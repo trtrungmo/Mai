@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luyện tập kiểm tra tuần 3 – LTXLDL</title>
+<style>
+:root{--bg:#0f1218;--p:#171c26;--b:#2a3242;--t:#e6e9ef;--m:#9aa4b5;--a:#7cc4ff;--g:#4ade80;--r:#f87171;--y:#fbbf24}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 system-ui,Segoe UI,sans-serif}
+nav{position:sticky;top:0;z-index:9;background:#0f1218ee;border-bottom:1px solid var(--b);padding:8px 12px;display:flex;gap:6px;overflow-x:auto}
+nav a{color:var(--a);text-decoration:none;border:1px solid var(--b);border-radius:6px;padding:2px 10px;flex:none}
+nav a:hover,nav a:focus-visible{background:var(--p);outline:2px solid var(--a)}
+main{max-width:840px;margin:0 auto;padding:16px}h1{font-size:1.5rem}h2{font-size:1.2rem;margin:0 0 10px}h2 small{color:var(--y);font-weight:400;margin:0 6px}
+section{background:var(--p);border:1px solid var(--b);border-radius:10px;padding:16px;margin:20px 0;scroll-margin-top:60px}
+.th,.tip{border-left:3px solid var(--a);padding:6px 12px;margin:8px 0;background:#0f1218;border-radius:0 6px 6px 0}.tip{border-color:var(--y)}
+.v{border-top:1px dashed var(--b);margin-top:16px;padding-top:12px}.v>b{color:var(--a)}
+code{background:#0b0e14;border-radius:4px;padding:1px 5px;font:0.9em ui-monospace,Consolas,monospace;color:#c8e1ff}
+pre{background:#0b0e14;border:1px solid var(--b);border-radius:6px;padding:10px;overflow-x:auto;margin:8px 0}pre code{padding:0}
+ol{list-style:upper-alpha;padding-left:28px}li{cursor:pointer;margin:6px 0;padding:6px 10px;border:1px solid var(--b);border-radius:6px}
+li:hover{border-color:var(--a)}li.p{border-color:var(--y)}li.ok{border-color:var(--g);background:#4ade8018}li.bad{border-color:var(--r);background:#f8717118}
+details{margin-top:8px}summary{cursor:pointer;color:var(--g);font-weight:600}details>div{margin-top:6px;padding:8px 12px;background:#0f1218;border-radius:6px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style></head><body>
+<nav id="nav"></nav>
+<main><h1>Luyện tập kiểm tra tuần 3 – Lập trình xử lý dữ liệu</h1>
+<p style="color:var(--m)">Bài 1–3: chính sách AI, Python cơ bản, NumPy. Mỗi câu mẫu có lý thuyết, mẹo chọn và các câu tương tự. Bấm chọn đáp án rồi mở "Đáp án &amp; giải thích".</p>
+<div id="app"></div></main>
+<script>
+const G=[
+['Set: hiệu, giao, hợp','`A - B` giữ phần tử có ở A mà không có ở B (không đối xứng); `A & B` giao; `A | B` hợp; `A ^ B` chỉ ở đúng một tập.','Đọc dấu: `-` là trừ ra, `&` là chung, `|` là gộp. Hỏi "chỉ ở một bên" thì loại giao và hợp trước.',[
+['A = {1,2,3,4}, B = {3,4,5}. Biểu thức nào cho {5} (chỉ có ở B)?',0,['A | B','A - B','B - A','A & B'],2,'`B - A` giữ phần tử có ở B mà không ở A. `A - B` = {1,2}; `A & B` = {3,4}; `A | B` = cả 5 phần tử.'],
+['s9 = {1,2,3}, s12 = {2,3,4}. Biểu thức nào cho {1,4} (chỉ ở đúng một trong hai snapshot)?',0,['s9 | s12','s9 & s12','s9 - s12','s9 ^ s12'],3,'`^` là hiệu đối xứng nên ra {1,4}. `-` chỉ cho một phía ({1}); `&` cho {2,3}; `|` cho cả bốn.']]],
+['Mặt nạ bool và tỷ lệ','So sánh mảng cho mảng bool. Ghép bằng `&`, `|` (không dùng `and`, `or`), mỗi điều kiện đặt trong ngoặc. `.mean()` của mảng bool là tỷ lệ, `.sum()` là số lượng.','Thấy `and`/`or` với mảng hoặc thiếu ngoặc thì loại. Hỏi "tỷ lệ" thì mean; hỏi "bao nhiêu" thì sum.',[
+['d = np.array([3,5,6,8,9,4,7,2]). Biểu thức nào ra 50.0 (% bài có điểm từ 4 đến dưới 8)?',0,['(d >= 4 & d < 8).mean() * 100','((d >= 4) & (d < 8)).mean() * 100','((d >= 4) and (d < 8)).mean() * 100','((d >= 4) & (d < 8)).sum()'],1,'Các điểm 5, 6, 4, 7 thỏa nên 4/8 = 50%. A thiếu ngoặc (`&` tính trước phép so sánh); C dùng `and` gây ValueError; D ra 4 (số lượng), không phải tỷ lệ.'],
+['Cùng d. Biểu thức nào đếm số bài điểm dưới 4 hoặc từ 8 trở lên?',0,['((d < 4) | (d >= 8)).sum()','(d < 4 or d >= 8).sum()','(d < 4) | (d >= 8).sum()','((d < 4) & (d >= 8)).sum()'],0,'Các điểm 3, 2, 8, 9 nên ra 4. B dùng `or` gây ValueError; C thiếu ngoặc nên `.sum()` gắn vào vế sau; D dùng `&` nên không phần tử nào thỏa (0).']]],
+['venv và requirements.txt','Tạo `python -m venv .venv`, kích hoạt (`source .venv/bin/activate`; Windows `.venv\\Scripts\\activate`), rồi `pip install -r requirements.txt`. Ghi lại phiên bản bằng `pip freeze > requirements.txt`.','Thứ tự luôn là tạo, kích hoạt, cài. `freeze` là ghi ra, `install -r` là cài vào. Chép thư mục `.venv` sang máy khác thì loại.',[
+['Muốn ghi đúng phiên bản thư viện đang cài trong venv để bạn cùng nhóm cài lại. Lệnh nào?',0,['pip install -r requirements.txt','pip freeze > requirements.txt','cp -r .venv nhom_khac/','python -m venv requirements.txt'],1,'`pip freeze > requirements.txt` ghi danh sách kèm phiên bản. A là lệnh cài từ file; C chép `.venv` gắn với đường dẫn và máy cũ nên không chạy được; D tạo venv tên lạ.'],
+['Trên Windows, lệnh kích hoạt venv `.venv` là gì?',0,['source .venv/bin/activate','.venv\\Scripts\\activate','pip install .venv','python -m venv activate'],1,'Windows dùng `.venv\\Scripts\\activate`. `source .venv/bin/activate` dành cho Linux/macOS; C và D không kích hoạt gì.']]],
+['try/except đúng loại lỗi','`float("")`, `int("abc")` gây ValueError; `int(None)` gây TypeError; `None.replace(...)` gây AttributeError. Tránh `except Exception: pass` vì che cả lỗi lập trình (NameError…).','Tự chạy từng ca thử xem ra lỗi gì, rồi chọn tập lỗi vừa đủ. Đáp án có `Exception` hoặc lỗi không liên quan (KeyError, IndexError) thì loại.',[
+['Hàm phải trả None cho cả ba ca "", "1x", None mà không che lỗi lập trình. Điền chỗ trống.','def to_float(s):\n    try:\n        return float(s)\n    except ______:\n        return None',['ValueError','(ValueError, TypeError)','Exception','(TypeError, KeyError)'],1,'`float("")`, `float("1x")` gây ValueError; `float(None)` gây TypeError. A để ca None làm chương trình dừng; C nuốt cả NameError…; D bỏ sót ValueError.'],
+['Hàm nhận "$45,647.00", "N/A" hoặc None. Điền chỗ trống.','def clean_price(s):\n    try:\n        return float(s.replace("$", "").replace(",", ""))\n    except ______:\n        return None',['(ValueError, TypeError)','Exception','(KeyError, IndexError)','(ValueError, AttributeError)'],3,'"N/A" gây ValueError; `None.replace` gây AttributeError (không phải TypeError). A bỏ sót AttributeError; B che mọi lỗi; C không liên quan.']]],
+['axis, argmax, max, sum','`axis` là chiều bị gộp: `axis=0` gộp các hàng nên kết quả theo cột; `axis=1` gộp các cột nên kết quả theo hàng. `argmax` trả vị trí, `max` trả giá trị.','Đếm độ dài kết quả: 4 hàng và axis=1 thì ra 4 số. Đề hỏi "vị trí" thì argmax, hỏi "giá trị" thì max.',[
+['N = np.array([[5,2,8],[1,9,3],[7,4,6],[2,2,10]]). Biểu thức nào cho [2 1 0 2] (cột chứa giá trị lớn nhất của từng hàng)?',0,['N.argmax(axis=0)','N.max(axis=1)','N.argmax(axis=1)','N.sum(axis=1).argmax()'],2,'Mỗi hàng cần một vị trí nên dùng `argmax(axis=1)`. A cho [2,1,3] (theo cột); B trả giá trị [8,9,7,10]; D chỉ ra một số (2).'],
+['Cùng N. Biểu thức nào cho [15 17 27] (tổng từng cột)?',0,['N.sum(axis=1)','N.sum()','N.mean(axis=0)','N.sum(axis=0)'],3,'`axis=0` gộp các hàng nên ra 3 tổng cột. A cho [15,13,17,14] (tổng hàng); B ra 59; C là trung bình cột.']]],
+['Chính sách AI: đóng và mở','🚫 đóng (quiz, giữa kỳ, vấn đáp): không dùng AI. ✅ mở (lab, bài về nhà, làm bài tập lớn): được dùng AI kèm 3 trách nhiệm: khai báo, hiểu, kiểm chứng. Không giải thích được khi vấn đáp thì phần đó 0 điểm cá nhân.','Chọn đáp án nêu đủ "khai báo + hiểu + kiểm chứng". Loại đáp án cực đoan ("không cần khai báo", "chỉ cần ghi tên công cụ").',[
+['Quiz 15 phút trên lớp được gắn nhãn nào và có được dùng AI không?',0,['✅ mở, được dùng AI nếu có khai báo','🚫 đóng, không được dùng AI','✅ mở, được dùng nếu hiểu code','🚫 đóng, được dùng nếu ghi tên công cụ'],1,'Quiz, thi giữa kỳ và vấn đáp đều là 🚫 đóng: không dùng AI, dù có khai báo hay không.'],
+['Bài tập lớn (chế độ mở): bạn nộp code AI viết nhưng không giải thích được khi vấn đáp. Hệ quả?',0,['Bị trừ điểm vì đã khai báo','Phần đó nhận 0 điểm cá nhân','Không sao vì AI chịu trách nhiệm','Bị đánh trượt cả môn'],1,'Khai báo đầy đủ không bị trừ điểm, nhưng phải hiểu và kiểm chứng. Không giải thích được thì phần đó 0 điểm cá nhân; "AI bảo thế" không phải câu trả lời.']]],
+['View và bản sao','Lát cắt cơ bản (`B[:,1:3]`, `B[0]`, `.T`) là view, dùng chung dữ liệu. Chỉ mục bằng danh sách, mask bool, `np.ix_` cho bản sao. Muốn độc lập thì dùng `.copy()`.','Dấu `:` hoặc số nguyên nghĩa là view; danh sách `[1,2]` hoặc mask bool nghĩa là copy. Cần chắc thì thêm `.copy()`.',[
+['Muốn lấy cột 1–2 của B thành c mà sửa c không làm đổi B. Cách nào?',0,['c = B[:, 1:3]','c = B[:, 1:3].copy()','c = B.T[1:3]','c = B[::1, 1:3]'],1,'Các lát cắt cơ bản (A, C, D) đều là view dùng chung dữ liệu; chỉ `.copy()` tạo mảng độc lập.'],
+['Cách nào tạo bản sao độc lập mà không cần gọi `.copy()`?',0,['B[:, 0:2]','B[::2]','B[:, [0, 2]]','B.T'],2,'Chỉ mục bằng danh sách trả bản sao. Lát cắt `0:2`, `::2` và `.T` đều là view.']]],
+['f-string định dạng','`:.1%` nhân 100 rồi thêm %; `:,` chèn phẩy nghìn; `:,.0f` phân cách nghìn và không có số lẻ.','Đuôi đã có `%` thì đừng tự nhân 100 và đừng thêm `%` nữa. `:d` hoặc `:.0f` không có phẩy thì thiếu phân cách nghìn.',[
+['Cho p = 0.0734, n = 98000. Cần in: Tỷ lệ trống: 7.3% | 98,000. Phần ghép f-string nào đúng?',0,['{p:.1f}% | {n:,}','{p:.1%} | {n:,}','{p*100:.1%} | {n:,}','{p:.1%} | {n:d}'],1,'`:.1%` nhân 100 và thêm %, `:,` chèn phẩy. A cho 0.1%; C nhân 100 hai lần (734.0%); D in 98000 không phẩy.'],
+['gia_tb = 1834567.891. Đuôi định dạng nào trong {gia_tb:…} in được 1,834,568?',0,[':.0f',':,',':,.0f',':.1%'],2,'`:,.0f` là phân cách nghìn cộng 0 chữ số lẻ. `:.0f` thiếu phẩy; `:,` giữ phần lẻ (1,834,567.891); `:.1%` ra phần trăm.']]],
+['CSV: mọi ô là chuỗi','CSV không mang kiểu. `csv.DictReader` đọc mọi ô là chuỗi nên phải ép `int()`/`float()` từng ô. `sum` bắt đầu từ 0 nên `0 + "20"` gây TypeError.','Thấy TypeError giữa int và str thì nghĩ ngay "quên ép kiểu". Đổi generator sang list hay thêm encoding không sửa được.',[
+['Sau rows = list(csv.DictReader(f)), lệnh sum(r["gia"] for r in rows) báo TypeError (int và str). Cách sửa đúng?',0,['Đổi generator thành list','Thêm encoding="utf-8" khi mở file','Ép kiểu từng ô: int(r["gia"])','Đọc lại bằng csv.reader'],2,'DictReader và csv.reader đều trả chuỗi; `sum` bắt đầu từ 0 nên cộng int với str lỗi. Phải ép kiểu từng ô.'],
+['Vì sao rows[0]["id"] == 52811 cho False dù file ghi id là 52811?',0,['CSV không lưu kiểu: ô được đọc ra là chuỗi 52811','File thiếu encoding','DictReader đọc số thành float','Dòng đầu là tiêu đề nên bị bỏ'],0,'Mọi ô CSV đều là chuỗi (str); so sánh chuỗi với số nguyên luôn False. Cần ép `int()`.']]],
+['Broadcasting','Xếp shape thẳng phải rồi so sánh từng chiều: bằng nhau hoặc một bên là 1. `(4,3)+(3,)` cộng theo cột. Muốn cộng theo hàng cần `(4,1)`: dùng `reshape(4,1)` hoặc `[:, None]`.','Viết shape ra giấy, so từ phải sang trái. Số hàng (4) phải nằm ở chiều đầu, dạng `(4,1)`, mới cộng theo hàng.',[
+['M có shape (4,3) (4 thành phố × 3 tháng); w = np.array([1,2,3,4]) là phụ phí từng thành phố. Cách nào cộng đúng w vào từng hàng?',0,['M + w','M + w.reshape(1, 4)','M + w.reshape(4, 1)','M @ w'],2,'(4,3)+(4,1) khớp: mỗi hàng dùng một số. A và B lỗi vì chiều cuối 3 khác 4; D sai shape khi nhân ma trận.'],
+['Cùng M. c = np.array([5,6,7]) là phụ phí từng tháng. Cách nào cộng đúng vào từng cột?',0,['M + c[:, None]','M.T + c','M + c','M + c.reshape(4, 1)'],2,'(4,3)+(3,) khớp ở chiều cuối nên cộng theo cột, không cần reshape. A có shape (3,1) không khớp 4 hàng; B là (3,4)+(3,) lỗi; D không reshape được 3 phần tử thành (4,1).']]],
+['Tự luận: nanmean và đếm','`np.nanmean` bỏ qua NaN. So sánh có NaN luôn cho `False` nên `(d > t).sum()` không đếm NaN. `.sum()` trên bool đếm số True; dấu `>` không lấy bằng.','Tính ngưỡng bằng tay (bỏ NaN), đánh dấu True/False từng phần tử (NaN là False), rồi đếm.',[
+['Có 2 bài chưa có điểm (NaN). Đoạn code in ra số nào?','d = np.array([4.0, np.nan, 9.0, 6.0, np.nan, 7.0, 3.0])\nnguong = np.nanmean(d)\nprint((d > nguong).sum())',null,'3','nanmean = (4+9+6+7+3)/5 = 5.8. Lớn hơn 5.8: 9, 6, 7 nên ra 3. NaN so sánh luôn False.'],
+['Đoạn code in ra số nào?','d = np.array([2.0, np.nan, 8.0, 5.0, np.nan, 6.0, 9.0])\nnguong = np.nanmean(d)\nprint((d > nguong).sum())',null,'2','nanmean = (2+8+5+6+9)/5 = 6.0. Chỉ 8 và 9 lớn hơn 6.0 (6 không lớn hơn chính nó) nên ra 2.']]],
+['Tự luận: giải thích lỗi và sửa','Dòng nằm ngoài `try` thì `except` không bắt được. `None.replace`/`None.strip` gây AttributeError, không thuộc `(ValueError, TypeError)`. Sửa: đưa dòng đó vào `try` và bắt thêm AttributeError, hoặc kiểm `s is None` trước.','Trả lời theo 3 mệnh đề: lỗi gì sinh ra ở đâu, vì sao except không bắt, cách sửa.',[
+['Cột đọc từ JSON có ô null (None); hàm dừng với AttributeError dù có except (ValueError, TypeError). Giải thích và nêu cách sửa (một câu).','def to_int(s):\n    x = s.strip()\n    try:\n        return int(x)\n    except (ValueError, TypeError):\n        return None',null,'`s.strip()` nằm ngoài `try` và `None.strip` sinh AttributeError (không thuộc ValueError/TypeError); sửa bằng cách đưa dòng đó vào `try` và thêm AttributeError vào `except` (hoặc kiểm `s is None`).','Chỉ cần đủ ba ý: lỗi ở đâu, vì sao không bắt được, cách sửa.'],
+['Ô trống (None) làm hàm dừng với AttributeError. Giải thích và nêu cách sửa.','def clean(s):\n    x = s.replace("%", "")\n    try:\n        return float(x)\n    except ValueError:\n        return None',null,'`s.replace(...)` chạy ngoài `try` và `None.replace` sinh AttributeError, không được `except ValueError` bắt; sửa bằng cách đưa vào `try` và bắt thêm AttributeError (hoặc kiểm `s is None`).','Đề chấm theo đủ ba ý, không cần dài.']]],
+['Tự luận: thứ tự chạy notebook','Thứ tự chạy là số `In [n]`, không phải thứ tự hiển thị. `a = a + [x]` tạo list mới; `append` và gán `y = x` cùng sửa một list (bí danh). Giá trị đã tính xong không tự cập nhật.','Sắp lại các ô theo n = 1, 2, 3, 4, chạy tuần tự và ghi trạng thái biến sau mỗi ô.',[
+['Bốn ô hiển thị từ trên xuống; sau đó chạy print(t). In ra số nào?','In [3]: t = sum(a)\nIn [1]: a = [2, 4]\nIn [4]: a.append(6)\nIn [2]: a = a + [8]',null,'14','Chạy theo In[n]: a = [2,4]; a = [2,4,8]; t = 14; rồi append(6) (t đã tính nên không đổi). print(t) ra 14.'],
+['Bốn ô hiển thị từ trên xuống; sau đó chạy print(tong). In ra số nào?','In [4]: tong = sum(x)\nIn [2]: y = x\nIn [1]: x = [1, 2]\nIn [3]: y.append(3)',null,'6','x = [1,2]; y = x (cùng một list); y.append(3) làm x = [1,2,3]; tong = 6.']]],
+['Tự luận: z-score','\\(z=\\dfrac{x-\\mu}{\\sigma}\\), với \\(\\sigma=\\sqrt{\\dfrac1n\\sum (x-\\mu)^2}\\) (`np.std()` mặc định chia n, ddof=0).','Tính μ, rồi tổng bình phương lệch, chia n (không phải n−1), lấy căn, cuối cùng tính z.',[
+['Điểm: 1, 3, 5, 7, 9. Chuẩn hoá z-score với độ lệch chuẩn tổng thể. Điểm z của bài 9 là bao nhiêu (làm tròn 2 chữ số)?',0,null,'1.41','μ = 5; tổng bình phương lệch = 16+4+0+4+16 = 40; σ = √(40/5) = √8 ≈ 2.83; z = (9−5)/2.83 ≈ 1.41.'],
+['Điểm: 2, 4, 4, 4, 5, 5, 7, 9. Điểm z của bài 9 là bao nhiêu?',0,null,'2','μ = 5; tổng bình phương lệch = 9+1+1+1+0+0+4+16 = 32; σ = √(32/8) = 2; z = (9−5)/2 = 2.']]],
+['Tự luận: điều kiện if v (truthy)','`if v` coi 0, None, "" là False nên loại cả điểm 0 lẫn ô thiếu; `is not None` mới chỉ loại ô thiếu. Trung bình = tổng / số phần tử còn lại.','Gạch các giá trị 0/None trước, rồi tính tổng và đếm số còn lại. Nhớ hỏi: điểm 0 có phải "có điểm" không?',[
+['Trung bình in ra là bao nhiêu (làm tròn 2 chữ số)?','diem = {"Lan": 9, "Mai": 0, "Nam": None, "Oanh": 4, "Phú": 7}\nco_diem = {k: v for k, v in diem.items() if v}\nprint(sum(co_diem.values()) / len(co_diem))',null,'6.67','`if v` loại Mai (0) và Nam (None); còn 9, 4, 7 nên 20/3 ≈ 6.67. (Nếu dùng `v is not None` thì Mai vẫn tính: 20/4 = 5.0.)'],
+['Trung bình in ra là bao nhiêu?','diem = {"A": 10, "B": 0, "C": 5, "D": None, "E": 0, "F": 3}\nco_diem = {k: v for k, v in diem.items() if v}\nprint(sum(co_diem.values()) / len(co_diem))',null,'6.0','Loại B, D, E; còn 10, 5, 3 nên 18/3 = 6.0.']]]
+];
+const E=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'),
+H=s=>E(s).replace(/`([^`]+)`/g,'<code>$1</code>');
+let nav='',out='';
+G.forEach((g,i)=>{const n=i+1;nav+=`<a href="#c${n}">${n}</a>`;
+out+=`<section id="c${n}"><h2>Câu ${n}<small>${n<11?'Trắc nghiệm':'Tự luận (2đ)'}</small>${H(g[0])}</h2><div class="th"><b>Lý thuyết.</b> ${H(g[1])}</div><div class="tip"><b>Mẹo chọn.</b> ${H(g[2])}</div>`;
+g[3].forEach((v,j)=>{const mc=Array.isArray(v[2]);
+out+=`<div class="v"><b>Câu ${n}.${j+1}</b> ${H(v[0])}${v[1]?`<pre><code>${E(v[1])}</code></pre>`:''}`;
+if(mc)out+=`<ol data-a="${v[3]}">${v[2].map(o=>`<li onclick="pk(this)"><code>${E(o)}</code></li>`).join('')}</ol>`;
+out+=`<details ontoggle="tg(this)"><summary>Đáp án &amp; giải thích</summary><div><b>Đáp án:</b> ${mc?String.fromCharCode(65+v[3])+'. '+H('`'+v[2][v[3]]+'`'):H('`'+v[3]+'`')}<br>${H(v[4])}${!mc&&v[5]?'<br><i>'+H(v[5])+'</i>':''}</div></details></div>`});
+out+='</section>'});
+document.getElementById('nav').innerHTML=nav;document.getElementById('app').innerHTML=out;
+function pk(li){[...li.parentNode.children].forEach(x=>x.classList.remove('p'));li.classList.add('p')}
+function tg(d){const o=d.parentNode.querySelector('ol');if(!o||!d.open)return;const c=o.children[o.dataset.a];c.classList.add('ok');const p=o.querySelector('.p');if(p&&p!==c)p.classList.add('bad')}
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.js"></script>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]}}</script>
+</body></html>
