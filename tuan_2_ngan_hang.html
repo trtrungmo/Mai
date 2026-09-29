@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Xử Lý Dữ Liệu Python</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .code-block {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: #1e293b;
+        }
+        .explanation-box {
+            position: relative;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .explanation-box::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 14px;
+            height: 14px;
+            background-color: #f8fafc;
+            border-left: 1px solid #cbd5e1;
+            border-top: 1px solid #cbd5e1;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-blue-700 text-white shadow-md py-6 mb-8">
+        <div class="max-w-5xl mx-auto px-4">
+            <h1 class="text-3xl font-bold">Bộ Bài Tập & Ôn Tập Kiến Thức Python</h1>
+            <p class="mt-2 text-blue-100">Dành cho môn Xử lý Dữ liệu (Python Base, NumPy, Pandas)</p>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 space-y-12" id="app">
+
+        <!-- SECTION 1: SET OPERATIONS -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 1</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Tập hợp (Set Operations in Python)</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <ul class="list-disc list-inside text-sm text-amber-800 space-y-1">
+                    <li><code class="bg-amber-100 px-1 rounded">A | B</code> hoặc <code class="bg-amber-100 px-1 rounded">A.union(B)</code>: Phép HỢP (Lấy tất cả phần tử ở A hoặc B).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">A & B</code> hoặc <code class="bg-amber-100 px-1 rounded">A.intersection(B)</code>: Phép GIAO (Lấy phần tử chung của cả A và B).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">A - B</code> hoặc <code class="bg-amber-100 px-1 rounded">A.difference(B)</code>: Phép HIỆU (Lấy phần tử thuộc A nhưng KHÔNG thuộc B).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">A ^ B</code> hoặc <code class="bg-amber-100 px-1 rounded">A.symmetric_difference(B)</code>: Phép HIỆU ĐỐI XỨNG (Thuộc A hoặc B nhưng không thuộc cả hai).</li>
+                </ul>
+            </div>
+
+            <div id="q-set-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 2: EXCEPTION HANDLING -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 2</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Xử Lý Lỗi (Exception Handling & Error Types)</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <ul class="list-disc list-inside text-sm text-amber-800 space-y-1">
+                    <li><code class="bg-amber-100 px-1 rounded">ValueError</code>: Kiểu dữ liệu đúng nhưng giá trị không hợp lệ (ví dụ: <code class="bg-amber-100 px-1 rounded">int("abc")</code>, <code class="bg-amber-100 px-1 rounded">int("")</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">TypeError</code>: Sai kiểu dữ liệu trong phép toán/hàm (ví dụ: <code class="bg-amber-100 px-1 rounded">int(None)</code>, <code class="bg-amber-100 px-1 rounded">"a" + 1</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">KeyError</code>: Truy cập Dict với key không tồn tại.</li>
+                    <li><code class="bg-amber-100 px-1 rounded">AttributeError</code>: Gọi phương thức/thuộc tính không tồn tại trên đối tượng (ví dụ: <code class="bg-amber-100 px-1 rounded">None.replace()</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">except (E1, E2)</code>: Bắt đúng danh sách lỗi cụ thể mà không làm nuốt các lỗi lập trình khác (như <code class="bg-amber-100 px-1 rounded">NameError</code>, <code class="bg-amber-100 px-1 rounded">SyntaxError</code>).</li>
+                </ul>
+            </div>
+
+            <div id="q-exception-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 3: F-STRING FORMATTING -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 3</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Định Dạng Chuỗi (F-String Formatting)</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <ul class="list-disc list-inside text-sm text-amber-800 space-y-1">
+                    <li><code class="bg-amber-100 px-1 rounded">:.1%</code>: Tự động <b>nhân 100</b>, làm tròn 1 chữ số thập phân và thêm ký hiệu <code class="bg-amber-100 px-1 rounded">%</code>. (VD: <code class="bg-amber-100 px-1 rounded">0.625 -> 62.5%</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">:,</code>: Phân cách hàng nghìn bằng dấu phẩy (VD: <code class="bg-amber-100 px-1 rounded">1250 -> 1,250</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">:.2f</code>: Định dạng số thực làm tròn 2 chữ số thập phân (<b>không</b> nhân 100, <b>không</b> tự thêm <code class="bg-amber-100 px-1 rounded">%</code>).</li>
+                    <li><code class="bg-amber-100 px-1 rounded">:d</code>: Số nguyên.</li>
+                </ul>
+            </div>
+
+            <div id="q-fstring-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 4: FILE CSV & DICTREADER -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 4</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Đọc Đọc File CSV & Xử Lý Kiểu Dữ Liệu</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <ul class="list-disc list-inside text-sm text-amber-800 space-y-1">
+                    <li>File CSV là văn bản thuần. Tất cả dữ liệu khi đọc bằng <code class="bg-amber-100 px-1 rounded">csv.reader</code> hay <code class="bg-amber-100 px-1 rounded">csv.DictReader</code> đều trả về kiểu <b>chuỗi (str)</b>.</li>
+                    <li>Hàm <code class="bg-amber-100 px-1 rounded">sum()</code> trong Python bắt đầu với giá trị mặc định là <code class="bg-amber-100 px-1 rounded">0</code> (kiểu int). Khi cộng với chuỗi sẽ bị lỗi <code class="bg-amber-100 px-1 rounded">TypeError: unsupported operand type(s) for +: 'int' and 'str'</code>.</li>
+                    <li>Cần phải ép kiểu thủ công: <code class="bg-amber-100 px-1 rounded">int(r["tuoi"])</code> hoặc <code class="bg-amber-100 px-1 rounded">float(...)</code>.</li>
+                </ul>
+            </div>
+
+            <div id="q-csv-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 5: TỰ LUẬN - ATTRIBUTE ERROR & SAFE CODE -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 5 (Tự Luận)</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Lỗi AttributeError & Xử Lý Chuỗi An Toàn</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <p class="text-sm text-amber-800">
+                    Khi đọc JSON/Pandas, các ô trống thường được chuyển thành <code class="bg-amber-100 px-1 rounded">None</code> (hoặc <code class="bg-amber-100 px-1 rounded">NaN</code>). Nếu thực hiện các phép toán chuỗi như <code class="bg-amber-100 px-1 rounded">s.replace()</code> hay <code class="bg-amber-100 px-1 rounded">s.strip()</code> <b>trước</b> khối <code class="bg-amber-100 px-1 rounded">try-except</code>, khi gặp <code class="bg-amber-100 px-1 rounded">None</code> chương trình sẽ văng lỗi <code class="bg-amber-100 px-1 rounded">AttributeError</code> lập tức mà không vào khối try!
+                </p>
+            </div>
+
+            <div id="q-tuluan1-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 6: TỰ LUẬN - TRUTHY / FALSY IN PYTHON -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề 6 (Tự Luận)</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Bẫy Truthy / Falsy Trong Điều Kiện Lọc</h2>
+            </div>
+
+            <!-- Lý thuyết -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
+                <h3 class="font-bold text-amber-900 mb-2"><i class="fa-solid fa-book-open mr-2"></i>Lý thuyết cần nhớ:</h3>
+                <p class="text-sm text-amber-800">
+                    Các giá trị bị coi là <b>Falsy</b> trong Python bao gồm: <code class="bg-amber-100 px-1 rounded">0</code>, <code class="bg-amber-100 px-1 rounded">0.0</code>, <code class="bg-amber-100 px-1 rounded">None</code>, <code class="bg-amber-100 px-1 rounded">""</code> (chuỗi rỗng), <code class="bg-amber-100 px-1 rounded">[]</code>, <code class="bg-amber-100 px-1 rounded">{}</code>.<br>
+                    Nếu dùng <code class="bg-amber-100 px-1 rounded">if v:</code> để lọc dữ liệu, điểm <code class="bg-amber-100 px-1 rounded">0</code> sẽ bị xem là <code class="bg-amber-100 px-1 rounded">False</code> và <b>bị loại bỏ sai lầm</b>! Để kiểm tra khác None, chuẩn nhất phải dùng <code class="bg-amber-100 px-1 rounded">if v is not None:</code>.
+                </p>
+            </div>
+
+            <div id="q-tuluan2-container" class="space-y-8"></div>
+        </section>
+
+        <!-- SECTION 7: NUMPY & PANDAS (LINKED KNOWLEDGE) -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <div class="border-b pb-4 mb-6">
+                <span class="bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded text-xs uppercase">Chủ đề Mở Rộng</span>
+                <h2 class="text-2xl font-bold mt-1 text-gray-900">Kiến Thức Đồng Dạng: NumPy & Pandas Basic</h2>
+            </div>
+
+            <div id="q-numpy-pandas-container" class="space-y-8"></div>
+        </section>
+
+    </div>
+
+    <script>
+        // Data Questions
+        const questionsSet = [
+            {
+                id: "s1",
+                num: "1.1",
+                text: "Cho `A = {'Py', 'Java', 'C++', 'Go'}` và `B = {'Java', 'Go', 'Rust'}`. Biểu thức nào trả về `{'Py', 'C++'}`?",
+                code: "A = {'Py', 'Java', 'C++', 'Go'}\nB = {'Java', 'Go', 'Rust'}",
+                options: [
+                    { label: "A | B", text: "A | B" },
+                    { label: "B - A", text: "B - A" },
+                    { label: "A - B", text: "A - B" },
+                    { label: "A & B", text: "A & B" }
+                ],
+                correct: 2,
+                explain: "Hiệu `A - B` giữ lại phần tử có trong A nhưng không có trong B: 'Py' và 'C++'. Phương án B (`B - A`) ra `{'Rust'}`. Phương án D (`A & B`) ra `{'Java', 'Go'}`. Phương án A (`A | B`) ra tất cả ngôn ngữ."
+            },
+            {
+                id: "s2",
+                num: "1.2",
+                text: "Cho `s1 = {1, 2, 3, 4}` và `s2 = {3, 4, 5, 6}`. Biểu thức nào cho kết quả `{1, 2, 5, 6}`?",
+                code: "s1 = {1, 2, 3, 4}\ns2 = {3, 4, 5, 6}",
+                options: [
+                    { label: "s1 ^ s2", text: "s1 ^ s2" },
+                    { label: "s1 & s2", text: "s1 & s2" },
+                    { label: "s1 - s2", text: "s1 - s2" },
+                    { label: "s1 | s2", text: "s1 | s2" }
+                ],
+                correct: 0,
+                explain: "Phép hiệu đối xứng `^` (Symmetric Difference) lấy các phần tử chỉ thuộc một trong hai tập hợp (loại bỏ phần giao `{3, 4}`). Kết quả là `{1, 2, 5, 6}`."
+            },
+            {
+                id: "s3",
+                num: "1.3",
+                text: "Muốn tìm danh sách sản phẩm bán được ở CẢ HAI cửa hàng A và B, ta dùng phép toán set nào?",
+                code: "store_A = {'Áo', 'Quần', 'Mũ'}\nstore_B = {'Quần', 'Giày', 'Mũ'}",
+                options: [
+                    { label: "store_A | store_B", text: "store_A | store_B" },
+                    { label: "store_A & store_B", text: "store_A & store_B" },
+                    { label: "store_A - store_B", text: "store_A - store_B" },
+                    { label: "store_A ^ store_B", text: "store_A ^ store_B" }
+                ],
+                correct: 1,
+                explain: "Phép giao `&` tìm các phần tử xuất hiện ở CẢ HAI tập hợp (`{'Quần', 'Mũ'}`)."
+            },
+            {
+                id: "s4",
+                num: "1.4",
+                text: "Cho `club_A = {'An', 'Bình'}` và `club_B = {'Chi', 'Dũng'}`. Kết quả của `club_A & club_B` là gì?",
+                code: "club_A = {'An', 'Bình'}\nclub_B = {'Chi', 'Dũng'}",
+                options: [
+                    { label: "{'An', 'Bình', 'Chi', 'Dũng'}", text: "{'An', 'Bình', 'Chi', 'Dũng'}" },
+                    { label: "set()", text: "set() (tập hợp rỗng)" },
+                    { label: "None", text: "None" },
+                    { label: "Báo lỗi TypeError", text: "Báo lỗi TypeError" }
+                ],
+                correct: 1,
+                explain: "Vì hai tập hợp không có phần tử nào chung, phép giao `&` trả về một tập hợp rỗng `set()`."
+            },
+            {
+                id: "s5",
+                num: "1.5",
+                text: "Để kiểm tra xem tập `sub` có phải là tập con hoàn toàn nằm trong tập `parent` hay không, biểu thức nào đúng?",
+                code: "sub = {1, 2}\nparent = {1, 2, 3, 4}",
+                options: [
+                    { label: "sub in parent", text: "sub in parent" },
+                    { label: "sub <= parent", text: "sub <= parent" },
+                    { label: "sub == parent", text: "sub == parent" },
+                    { label: "sub | parent == sub", text: "sub | parent == sub" }
+                ],
+                correct: 1,
+                explain: "Toán tử `<=` (hoặc phương thức `.issubset()`) dùng để kiểm tra tập con trong Python. `sub in parent` sẽ tìm xem tập `sub` như 1 phần tử đơn lẻ có trong parent không (sai)."
+            }
+        ];
+
+        const questionsException = [
+            {
+                id: "e1",
+                num: "2.1",
+                text: "Hàm `clean_data(val)` cần trả về `None` khi gặp lỗi ép kiểu `float(\"\")`, `float(\"N/A\")` hoặc `float(None)`. Mệnh đề `except` nào đúng?",
+                code: "def clean_data(val):\n    try:\n        return float(val)\n    ____:\n        return None",
+                options: [
+                    { label: "except (ValueError, TypeError)", text: "except (ValueError, TypeError)" },
+                    { label: "except (ValueError, KeyError)", text: "except (ValueError, KeyError)" },
+                    { label: "except Exception", text: "except Exception" },
+                    { label: "except (TypeError, AttributeError)", text: "except (TypeError, AttributeError)" }
+                ],
+                correct: 0,
+                explain: "`float(\"\")` và `float(\"N/A\")` phát sinh `ValueError`. `float(None)` phát sinh `TypeError`. Bắt đúng bộ đôi `(ValueError, TypeError)` sẽ đảm bảo xử lý đủ các ca trên mà không che giấu các lỗi ẩn khác."
+            },
+            {
+                id: "e2",
+                num: "2.2",
+                text: "Phép toán `d['age'] + 5` bị lỗi nếu `d` không có key `'age'` HOẶC giá trị `d['age']` là chuỗi `\"20\"`. Bắt 2 lỗi này bằng lệnh nào?",
+                code: "try:\n    res = d['age'] + 5\nexcept ______:\n    res = None",
+                options: [
+                    { label: "except (KeyError, TypeError)", text: "except (KeyError, TypeError)" },
+                    { label: "except (KeyError, ValueError)", text: "except (KeyError, ValueError)" },
+                    { label: "except (IndexError, TypeError)", text: "except (IndexError, TypeError)" },
+                    { label: "except Exception", text: "except Exception" }
+                ],
+                correct: 0,
+                explain: "Thiếu key trong Dict phát sinh `KeyError`. Cộng chuỗi với số (`'20' + 5`) phát sinh `TypeError`."
+            },
+            {
+                id: "e3",
+                num: "2.3",
+                text: "Lỗi nào phát sinh khi thực hiện lệnh `int(\"12.5\")` trong Python?",
+                code: "val = int(\"12.5\")",
+                options: [
+                    { label: "TypeError", text: "TypeError" },
+                    { label: "ValueError", text: "ValueError" },
+                    { label: "SyntaxError", text: "SyntaxError" },
+                    { label: "AttributeError", text: "AttributeError" }
+                ],
+                correct: 1,
+                explain: "`\"12.5\"` là một chuỗi ký tự hợp lệ, nhưng không thể chuyển trực tiếp thành kiểu `int` bằng `int()` (phải qua `float()` trước), nên Python bắn lỗi `ValueError` (invalid literal for int())."
+            },
+            {
+                id: "e4",
+                num: "2.4",
+                text: "Lệnh `len(12345)` phát sinh ngoại lệ nào?",
+                code: "print(len(12345))",
+                options: [
+                    { label: "ValueError", text: "ValueError" },
+                    { label: "TypeError", text: "TypeError" },
+                    { label: "AttributeError", text: "AttributeError" },
+                    { label: "IndexError", text: "IndexError" }
+                ],
+                correct: 1,
+                explain: "Hàm `len()` chỉ nhận kiểu dữ liệu dạng sequence/collection (str, list, tuple, dict,...). Truyền kiểu `int` vào sẽ gây ra `TypeError: object of type 'int' has no len()`."
+            },
+            {
+                id: "e5",
+                num: "2.5",
+                text: "Tại sao dùng `except Exception:` rộng rãi lại bị coi là thực hành xấu (bad practice)?",
+                code: "# Code ví dụ\ntry:\n    do_something()\nexcept Exception:\n    pass",
+                options: [
+                    { label: "Vì nó làm chương trình chạy chậm hơn 10 lần.", text: "Vì nó làm chương trình chạy chậm hơn 10 lần." },
+                    { label: "Vì nó sẽ bắt và che giấu cả các lỗi cú pháp, sai tên biến (NameError) làm khó debug.", text: "Vì nó sẽ bắt và che giấu cả các lỗi cú pháp, sai tên biến (NameError) làm khó debug." },
+                    { label: "Vì Python không cho phép dùng ngoại lệ Exception.", text: "Vì Python không cho phép dùng ngoại lệ Exception." },
+                    { label: "Vì nó chỉ bắt được lỗi tính toán số học.", text: "Vì nó chỉ bắt được lỗi tính toán số học." }
+                ],
+                correct: 1,
+                explain: "`Exception` là lớp cha của hầu hết các lỗi. Khi dùng `except Exception:`, các lỗi nguy hiểm như gõ sai tên biến (`NameError`), truy cập vượt chỉ số (`IndexError`) đều bị âm thầm nuốt mất."
+            }
+        ];
+
+        const questionsFString = [
+            {
+                id: "f1",
+                num: "3.1",
+                text: "Cho `ratio = 0.854` và `total = 2500`. Biểu thức nào tạo chuỗi `\"Tỉ lệ: 85.4% | 2,500 mẫu\"`?",
+                code: "ratio = 0.854\ntotal = 2500",
+                options: [
+                    { label: "f\"Tỉ lệ: {ratio:.1%} | {total:,} mẫu\"", text: "f\"Tỉ lệ: {ratio:.1%} | {total:,} mẫu\"" },
+                    { label: "f\"Tỉ lệ: {ratio:.1f}% | {total:,} mẫu\"", text: "f\"Tỉ lệ: {ratio:.1f}% | {total:,} mẫu\"" },
+                    { label: "f\"Tỉ lệ: {ratio * 100:.1%} | {total:d} mẫu\"", text: "f\"Tỉ lệ: {ratio * 100:.1%} | {total:d} mẫu\"" },
+                    { label: "f\"Tỉ lệ: {ratio:.1%} | {total:.2f} mẫu\"", text: "f\"Tỉ lệ: {ratio:.1%} | {total:.2f} mẫu\"" }
+                ],
+                correct: 0,
+                explain: "Đuôi `:.1%` tự nhân 100 thành 85.4 và dán `%`. Đuôi `:,` tự chèn dấu phẩy phân cách hàng nghìn thành `2,500`. Phương án B dùng `.1f` ra `0.9%`. Phương án C nhân 100 hai lần thành `8540.0%`."
+            },
+            {
+                id: "f2",
+                num: "3.2",
+                text: "Biểu thức `f\"{1234567.8910:,.2f}\"` trả về chuỗi kết quả nào?",
+                code: "val = 1234567.8910\nprint(f\"{val:,.2f}\")",
+                options: [
+                    { label: "1234567.89", text: "\"1234567.89\"" },
+                    { label: "1,234,567.89", text: "\"1,234,567.89\"" },
+                    { label: "1,234,567.8910", text: "\"1,234,567.8910\"" },
+                    { label: "1.234.567,89", text: "\"1.234.567,89\"" }
+                ],
+                correct: 1,
+                explain: "Dấu `,` chèn phân cách hàng nghìn dạng `1,234,567` và `.2f` làm tròn đến 2 chữ số thập phân `.89`."
+            },
+            {
+                id: "f3",
+                num: "3.3",
+                text: "Nếu muốn in số nguyên `5` dưới dạng chuỗi có 3 chữ số căn lề bằng số 0 (`\"005\"`), ta dùng định dạng nào?",
+                code: "num = 5",
+                options: [
+                    { label: "f\"{num:03d}\"", text: "f\"{num:03d}\"" },
+                    { label: "f\"{num:.3f}\"", text: "f\"{num:.3f}\"" },
+                    { label: "f\"{num:3d}\"", text: "f\"{num:3d}\"" },
+                    { label: "f\"{num:,3}\"", text: "f\"{num:,3}\"" }
+                ],
+                correct: 0,
+                explain: "Cú pháp `:03d` có nghĩa là: in số nguyên d, tổng độ rộng 3 ký tự, điền thêm các số 0 ở phía trước nếu chưa đủ."
+            },
+            {
+                id: "f4",
+                num: "3.4",
+                text: "Cho `acc = 0.05`. Kết quả của `f\"{acc:.0%}\"` là gì?",
+                code: "acc = 0.05\nprint(f\"{acc:.0%}\")",
+                options: [
+                    { label: "\"0.05%\"", text: "\"0.05%\"" },
+                    { label: "\"5%\"", text: "\"5%\"" },
+                    { label: "\"5.0%\"", text: "\"5.0%\"" },
+                    { label: "\"0%\"", text: "\"0%\"" }
+                ],
+                correct: 1,
+                explain: "`%` nhân 0.05 với 100 = 5. `.0` chỉ định lấy 0 chữ số thập phân. Kết quả thu được là `\"5%\"`."
+            },
+            {
+                id: "f5",
+                num: "3.5",
+                text: "Biểu thức `f\"{15:10d}\"` sẽ căn lề số 15 như thế nào?",
+                code: "print(repr(f\"{15:10d}\"))",
+                options: [
+                    { label: "Căn trái trong khoảng rộng 10 ký tự", text: "Căn trái trong khoảng rộng 10 ký tự" },
+                    { label: "Căn phải trong khoảng rộng 10 ký tự (có 8 khoảng trắng đằng trước)", text: "Căn phải trong khoảng rộng 10 ký tự (có 8 khoảng trắng đằng trước)" },
+                    { label: "Thêm 10 số 0 vào trước", text: "Thêm 10 số 0 vào trước" },
+                    { label: "Báo lỗi cú pháp", text: "Báo lỗi cú pháp" }
+                ],
+                correct: 1,
+                explain: "Mặc định đối với số nguyên/số thực, định dạng độ rộng `:10d` sẽ căn phải và thêm các khoảng trắng bên trái cho đủ 10 ký tự."
+            }
+        ];
+
+        const questionsCSV = [
+            {
+                id: "c1",
+                num: "4.1",
+                text: "File `sales.csv` có cột `price` lưu số tiền. Sau khi đọc bằng `DictReader`, lệnh `sum(r['price'] for r in rows)` báo lỗi `TypeError`. Nguyên nhân chính là gì?",
+                code: "import csv\nwith open('sales.csv') as f:\n    rows = list(csv.DictReader(f))\n    total = sum(r['price'] for r in rows)",
+                options: [
+                    { label: "DictReader đọc mọi giá trị dạng string (str), sum() không thể cộng dồn số 0 ban đầu với chuỗi.", text: "DictReader đọc mọi giá trị dạng string (str), sum() không thể cộng dồn số 0 ban đầu với chuỗi." },
+                    { label: "Hàm sum() không hoạt động với generator expression.", text: "Hàm sum() không hoạt động với generator expression." },
+                    { label: "DictReader đọc cột số thành None.", text: "DictReader đọc cột số thành None." },
+                    { label: "Tên cột 'price' bị sai cú pháp.", text: "Tên cột 'price' bị sai cú pháp." }
+                ],
+                correct: 0,
+                explain: "Dữ liệu từ CSV đọc bởi `DictReader` luôn luôn là chuỗi (`str`). Hàm `sum()` mặc định xuất phát từ số nguyên `0`. Phép tính `0 + '100'` sẽ lập tức gây lỗi `TypeError`."
+            },
+            {
+                id: "c2",
+                num: "4.2",
+                text: "Để tính tổng cột `price` ở câu trên một cách chính xác (bỏ qua dòng lỗi/rỗng nếu có), đoạn code nào chuẩn nhất?",
+                code: "# Cần sửa lại lệnh sum()",
+                options: [
+                    { label: "sum(float(r['price']) for r in rows)", text: "sum(float(r['price']) for r in rows)" },
+                    { label: "sum(r['price'] for r in rows)", text: "sum(r['price'] for r in rows)" },
+                    { label: "sum(int(r) for r in rows)", text: "sum(int(r) for r in rows)" },
+                    { label: "sum(str(r['price']) for r in rows)", text: "sum(str(r['price']) for r in rows)" }
+                ],
+                correct: 0,
+                explain: "Phải ép kiểu từng ô về kiểu số `float(r['price'])` hoặc `int(...)` trước khi truyền vào hàm `sum()`."
+            },
+            {
+                id: "c3",
+                num: "4.3",
+                text: "Khi dùng module `csv.reader(f)` đọc file, mỗi dòng trả về dữ liệu cấu trúc dạng nào?",
+                code: "import csv\n# row = next(reader)",
+                options: [
+                    { label: "Dictionary với key là tên cột", text: "Dictionary với key là tên cột" },
+                    { label: "List chứa các chuỗi (list of strings)", text: "List chứa các chuỗi (list of strings)" },
+                    { label: "Tuple chứa các số", text: "Tuple chứa các số" },
+                    { label: "Pandas DataFrame", text: "Pandas DataFrame" }
+                ],
+                correct: 1,
+                explain: "`csv.reader` trả về mỗi dòng là một `list` các chuỗi (`str`). `csv.DictReader` mới trả về `dict` với key là tên cột."
+            },
+            {
+                id: "c4",
+                num: "4.4",
+                text: "Giả sử file CSV có ô trống ở cột số. Nếu dùng `float(r['val'])` trực tiếp thì Python sẽ báo lỗi gì?",
+                code: "# r['val'] là chuỗi rỗng ''\nval = float('')",
+                options: [
+                    { label: "TypeError", text: "TypeError" },
+                    { label: "ValueError", text: "ValueError" },
+                    { label: "KeyError", text: "KeyError" },
+                    { label: "NullError", text: "NullError" }
+                ],
+                correct: 1,
+                explain: "Chuyển đổi một chuỗi rỗng `''` thành `float` hoặc `int` sẽ gây lỗi `ValueError: could not convert string to float: ''`."
+            },
+            {
+                id: "c5",
+                num: "4.5",
+                text: "Sự khác biệt lớn nhất giữa việc đọc dữ liệu bằng module `csv` chuẩn của Python và thư viện `pandas.read_csv()` là gì?",
+                code: "# So sánh csv vs pandas",
+                options: [
+                    { label: "Module csv tự chuyển kiểu dữ liệu số, Pandas thì không.", text: "Module csv tự chuyển kiểu dữ liệu số, Pandas thì không." },
+                    { label: "Pandas tự động nhận diện và ép kiểu dữ liệu (int, float, bool) cũng như xử lý NaN, trong khi module csv giữ nguyên dạng string.", text: "Pandas tự động nhận diện và ép kiểu dữ liệu (int, float, bool) cũng như xử lý NaN, trong khi module csv giữ nguyên dạng string." },
+                    { label: "Module csv không đọc được file lớn.", text: "Module csv không đọc được file lớn." },
+                    { label: "Không có sự khác biệt nào.", text: "Không có sự khác biệt nào." }
+                ],
+                correct: 1,
+                explain: "Pandas có engine parser thông minh tự suy luận kiểu dữ liệu (Type Inference), biến ô trống thành `NaN`, còn module `csv` chỉ thuần túy coi mọi ô là string."
+            }
+        ];
+
+        const questionsTuLuan1 = [
+            {
+                id: "tl1_1",
+                num: "5.1",
+                text: "Hàm `to_float` do AI viết dưới đây văng lỗi `AttributeError: 'NoneType' object has no attribute 'replace'` khi đọc ô JSON có giá trị `null` (Python đọc thành `None`). Giải thích ngắn gọn nguyên nhân và cách sửa.",
+                code: "def to_float(s):\n    x = s.replace(\",\", \"\")\n    try:\n        return float(x)\n    except (ValueError, TypeError):\n        return None",
+                answer: "<b>Nguyên nhân:</b> Lệnh <code>s.replace()</code> nằm ngoài khối <code>try</code> và được gọi trực tiếp trên <code>s</code>. Khi <code>s = None</code>, kiểu <code>NoneType</code> không có phương thức <code>replace</code> nên bắn ra <code>AttributeError</code>.<br><b>Cách sửa:</b> Thêm kiểm tra <code>if s is None: return None</code> ở đầu hàm, hoặc đưa <code>s.replace()</code> vào trong khối <code>try</code> và bổ sung <code>AttributeError</code> vào mệnh đề <code>except</code>."
+            },
+            {
+                id: "tl1_2",
+                num: "5.2",
+                text: "Hàm `clean_name(name)` dưới đây gặp lỗi `AttributeError: 'float' object has no attribute 'strip'` khi xử lý một cột tên trong Pandas DataFrame chứa giá trị thiếu (`NaN`). Hãy giải thích lý do và nêu 1 dòng code sửa.",
+                code: "def clean_name(name):\n    return name.strip().title()",
+                answer: "<b>Nguyên nhân:</b> Giá trị thiếu (`NaN`) trong Pandas có kiểu dữ liệu là `float`. Kiểu `float` không sở hữu phương thức xử lý chuỗi `.strip()`.<br><b>Cách sửa:</b> `if not isinstance(name, str): return \"\"` hoặc viết `if pd.isna(name): return \"\"` trước khi gọi `.strip()`."
+            },
+            {
+                id: "tl1_3",
+                num: "5.3",
+                text: "Xét hàm `parse_code(code)` dưới đây. Tại sao lệnh `code.upper()` vẫn bị ngắt chương trình dù đã dùng `try-except`?",
+                code: "def parse_code(code):\n    code = code.upper()\n    try:\n        return int(code)\n    except Exception:\n        return 0",
+                answer: "<b>Nguyên nhân:</b> Khối `try-except` chỉ bảo vệ dòng `return int(code)`. Dòng `code.upper()` nằm bên ngoài và phía trước `try`, nên khi `code = None` hoặc số, nó ngắt chương trình ngay ở dòng đầu tiên trước khi kịp chạm tới `try`.<br><b>Cách sửa:</b> Đưa dòng `code = code.upper()` vào bên trong khối `try`."
+            },
+            {
+                id: "tl1_4",
+                num: "5.4",
+                text: "Viết lại hàm `to_int_safe(val)` sao cho xử lý an toàn mọi trường hợp input: chuỗi `\"123\"`, chuỗi có phẩy `\"1,230\"`, giá trị `None`, chuỗi rỗng `\"\"`, hoặc số thực `12.5` mà không bị ngắt bởi bất kỳ lỗi nào.",
+                code: "# Hãy viết hàm hoàn chỉnh",
+                answer: "<b>Đáp án chuẩn:</b><br><pre class='code-block'>def to_int_safe(val):\n    if val is None:\n        return None\n    try:\n        if isinstance(val, str):\n            val = val.replace(\",\", \"\")\n        return int(float(val))\n    except (ValueError, TypeError):\n        return None</pre>"
+            },
+            {
+                id: "tl1_5",
+                num: "5.5",
+                text: "Trong Python, khác biệt giữa lỗi `TypeError` và `AttributeError` khi thao tác với đối tượng `None` là gì?",
+                code: "# So sánh None + 5 vs None.method()",
+                answer: "<b>Giải thích:</b><br>- `TypeError`: Xảy ra khi thực hiện phép toán/truyền tham số không hợp lệ với `None` (VD: `None + 5` hoặc `len(None)`).<br>- `AttributeError`: Xảy ra khi cố gắng truy cập thuộc tính hoặc gọi phương thức không tồn tại trên `None` (VD: `None.replace()`, `None.upper()`)."
+            }
+        ];
+
+        const questionsTuLuan2 = [
+            {
+                id: "tl2_1",
+                num: "6.1",
+                text: "Đoạn code tính điểm trung bình của các sinh viên 'có điểm', nhưng điều kiện lọc dùng `if v`. Cho biết con số chính xác được in ra và giải thích vì sao kết quả bị sai lệch.",
+                code: "diem = {\"An\": 8, \"Bình\": 0, \"Chi\": None, \"Dũng\": 6, \"Em\": 0}\nco_diem = {k: v for k, v in diem.items() if v}\nprint(sum(co_diem.values()) / len(co_diem))",
+                answer: "<b>Con số in ra:</b> <code>7.0</code> (lấy (8 + 6) / 2)<br><b>Giải thích sai lệch:</b> Trong Python, giá trị `0` bị đánh giá là `False` trong điều kiện `if v`. Do đó hai bạn 'Bình' và 'Em' (điểm 0) bị lọc bỏ oan chuộng cùng với 'Chi' (None). Tổng đúng phải là (8+0+6+0)/4 = 3.5. Để sửa cần viết `if v is not None`."
+            },
+            {
+                id: "tl2_2",
+                num: "6.2",
+                text: "Đoạn code sau dùng để lọc ra danh sách các giao dịch hợp lệ. Cho biết kết quả `len(valid_tx)` thu được là bao nhiêu?",
+                code: "transactions = [100.0, 0.0, None, 250.5, 0, -50.0]\nvalid_tx = [tx for tx in transactions if tx]\nprint(len(valid_tx))",
+                answer: "<b>Kết quả:</b> <code>3</code><br><b>Giải thích:</b> Các giá trị `0.0`, `0`, và `None` đều bị coi là Falsy và bị loại bỏ. Danh sách còn lại chỉ có `[100.0, 250.5, -50.0]` (độ dài 3)."
+            },
+            {
+                id: "tl2_3",
+                num: "6.3",
+                text: "Làm thế nào để lọc danh sách các chuỗi trong Python sao cho giữ lại cả chuỗi rỗng `\"\"` nhưng loại bỏ giá trị `None`?",
+                code: "data = [\"Apple\", \"\", None, \"Banana\", None]",
+                answer: "<b>Đáp án:</b> Dùng điều kiện `if x is not None`.<br><pre class='code-block'>filtered = [x for x in data if x is not None]\n# Kết quả: ['Apple', '', 'Banana']</pre>Nếu dùng `if x:`, chuỗi rỗng `\"\"` sẽ bị loại mất."
+            },
+            {
+                id: "tl2_4",
+                num: "6.4",
+                text: "Liệt kê ít nhất 6 giá trị trong Python được tự động ép về `False` (Falsy) khi đưa vào biểu thức điều kiện `if`.",
+                code: "# Liệt kê các Falsy values",
+                answer: "<b>Danh sách các giá trị Falsy trong Python:</b><br>1. `None`<br>2. `False`<br>3. Các số không: `0`, `0.0`, `0j`<br>4. Chuỗi rỗng: `\"\"`<br>5. Các danh sách/tập hợp rỗng: `[]`, `()`, `{}` (dict rỗng), `set()`."
+            },
+            {
+                id: "tl2_5",
+                num: "6.5",
+                text: "Sửa đoạn code sau để tính đúng tổng tiền thu nhập, biết rằng thu nhập có thể bằng 0.",
+                code: "incomes = [2000, 0, None, 1500, 0, None]\nvalid_incomes = [i for i in incomes if i]\ntotal = sum(valid_incomes)",
+                answer: "<b>Code sửa chuẩn:</b><br><pre class='code-block'>incomes = [2000, 0, None, 1500, 0, None]\nvalid_incomes = [i for i in incomes if i is not None]\ntotal = sum(valid_incomes) # Kết quả = 3500</pre>"
+            }
+        ];
+
+        const questionsNumPyPandas = [
+            {
+                id: "np1",
+                num: "7.1 (NumPy)",
+                text: "Cho mảng `arr = np.array([1, 2, 3, 4, 5, 6])`. Biểu thức `arr[arr % 2 == 0]` trả về kết quả gì?",
+                code: "import numpy as np\narr = np.array([1, 2, 3, 4, 5, 6])\nprint(arr[arr % 2 == 0])",
+                options: [
+                    { label: "[False, True, False, True, False, True]", text: "[False, True, False, True, False, True]" },
+                    { label: "[2, 4, 6]", text: "[2, 4, 6]" },
+                    { label: "[1, 3, 5]", text: "[1, 3, 5]" },
+                    { label: "Báo lỗi", text: "Báo lỗi" }
+                ],
+                correct: 1,
+                explain: "`arr % 2 == 0` tạo ra một Boolean Mask `[False, True, False, True, False, True]`. Khi truyền mask này vào `arr[...]` (Boolean Indexing), NumPy sẽ lọc ra các phần tử tương ứng với `True`, tức là `[2, 4, 6]`."
+            },
+            {
+                id: "np2",
+                num: "7.2 (NumPy)",
+                text: "Khác biệt quan trọng về bộ nhớ giữa Slicing trong Python List và Slicing trong NumPy Array là gì?",
+                code: "# Python list: sub = lst[1:3]\n# NumPy array: sub = arr[1:3]",
+                options: [
+                    { label: "Python List tạo Copy mới; NumPy Slicing tạo View (chia sẻ bộ nhớ với array gốc).", text: "Python List tạo Copy mới; NumPy Slicing tạo View (chia sẻ bộ nhớ với array gốc)." },
+                    { label: "NumPy tạo Copy mới; Python List tạo View.", text: "NumPy tạo Copy mới; Python List tạo View." },
+                    { label: "Cả hai đều tạo bản sao độc lập (Copy).", text: "Cả hai đều tạo bản sao độc lập (Copy)." },
+                    { label: "Cả hai đều chia sẻ bộ nhớ (View).", text: "Cả hai đều chia sẻ bộ nhớ (View)." }
+                ],
+                correct: 0,
+                explain: "Slicing trên NumPy array tạo ra một `View`. Nếu thay đổi phần tử trên slice đó, mảng gốc sẽ bị thay đổi theo! Để tạo bản sao độc lập trên NumPy cần dùng `.copy()`."
+            },
+            {
+                id: "pd1",
+                num: "7.3 (Pandas)",
+                text: "Trong Pandas, sự khác biệt giữa `df.loc[]` và `df.iloc[]` là gì?",
+                code: "# df.loc vs df.iloc",
+                options: [
+                    { label: "loc dựa trên Label (nhãn chỉ số/tên cột); iloc dựa trên Integer Position (vị trí số nguyên từ 0).", text: "loc dựa trên Label (nhãn chỉ số/tên cột); iloc dựa trên Integer Position (vị trí số nguyên từ 0)." },
+                    { label: "loc dùng cho dòng; iloc dùng cho cột.", text: "loc dùng cho dòng; iloc dùng cho cột." },
+                    { label: "loc chậm hơn iloc 100 lần.", text: "loc chậm hơn iloc 100 lần." },
+                    { label: "Cả hai hoàn toàn giống nhau.", text: "Cả hai hoàn toàn giống nhau." }
+                ],
+                correct: 0,
+                explain: "`loc` tìm kiếm theo nhãn tên (Label-based), slicing bao gồm CẢ điểm cuối. `iloc` tìm kiếm theo vị trí chỉ số số nguyên 0-indexed (Integer-position based), slicing KHÔNG bao gồm điểm cuối."
+            },
+            {
+                id: "pd2",
+                num: "7.4 (Pandas)",
+                text: "Cho DataFrame `df` có cột `'Age'` chứa một số giá trị thiếu `NaN`. Lệnh nào giúp điền giá trị trung bình vào các vị trí `NaN` đó?",
+                code: "import pandas as pd",
+                options: [
+                    { label: "df['Age'].dropna()", text: "df['Age'].dropna()" },
+                    { label: "df['Age'].fillna(df['Age'].mean())", text: "df['Age'].fillna(df['Age'].mean())" },
+                    { label: "df['Age'].replace(0, df['Age'].mean())", text: "df['Age'].replace(0, df['Age'].mean())" },
+                    { label: "df['Age'].isna().sum()", text: "df['Age'].isna().sum()" }
+                ],
+                correct: 1,
+                explain: "Hàm `.fillna()` dùng để thay thế các giá trị khuyết thiếu `NaN`. Truyền `df['Age'].mean()` vào để thay bằng giá trị trung bình."
+            },
+            {
+                id: "pd3",
+                num: "7.5 (Pandas)",
+                text: "Lệnh nào sau đây trả về số lượng dòng và số lượng cột dưới dạng tuple `(n_rows, n_cols)` của một DataFrame `df`?",
+                code: "df.____",
+                options: [
+                    { label: "df.size", text: "df.size" },
+                    { label: "df.shape", text: "df.shape" },
+                    { label: "df.ndim", text: "df.ndim" },
+                    { label: "df.info()", text: "df.info()" }
+                ],
+                correct: 1,
+                explain: "`df.shape` trả về tuple `(số_dòng, số_cột)`. `df.size` trả về tổng số ô (`số dòng * số cột`)."
+            }
+        ];
+
+        // Render Functions
+        function renderMCQ(questions, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = questions.map((q, idx) => `
+                <div class="border rounded-lg p-5 bg-white shadow-sm" id="card-${q.id}">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-bold text-gray-700">Câu hỏi ${q.num}</span>
+                        <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 điểm</span>
+                    </div>
+                    <p class="mb-3 text-gray-800 font-medium">${q.text.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-red-600 px-1 py-0.5 rounded font-mono text-sm">$1</code>')}</p>
+                    ${q.code ? `<div class="code-block mb-4 text-sm">${escapeHtml(q.code)}</div>` : ''}
+                    
+                    <div class="space-y-2">
+                        ${q.options.map((opt, oIdx) => `
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" id="label-${q.id}-${oIdx}">
+                                <input type="radio" name="opt-${q.id}" value="${oIdx}" onclick="checkMCQ('${q.id}', ${oIdx}, ${q.correct})" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-3 text-sm text-gray-700">${opt.text.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-red-600 px-1 py-0.5 rounded font-mono text-xs">$1</code>')}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    <div id="explain-${q.id}" class="hidden explanation-box">
+                        <div class="flex items-start">
+                            <i id="icon-${q.id}" class="fa-solid mt-0.5 mr-2"></i>
+                            <div class="text-sm text-gray-700" id="explain-text-${q.id}"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTuLuan(questions, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = questions.map((q) => `
+                <div class="border rounded-lg p-5 bg-white shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-bold text-gray-700">Câu hỏi ${q.num}</span>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded font-semibold">Tự Luận - 2 điểm</span>
+                    </div>
+                    <p class="mb-3 text-gray-800 font-medium">${q.text.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-red-600 px-1 py-0.5 rounded font-mono text-sm">$1</code>')}</p>
+                    ${q.code ? `<div class="code-block mb-4 text-sm">${escapeHtml(q.code)}</div>` : ''}
+                    
+                    <div class="mb-3">
+                        <textarea id="input-${q.id}" rows="3" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Nhập câu trả lời hoặc suy nghĩ của bạn vào đây..."></textarea>
+                    </div>
+
+                    <button onclick="toggleAnswer('${q.id}')" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-semibold py-2 px-4 rounded shadow transition-colors flex items-center">
+                        <i class="fa-solid fa-eye mr-1.5"></i> <span id="btn-text-${q.id}">Xem Đáp Án Chuẩn & Giải Thích</span>
+                    </button>
+
+                    <div id="ans-${q.id}" class="hidden explanation-box border-blue-300 bg-blue-50/50">
+                        <div class="text-sm text-gray-800 space-y-1">
+                            ${q.answer}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkMCQ(qId, selectedIdx, correctIdx) {
+            const explainBox = document.getElementById(`explain-${qId}`);
+            const explainText = document.getElementById(`explain-text-${qId}`);
+            const icon = document.getElementById(`icon-${qId}`);
+            
+            // Find question data
+            const allMCQs = [...questionsSet, ...questionsException, ...questionsFString, ...questionsCSV, ...questionsNumPyPandas];
+            const qData = allMCQs.find(q => q.id === qId);
+
+            explainBox.classList.remove('hidden');
+
+            if (selectedIdx === correctIdx) {
+                explainBox.className = "explanation-box bg-green-50 border-green-300";
+                icon.className = "fa-solid fa-circle-check text-green-600 mt-0.5 mr-2";
+                explainText.innerHTML = `<span class="font-bold text-green-800">Chính xác!</span> ${qData.explain.replace(/`([^`]+)`/g, '<code class="bg-green-100 text-green-900 px-1 py-0.5 rounded font-mono text-xs">$1</code>')}`;
+            } else {
+                explainBox.className = "explanation-box bg-red-50 border-red-300";
+                icon.className = "fa-solid fa-circle-xmark text-red-600 mt-0.5 mr-2";
+                explainText.innerHTML = `<span class="font-bold text-red-800">Chưa đúng!</span> ${qData.explain.replace(/`([^`]+)`/g, '<code class="bg-red-100 text-red-900 px-1 py-0.5 rounded font-mono text-xs">$1</code>')}`;
+            }
+        }
+
+        function toggleAnswer(qId) {
+            const ansBox = document.getElementById(`ans-${qId}`);
+            const btnText = document.getElementById(`btn-text-${qId}`);
+            if (ansBox.classList.contains('hidden')) {
+                ansBox.classList.remove('hidden');
+                btnText.innerText = "Ẩn Đáp Án";
+            } else {
+                ansBox.classList.add('hidden');
+                btnText.innerText = "Xem Đáp Án Chuẩn & Giải Thích";
+            }
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initialize All Sections
+        window.onload = function() {
+            renderMCQ(questionsSet, 'q-set-container');
+            renderMCQ(questionsException, 'q-exception-container');
+            renderMCQ(questionsFString, 'q-fstring-container');
+            renderMCQ(questionsCSV, 'q-csv-container');
+            renderTuLuan(questionsTuLuan1, 'q-tuluan1-container');
+            renderTuLuan(questionsTuLuan2, 'q-tuluan2-container');
+            renderMCQ(questionsNumPyPandas, 'q-numpy-pandas-container');
+        };
+    </script>
+</body>
+</html>

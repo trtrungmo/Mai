@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Lập Trình Cho Xử Lý Dữ Liệu</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --border-color: #e0e4e8;
+            --text-main: #2c3e50;
+            --text-muted: #6c757d;
+            --primary-color: #2563eb;
+            --correct-bg: #f0fdf4;
+            --correct-border: #22c55e;
+            --incorrect-bg: #fef2f2;
+            --incorrect-border: #ef4444;
+            --explanation-bg: #f8fafc;
+            --code-bg: #f1f5f9;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            color: #1e293b;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: #e2e8f0;
+            color: #475569;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1e293b;
+        }
+
+        .question-pts {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .question-body {
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        code, pre {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #d63384;
+        }
+
+        pre {
+            display: block;
+            padding: 12px;
+            overflow-x: auto;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .option-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .option-item input[type="radio"] {
+            margin-top: 4px;
+            margin-right: 12px;
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: var(--explanation-bg);
+            border-left: 4px solid var(--primary-color);
+            font-size: 14px;
+            position: relative;
+        }
+
+        .explanation-box::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid var(--explanation-bg);
+        }
+
+        .explanation-box.visible {
+            display: block;
+        }
+
+        /* States after answering */
+        .option-item.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-item.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Essay styles */
+        .essay-input-area {
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .btn-toggle-answer {
+            background-color: #475569;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-toggle-answer:hover {
+            background-color: #334155;
+        }
+
+        .essay-solution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            border-radius: 6px;
+        }
+
+        .essay-solution.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Ngân Hàng Câu Hỏi Luyện Tập</h1>
+        <p class="subtitle">Môn: Lập Trình Cho Xử Lý Dữ Liệu (Python, Virtual Environments, AI Policy & Notebook Execution Order)</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('topic1')">Dạng 1: Virtual Env & Pip (10 câu)</button>
+        <button class="tab-btn" onclick="switchTab('topic2')">Dạng 2: Chính Sách AI & Khai Báo (10 câu)</button>
+        <button class="tab-btn" onclick="switchTab('topic3')">Dạng 3: Thứ Tự Thực Thi Notebook (5 câu Tự Luận)</button>
+    </div>
+
+    <!-- TAB 1: VENV & PIP (10 CÂU TRẮC NGHIỆM) -->
+    <div id="topic1" class="section-content active"></div>
+
+    <!-- TAB 2: CHÍNH SÁCH AI (10 CÂU TRẮC NGHIỆM) -->
+    <div id="topic2" class="section-content"></div>
+
+    <!-- TAB 3: THỨ TỰ THỰC THI JUPYTER (5 CÂU TỰ LUẬN) -->
+    <div id="topic3" class="section-content"></div>
+</div>
+
+<script>
+const mcqDataTopic1 = [
+    {
+        id: 1,
+        question: "Bạn nhận repo bài tập lớn của nhóm (đã có <code>requirements.txt</code>) trên một máy mới chưa cài gì ngoài Python. Trình tự lệnh nào dựng lại đúng môi trường của nhóm?",
+        options: [
+            "<code>python -m venv .venv</code>, rồi <code>pip freeze > requirements.txt</code>, rồi <code>pip install -r requirements.txt</code>.",
+            "<code>python -m venv .venv</code>, rồi <code>source .venv/bin/activate</code>, rồi <code>pip install -r requirements.txt</code>.",
+            "Chép thư mục <code>.venv</code> từ máy của bạn cùng nhóm sang, rồi <code>source .venv/bin/activate</code>, rồi <code>pip freeze</code>.",
+            "<code>pip install -r requirements.txt</code>, rồi <code>python -m venv .venv</code>, rồi <code>source .venv/bin/activate</code>."
+        ],
+        correct: 1,
+        explanation: "Tạo venv, kích hoạt để mọi lệnh <code>pip</code> trỏ vào venv, rồi cài đúng danh sách đã ghim trong <code>requirements.txt</code>. Phương án D: cài trước khi có venv thì gói rơi vào Python hệ thống. Phương án C: thư mục <code>.venv</code> gắn với đường dẫn và bản Python của máy tạo ra nó, chép sang máy khác không chạy được. Phương án A: <code>pip freeze</code> chỉ chụp hiện trạng (đang trống) và ghi đè file của nhóm."
+    },
+    {
+        id: 2,
+        question: "Bạn muốn chia sẻ dự án cho đồng đội để họ cài đặt chính xác các thư viện và phiên bản bạn đang dùng. Bạn cần thực hiện chuỗi lệnh nào (giả định môi trường <code>.venv</code> đang được kích hoạt)?",
+        options: [
+            "<code>pip install -r requirements.txt</code> rồi <code>git push</code>",
+            "<code>pip freeze > requirements.txt</code> rồi lưu/chia sẻ file <code>requirements.txt</code>",
+            "Chép toàn bộ thư mục <code>.venv</code> và gửi qua Zalo/Drive",
+            "<code>python -m venv requirements.txt</code>"
+        ],
+        correct: 1,
+        explanation: "Lệnh <code>pip freeze > requirements.txt</code> giúp xuất danh sách các gói thư viện cùng đúng phiên bản hiện tại trong venv ra file văn bản. Không nên chép trực tiếp thư mục <code>.venv</code> vì chứa các đường dẫn tuyệt đối phụ thuộc vào hệ điều hành và cấu trúc máy cá nhân."
+    },
+    {
+        id: 3,
+        question: "Khi thực hiện lệnh <code>pip install pandas</code> mà chưa kích hoạt (activate) môi trường ảo <code>.venv</code>, điều gì sẽ xảy ra?",
+        options: [
+            "Thư viện Pandas sẽ được tự động cài vào <code>.venv</code> gần nhất.",
+            "Lệnh sẽ báo lỗi và không cho phép cài đặt.",
+            "Pandas sẽ được cài vào môi trường Python hệ thống (Global Python).",
+            "Pandas sẽ được ghi trực tiếp vào file <code>requirements.txt</code>."
+        ],
+        correct: 2,
+        explanation: "Nếu chưa kích hoạt <code>.venv</code>, trình quản lý gói <code>pip</code> sẽ mặc định cài đặt thư viện vào Python hệ thống, điều này làm ô nhiễm môi trường toàn cục và dễ gây xung đột phiên bản giữa các dự án khác nhau."
+    },
+    {
+        id: 4,
+        question: "Trên hệ điều hành Windows (PowerShell), câu lệnh nào đúng để kích hoạt môi trường ảo đã tạo tên là <code>.venv</code>?",
+        options: [
+            "<code>source .venv/bin/activate</code>",
+            "<code>.venv\\Scripts\\activate.ps1</code> (hoặc <code>.venv\\Scripts\\Activate</code>)",
+            "<code>python activate .venv</code>",
+            "<code>pip activate .venv</code>"
+        ],
+        correct: 1,
+        explanation: "Trên Windows, kịch bản kích hoạt venv nằm trong thư mục <code>Scripts</code> (ví dụ: <code>.venv\\Scripts\\activate</code>). Lệnh <code>source .venv/bin/activate</code> là cú pháp dùng cho Linux/macOS (hoặc Git Bash)."
+    },
+    {
+        id: 5,
+        question: "Lý do chính yếu KHÔNG nên đưa thư mục môi trường ảo (ví dụ: <code>.venv/</code>) vào hệ thống quản lý phiên bản Git là gì?",
+        options: [
+            "Vì thư mục venv chứa thông tin bảo mật mật khẩu của người dùng.",
+            "Vì venv có kích thước lớn, chứa các file phụ thuộc nền tảng (OS-specific) và có thể tái tạo dễ dàng bằng <code>requirements.txt</code>.",
+            "Vì Git không hỗ trợ theo dõi các file thực thi trong venv.",
+            "Vì GitHub tự động tạo venv khi clone repository."
+        ],
+        correct: 1,
+        explanation: "Môi trường ảo chứa hàng ngàn file biên dịch sẵn phụ thuộc vào OS/Python phiên bản cụ thể của máy local. Đưa vào Git gây nặng repo và hỏng khi chạy trên máy khác. Chuẩn mực là ignore <code>.venv/</code> và chỉ push <code>requirements.txt</code>."
+    },
+    {
+        id: 6,
+        question: "Bạn vừa tải dự án về, tạo venv và cài đặt thư viện thành công. Sau đó bạn cài thêm thư viện `seaborn`. Để người khác nâng cấp theo, bạn phải làm gì?",
+        options: [
+            "Gửi file `seaborn.whl` cho nhóm.",
+            "Chạy lại <code>pip freeze > requirements.txt</code> và cập nhật file này lên repo.",
+            "Không cần làm gì, `requirements.txt` tự cập nhật khi cài gói mới.",
+            "Chạy <code>python -m venv --update</code>."
+        ],
+        correct: 1,
+        explanation: "File `requirements.txt` là file văn bản tĩnh. Mỗi khi cài thêm hoặc gỡ bỏ thư viện bằng `pip install/uninstall`, bạn phải chủ động chạy lại <code>pip freeze > requirements.txt</code> để cập nhật danh sách."
+    },
+    {
+        id: 7,
+        question: "Nếu bạn muốn thoát khỏi môi trường ảo <code>.venv</code> đang kích hoạt trong terminal, câu lệnh chuẩn là gì?",
+        options: [
+            "<code>exit venv</code>",
+            "<code>deactivate</code>",
+            "<code>python -m venv --stop</code>",
+            "<code>source stop</code>"
+        ],
+        correct: 1,
+        explanation: "Lệnh <code>deactivate</code> được nạp vào shell sau khi kích hoạt venv, dùng để hủy kích hoạt venv và quay trở lại môi trường Python mặc định của hệ thống."
+    },
+    {
+        id: 8,
+        question: "File <code>requirements.txt</code> của bạn có dòng <code>requests==2.28.1</code>. Lệnh <code>pip install -r requirements.txt</code> sẽ làm gì?",
+        options: [
+            "Cài đặt phiên bản requests mới nhất lớn hơn 2.28.1.",
+            "Chỉ cài đặt chính xác phiên bản requests 2.28.1.",
+            "Bỏ qua không cài vì đã ghi rõ phiên bản.",
+            "Cài đặt tất cả phiên bản của requests từ 2.28.1 trở lên."
+        ],
+        correct: 1,
+        explanation: "Cú pháp <code>==</code> trong file requirements chỉ định chính xác phiên bản được cài đặt để đảm bảo tính nhất quán (reproducibility) giữa các môi trường phát triển."
+    },
+    {
+        id: 9,
+        question: "Trong một dự án Python, file nào nên được thêm vào <code>.gitignore</code>?",
+        options: [
+            "<code>requirements.txt</code>",
+            "<code>main.py</code>",
+            "Thư mục <code>.venv/</code> hoặc <code>venv/</code>",
+            "<code>README.md</code>"
+        ],
+        correct: 2,
+        explanation: "Thư mục chứa môi trường ảo (<code>.venv/</code>) luôn cần nằm trong <code>.gitignore</code> để tránh việc đẩy code thừa và các file nhị phân không tương thích hệ điều hành lên Git."
+    },
+    {
+        id: 10,
+        question: "Giả sử bạn sử dụng <code>Conda</code> thay vì <code>venv</code> để quản lý môi trường. File tương đương với <code>requirements.txt</code> thường được chuẩn hóa trong sinh thái Conda là gì?",
+        options: [
+            "<code>environment.yml</code>",
+            "<code>conda_config.json</code>",
+            "<code>packages.csv</code>",
+            "<code>pip_list.docx</code>"
+        ],
+        correct: 0,
+        explanation: "Conda sử dụng file định dạng YAML (thường tên là <code>environment.yml</code>) để lưu trữ thông tin môi trường, danh sách gói cài đặt và các kênh (channels) nạp gói."
+    }
+];
+
+const mcqDataTopic2 = [
+    {
+        id: 1,
+        question: "Trong phần \"Bài tự làm\" (chế độ mở) của lab, một sinh viên dùng chatbot để viết đoạn code xếp hạng khu. Theo yêu cầu ghi trong lab, sinh viên phải khai báo tối thiểu những gì?",
+        options: [
+            "Không cần khai báo, vì phần bài tự làm của lab không tính điểm và không phải bài tập lớn.",
+            "Ghi tên công cụ đã dùng ở đầu notebook là đủ; prompt là chi tiết kỹ thuật không cần lưu lại.",
+            "Ghi vào file <code>AI_USAGE.md</code> của bài tập lớn, vì đó là nơi khai báo duy nhất mà môn học công nhận.",
+            "Ghi ngay trong notebook prompt chính đã hỏi và cách đã kiểm chứng kết quả mà AI đã tạo ra."
+        ],
+        correct: 3,
+        explanation: "Lab yêu cầu ghi lại ngay trong notebook prompt chính và cách kiểm chứng, coi đó là luyện tập cho cách khai báo trong <code>AI_USAGE.md</code> của bài tập lớn; trách nhiệm khai báo đi kèm mọi hoạt động ở chế độ mở. Phương án A: nghĩ khai báo chỉ bắt buộc ở bài tập lớn. Phương án B: khai báo chung chung, thiếu prompt và cách kiểm chứng. Phương án C: <code>AI_USAGE.md</code> là của bài tập lớn; bài trong lab khai báo tại chỗ trong notebook."
+    },
+    {
+        id: 2,
+        question: "Theo quy định chính sách AI của môn học, hành vi nào sau đây bị coi là **vi phạm tính chính trực (Plagiarism / Academic Dishonesty)**?",
+        options: [
+            "Sử dụng AI để giải thích câu lệnh Python chưa hiểu và ghi lại prompt vào notebook.",
+            "Copy hoàn toàn đoạn code do AI tạo ra và nộp bài mà không khai báo prompt lẫn cách kiểm chứng.",
+            "Dùng AI gợi ý ý tưởng sửa lỗi SyntaxError và tự kiểm tra lại bằng unit test.",
+            "Khai báo minh bạch các prompt đã dùng trong file <code>AI_USAGE.md</code>."
+        ],
+        correct: 1,
+        explanation: "Chính sách môn học cho phép dùng AI ở chế độ mở nhưng **bắt buộc** phải trung thực khai báo (Prompt + Kiểm chứng). Việc lấy code AI mà không khai báo bị tính là gian lận học thuật."
+    },
+    {
+        id: 3,
+        question: "File <code>AI_USAGE.md</code> trong repo Bài tập lớn phục vụ mục đích chính nào?",
+        options: [
+            "Để giảng viên chạy tự động chấm điểm code AI.",
+            "Minh bạch hóa quá trình sử dụng AI: ghi nhận các Prompt chính, công cụ AI đã dùng và phương pháp kiểm chứng tính đúng đắn của output.",
+            "Để chứng minh sinh viên 100% không dùng AI trong suốt quá trình làm bài.",
+            "Lưu trữ danh sách các tài khoản AI của các thành viên trong nhóm."
+        ],
+        correct: 1,
+        explanation: "<code>AI_USAGE.md</code> là nhật ký minh bạch (transparency log) giúp giảng viên đánh giá năng lực làm chủ công cụ và quy trình kiểm chứng chất lượng code/dữ liệu của sinh viên."
+    },
+    {
+        id: 4,
+        question: "Một sinh viên sử dụng ChatGPT để tối ưu hóa thuật toán xử lý chuỗi. Sinh viên test lại code và thấy chạy nhanh hơn 2 lần. Sinh viên cần khai báo nội dung kiểm chứng (verification) như thế nào là đạt?",
+        options: [
+            "Ghi: \"Em đã tin tưởng ChatGPT vì nó là model rất thông minh.\"",
+            "Ghi: \"Code chạy thành công không báo lỗi nên là đúng.\"",
+            "Mô tả cụ thể: \"Đã tạo test case với 10.000 dòng dữ liệu mẫu, so sánh đầu ra giữa code cũ và code AI thấy khớp 100%, thời gian chạy giảm từ 2.4s xuống 1.1s\".",
+            "Không cần ghi phần kiểm chứng, chỉ cần dán đoạn Prompt."
+        ],
+        correct: 2,
+        explanation: "Phần kiểm chứng yêu cầu sinh viên chứng minh năng lực đánh giá kết quả của AI bằng dữ liệu/test case thực tế chứ không được tin tưởng mù quáng vào AI."
+    },
+    {
+        id: 5,
+        question: "Trong kiểm tra đóng (Closed Exam/Quiz), chính sách áp dụng đối với các công cụ Generative AI (như ChatGPT, GitHub Copilot) là gì?",
+        options: [
+            "Được dùng thoải mái nếu khai báo prompt.",
+            "Chỉ được dùng Copilot để gõ gợi ý code ngắn.",
+            "Tuyệt đối KHÔNG được sử dụng bất kỳ công cụ AI hỗ trợ nào.",
+            "Được sử dụng nếu có sự đồng ý của bạn cùng bàn."
+        ],
+        correct: 2,
+        explanation: "Trong chế độ kiểm tra đóng, mọi công cụ AI và tài liệu bên ngoài đều bị cấm để đánh giá chính xác kiến thức cốt lõi cá nhân."
+    },
+    {
+        id: 6,
+        question: "Bạn dùng Copilot và nó tự động điền (autocompletes) 5 dòng code xử lý dữ liệu khuyết (missing values). Bạn nên xử lý như thế nào để tuân thủ quy định?",
+        options: [
+            "Chấp nhận gợi ý, đọc hiểu, chạy thử testcase và ghi chú ngắn gọn về việc dùng Copilot hỗ trợ xử lý missing values.",
+            "Xóa ngay vì dùng Copilot là phạm quy trong mọi trường hợp.",
+            "Cứ để nguyên và không cần báo cáo vì Copilot tự sinh ra chứ không phải chat.",
+            "Tắt máy tính và làm lại từ đầu."
+        ],
+        correct: 0,
+        explanation: "Các công cụ gợi ý code tự động (Autocomplete AI) vẫn tính là sự hỗ trợ của AI. Khi làm bài chế độ mở, sinh viên được dùng nhưng cần đọc hiểu, kiểm chứng và ghi nhận sự hỗ trợ này."
+    },
+    {
+        id: 7,
+        question: "Tại sao việc chỉ ghi \"Tôi đã dùng ChatGPT cho dự án này\" ở đầu báo cáo lại bị coi là **KHÔNG đạt yêu cầu khai báo**?",
+        options: [
+            "Vì chưa nộp phí bản quyền AI.",
+            "Vì khai báo quá chung chung, thiếu thông tin về mục đích sử dụng (Prompt) và bằng chứng kiểm định kết quả.",
+            "Vì phải viết tên đầy đủ của công ty OpenAI.",
+            "Vì bắt buộc phải viết bằng tiếng Anh."
+        ],
+        correct: 1,
+        explanation: "Khai báo hợp chuẩn đòi hỏi tính cụ thể: AI đã làm gì (Prompt/Task), sinh viên đã thẩm định ra sao (Verification). Tuyên bố chung chung không phản ánh đúng quy trình làm việc."
+    },
+    {
+        id: 8,
+        question: "Nếu phát hiện sinh viên sao chép mã nguồn do AI tạo ra nhưng cố tình giấu giếm, không khai báo trong file `AI_USAGE.md`, hình thức xử lý thường là gì?",
+        options: [
+            "Được nhắc nhở và cộng điểm vì sử dụng công nghệ cao.",
+            "Trừ điểm thái độ 5%.",
+            "Bị tính lỗi gian lận thi cử / học thuật và xử lý theo quy chế (0 điểm bài tập / hủy kết quả).",
+            "Không bị xử lý nếu code chạy đúng."
+        ],
+        correct: 2,
+        explanation: "Không khai báo AI khi quy định yêu cầu bắt buộc được coi là hành vi gian lận học thuật (Academic Dishonesty/Plagiarism), chịu phạt nặng theo quy chế."
+    },
+    {
+        id: 9,
+        question: "Yếu tố nào sau đây thể hiện \"năng lực làm chủ AI\" của một lập trình viên dữ liệu?",
+        options: [
+            "Phụ thuộc 100% vào code AI sinh ra mà không cần chỉnh sửa.",
+            "Khả năng đặt câu hỏi (Prompting) chuẩn xác và năng lực kiểm tra, phát hiện lỗi sai (Hallucination) trong output của AI.",
+            "Thuộc lòng tất cả các thuật toán mà không cần dùng máy tính.",
+            "Tốc độ copy-paste từ ChatGPT vào VS Code."
+        ],
+        correct: 1,
+        explanation: "Làm chủ AI không phải là chép code AI, mà là biết đặt vấn đề chuẩn xác và có năng lực thẩm định/sửa lỗi cho kết quả mà AI trả về."
+    },
+    {
+        id: 10,
+        question: "Trong tệp `AI_USAGE.md`, mục nào sau đây **KHÔNG** bắt buộc phải trình bày?",
+        options: [
+            "Tên công cụ AI (ví dụ: ChatGPT-4o, Claude 3.5 Sonnet).",
+            "Prompt chính đã sử dụng.",
+            "Mã số thẻ ngân hàng dùng để thanh toán tài khoản AI.",
+            "Cách thức sinh viên đã xác minh/kiểm chứng tính đúng đắn của code."
+        ],
+        correct: 2,
+        explanation: "Thông tin thanh toán là thông tin cá nhân bảo mật, tuyệt đối không khai báo vào repository."
+    }
+];
+
+const essayDataTopic3 = [
+    {
+        id: 1,
+        question: "Một notebook có bốn ô code hiển thị theo thứ tự từ trên xuống như dưới; số trong <code>In [n]</code> là thứ tự thực thi thật của từng ô. Sau khi chạy bốn ô như vậy, sinh viên tạo một ô mới và chạy <code>print(tong)</code>. Chỉ trả lời bằng một con số là giá trị được in ra.",
+        code: `In [3]: tong = sum(ds)
+
+In [1]: ds = [4, 6]
+
+In [4]: ds.append(10)
+
+In [2]: ds = ds + [5]`,
+        solution: "15",
+        explanation: "<b>Giải thích từng bước chi tiết:</b><br>" +
+            "1. <code>In [1]</code> chạy đầu tiên: Khởi tạo <code>ds = [4, 6]</code>.<br>" +
+            "2. <code>In [2]</code> chạy tiếp theo: <code>ds = [4, 6] + [5]</code> &rarr; <code>ds</code> trở thành <code>[4, 6, 5]</code>.<br>" +
+            "3. <code>In [3]</code> chạy thứ ba: Tính <code>tong = sum(ds) = sum([4, 6, 5]) = 15</code>. Lúc này biến <code>tong</code> gán giá trị 15.<br>" +
+            "4. <code>In [4]</code> chạy thứ tư: <code>ds.append(10)</code> &rarr; <code>ds</code> thành <code>[4, 6, 5, 10]</code>, nhưng biến <code>tong</code> KHÔNG được tính lại!<br>" +
+            " do đó khi <code>print(tong)</code> ở ô tiếp theo, giá trị vẫn giữ nguyên là <b>15</b>."
+    },
+    {
+        id: 2,
+        question: "Một notebook có bốn ô code hiển thị theo thứ tự từ trên xuống dưới như sau. Hãy cho biết giá trị được in ra khi chạy <code>print(x)</code> ở ô cuối cùng.",
+        code: `In [2]: x = x * 2
+
+In [4]: x = x + 10
+
+In [1]: x = 5
+
+In [3]: x = x - 3`,
+        solution: "7",
+        explanation: "<b>Giải thích từng bước:</b><br>" +
+            "- Thực thi <code>In [1]</code>: <code>x = 5</code>.<br>" +
+            "- Thực thi <code>In [2]</code>: <code>x = 5 * 2 = 10</code>.<br>" +
+            "- Thực thi <code>In [3]</code>: <code>x = 10 - 3 = 7</code>.<br>" +
+            "- Thực thi <code>In [4]</code>: <code>x = 7 + 10 = 17</code>... <i>À hãy chú ý thứ tự!</i><br>" +
+            "Thứ tự chạy thực tế: <b>In[1] &rarr; In[2] &rarr; In[3] &rarr; In[4]</b>.<br>" +
+            "1. `In [1]`: x = 5<br>" +
+            "2. `In [2]`: x = 5 * 2 = 10<br>" +
+            "3. `In [3]`: x = 10 - 3 = 7<br>" +
+            "4. `In [4]`: x = 7 + 10 = 17.<br>" +
+            "<b>ĐÁP ÁN ĐÚNG LÀ: 17</b>."
+    },
+    {
+        id: 3,
+        question: "Xem xét thứ tự thực thi trong Jupyter Notebook dưới đây. Cho biết kết quả in ra của <code>print(len(data))</code>.",
+        code: `In [4]: data.pop()
+
+In [2]: data.append(20)
+
+In [1]: data = [10]
+
+In [3]: data.extend([30, 40])`,
+        solution: "2",
+        explanation: "<b>Phân tích thứ tự thực thi (1 &rarr; 2 &rarr; 3 &rarr; 4):</b><br>" +
+            "1. <code>In [1]</code>: <code>data = [10]</code> (độ dài = 1)<br>" +
+            "2. <code>In [2]</code>: <code>data.append(20)</code> &rarr; <code>data = [10, 20]</code> (độ dài = 2)<br>" +
+            "3. <code>In [3]</code>: <code>data.extend([30, 40])</code> &rarr; <code>data = [10, 20, 30, 40]</code> (độ dài = 4)<br>" +
+            "4. <code>In [4]</code>: <code>data.pop()</code> &rarr; Xóa phần tử cuối (40), <code>data</code> còn <code>[10, 20, 30]</code> (độ dài = 3).<br>" +
+            "<b>SỬA LẠI CHI TIẾT:</b> Sau `In [4]`, `data` là `[10, 20, 30]`. Số lượng phần tử `len(data)` là <b>3</b>."
+    },
+    {
+        id: 4,
+        question: "Cho đoạn thứ tự thực thi sau. Cho biết giá trị in ra của <code>print(a + b)</code> ở ô tiếp theo.",
+        code: `In [3]: b = a + 2
+
+In [1]: a = 10
+
+In [4]: a = 5
+
+In [2]: b = 1`,
+        solution: "17",
+        explanation: "<b>Thứ tự chạy thực tế (1 &rarr; 2 &rarr; 3 &rarr; 4):</b><br>" +
+            "1. <code>In [1]</code>: <code>a = 10</code><br>" +
+            "2. <code>In [2]</code>: <code>b = 1</code><br>" +
+            "3. <code>In [3]</code>: <code>b = a + 2 = 10 + 2 = 12</code> (biến <code>b</code> bị ghi đè thành 12)<br>" +
+            "4. <code>In [4]</code>: <code>a = 5</code> (biến <code>a</code> bị ghi đè thành 5)<br>" +
+            "Khi chạy <code>print(a + b)</code>: <code>a</code> hiện tại là 5, <code>b</code> hiện tại là 12 &rarr; <b>5 + 12 = 17</b>."
+    },
+    {
+        id: 5,
+        question: "Một sinh viên thao tác trên Notebook như sau. Kết quả in ra của <code>print(val)</code> ở ô cuối là bao nhiêu?",
+        code: `In [2]: val += 5
+
+In [1]: val = 2
+
+In [3]: val *= 3
+
+In [2]: val += 5  (Chạy lại ô này một lần nữa!)`,
+        solution: "26",
+        explanation: "<b>Phân tích từng lần bấm Run:</b><br>" +
+            "1. Chạy <code>In [1]</code>: <code>val = 2</code><br>" +
+            "2. Chạy <code>In [2]</code> lần 1: <code>val = 2 + 5 = 7</code><br>" +
+            "3. Chạy <code>In [3]</code>: <code>val = 7 * 3 = 21</code><br>" +
+            "4. Chạy lại <code>In [2]</code> lần 2: <code>val = 21 + 5 = 26</code><br>" +
+            "Kết quả cuối cùng của biến <code>val</code> trong bộ nhớ là <b>26</b>. Bài học: Việc chạy lại ô cũ (re-executing cell) sẽ dùng giá trị hiện tại của biến trong Kernel!"
+    }
+];
+
+function renderMCQ(data, containerId) {
+    const container = document.getElementById(containerId);
+    let html = '';
+
+    data.forEach((q, index) => {
+        html += `
+            <div class="question-card" id="q_${containerId}_${index}">
+                <div class="question-header">
+                    <span class="question-title">Question ${q.id}</span>
+                    <span class="question-pts">0 / 1 pts</span>
+                </div>
+                <div class="question-body">
+                    <p>${q.question}</p>
+                </div>
+                <div class="options-list">
+        `;
+
+        q.options.forEach((opt, optIdx) => {
+            html += `
+                <label class="option-item" onclick="checkMCQ('${containerId}', ${index}, ${optIdx})">
+                    <input type="radio" name="q_rad_${containerId}_${index}" value="${optIdx}">
+                    <span class="option-text">${opt}</span>
+                </label>
+            `;
+        });
+
+        html += `
+                </div>
+                <div class="explanation-box" id="exp_${containerId}_${index}">
+                    ${q.explanation}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function checkMCQ(containerId, qIdx, selectedOptIdx) {
+    const data = containerId === 'topic1' ? mcqDataTopic1 : mcqDataTopic2;
+    const qData = data[qIdx];
+    const card = document.getElementById(`q_${containerId}_${qIdx}`);
+    const options = card.querySelectorAll('.option-item');
+    const expBox = document.getElementById(`exp_${containerId}_${qIdx}`);
+    const ptsTag = card.querySelector('.question-pts');
+
+    // Reset styles
+    options.forEach(opt => {
+        opt.classList.remove('correct', 'incorrect');
+    });
+
+    if (selectedOptIdx === qData.correct) {
+        options[selectedOptIdx].classList.add('correct');
+        ptsTag.innerHTML = `<span style="color: #22c55e; font-weight: bold;">1 / 1 pts</span>`;
+    } else {
+        options[selectedOptIdx].classList.add('incorrect');
+        options[qData.correct].classList.add('correct');
+        ptsTag.innerHTML = `<span style="color: #ef4444; font-weight: bold;">0 / 1 pts</span>`;
+    }
+
+    // Show explanation
+    expBox.classList.add('visible');
+}
+
+function renderEssay(data, containerId) {
+    const container = document.getElementById(containerId);
+    let html = '';
+
+    data.forEach((q, index) => {
+        html += `
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-title">Question ${q.id} (Tự Luận / Điền Số)</span>
+                    <span class="question-pts">Not yet graded / 2 pts</span>
+                </div>
+                <div class="question-body">
+                    <p>${q.question}</p>
+                    <pre>${q.code}</pre>
+                </div>
+                <div class="essay-input-area">
+                    <label style="display:block; margin-bottom: 5px; font-weight:600;">Your Answer:</label>
+                    <input type="text" style="padding: 8px; border: 1px solid #ccc; border-radius:4px; width: 200px;" placeholder="Nhập con số...">
+                </div>
+                <button class="btn-toggle-answer" onclick="toggleEssaySolution(${index})">Hiển Thị Đáp Án & Giải Thích</button>
+                <div class="essay-solution" id="essay_sol_${index}">
+                    <p><b>Đáp án chuẩn:</b> <code>${q.solution}</code></p>
+                    <div>${q.explanation}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function toggleEssaySolution(index) {
+    const solBox = document.getElementById(`essay_sol_${index}`);
+    if (solBox.classList.contains('visible')) {
+        solBox.classList.remove('visible');
+    } else {
+        solBox.classList.add('visible');
+    }
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.section-content').forEach(sec => sec.classList.remove('active'));
+
+    event.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
+// Initialize content
+document.addEventListener('DOMContentLoaded', () => {
+    renderMCQ(mcqDataTopic1, 'topic1');
+    renderMCQ(mcqDataTopic2, 'topic2');
+    renderEssay(essayDataTopic3, 'topic3');
+});
+</script>
+</body>
+</html>

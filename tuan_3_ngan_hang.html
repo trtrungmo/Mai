@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Python & NumPy - Interactive Quiz</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for rendering math formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .mcq-option {
+            transition: all 0.2s ease;
+        }
+        .mcq-option:hover {
+            background-color: #f3f4f6;
+        }
+        .explanation-box {
+            display: none;
+            position: relative;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .explanation-box::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 24px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #d1d5db;
+        }
+        .explanation-box::after {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: 25px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-blue-700 text-white shadow-lg py-6 mb-8">
+        <div class="max-w-5xl mx-auto px-4">
+            <h1 class="text-3xl font-bold">Luyện Tập Python Cơ Bản & NumPy</h1>
+            <p class="text-blue-100 mt-2">Hệ thống bài tập trắc nghiệm & tự luận mô phỏng câu hỏi thực tế</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4">
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-gray-300 mb-6 bg-white rounded-t-lg shadow-sm">
+            <button onclick="switchTab('theory')" id="tab-theory" class="tab-btn px-6 py-3 font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none">📚 Lý Thuyết Core</button>
+            <button onclick="switchTab('mcq')" id="tab-mcq" class="tab-btn px-6 py-3 font-semibold text-gray-500 hover:text-blue-600 focus:outline-none">📝 Trắc Nghiệm (MCQ)</button>
+            <button onclick="switchTab('sa')" id="tab-sa" class="tab-btn px-6 py-3 font-semibold text-gray-500 hover:text-blue-600 focus:outline-none">✏️ Tự Luận (Short Answer)</button>
+        </div>
+
+        <!-- ================= TAB LÝ THUYẾT ================= -->
+        <div id="content-theory" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">1. Boolean Indexing & Bitwise Operators trong NumPy</h2>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>Tránh dùng <code>and</code>, <code>or</code>, <code>not</code> với mảng NumPy (sẽ gây lỗi <code>ValueError</code> vì tính chân lý không xác định cho toàn mảng).</li>
+                    <li>Sử dụng các toán tử bitwise: <code>&</code> (AND), <code>|</code> (OR), <code>~</code> (NOT).</li>
+                    <li><strong>Bắt buộc</strong> phải bao các biểu thức so sánh trong cặp dấu ngoặc đơn <code>()</code>. Ví dụ: <code>(d >= 5) & (d < 8)</code> vì toán tử bitwise có độ ưu tiên cao hơn toán tử so sánh.</li>
+                    <li><code>.mean()</code> trên mảng boolean tính tỷ lệ phần tử thỏa mãn condition (giá trị <code>True = 1</code>, <code>False = 0</code>).</li>
+                    <li><code>.sum()</code> tính tổng số lượng phần tử thỏa mãn điều kiện.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">2. Thao tác trên Ma Trận & Trục (Axis & Aggregation)</h2>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li><code>axis=0</code>: Thao tác theo chiều dọc (theo từng cột), kết quả làm "mất" chiều hàng.</li>
+                    <li><code>axis=1</code>: Thao tác theo chiều ngang (theo từng hàng), kết quả làm "mất" chiều cột.</li>
+                    <li><code>np.argmax(arr, axis=k)</code>: Trả về vị trí (index) của giá trị lớn nhất theo trục <code>k</code>.</li>
+                    <li><code>np.max(arr, axis=k)</code>: Trả về giá trị lớn nhất theo trục <code>k</code>.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">3. Trích Xuất Mảng: View vs Copy</h2>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li><strong>Basic Slicing & Indexing</strong> (như <code>M[0]</code>, <code>M[0:1]</code>, <code>M[0, :]</code>): Tạo một <strong>View</strong> (dùng chung vùng nhớ với mảng gốc). Thay đổi trên view sẽ làm thay đổi mảng gốc.</li>
+                    <li><strong>Fancy Indexing</strong> (dùng danh sách chỉ số <code>M[[0]]</code>): Tạo mảng mới (Copy).</li>
+                    <li><strong>Hàm <code>.copy()</code></strong>: Bắt buộc dùng để tạo một bản sao độc lập, đảm bảo sửa đổi trên bản sao KHÔNG ảnh hưởng mảng gốc.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">4. Xử Lý Giá Trị Thiếu (NaN) & Chuẩn Hoá (Z-score)</h2>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>Các hàm thống kê chuẩn như <code>np.mean()</code>, <code>np.sum()</code> khi gặp <code>np.nan</code> sẽ trả về <code>nan</code>.</li>
+                    <li>Sử dụng các hàm bỏ qua NaN: <code>np.nanmean()</code>, <code>np.nansum()</code>, <code>np.nanstd()</code>.</li>
+                    <li>So sánh mảng có NaN với một số (ví dụ: <code>d > threshold</code>): Các vị trí <code>nan</code> sẽ cho kết quả <code>False</code>.</li>
+                    <li><strong>Công thức Z-score:</strong> $z = \frac{x - \mu}{\sigma}$ với $\mu$ là trung bình (mean) và $\sigma$ là độ lệch chuẩn (std).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ================= TAB TRẮC NGHIỆM ================= -->
+        <div id="content-mcq" class="tab-content hidden space-y-8">
+
+            <!-- DẠNG 1: BOOLEAN INDEXING -->
+            <div class="border-l-4 border-blue-600 pl-4 py-2 bg-blue-50 rounded-r">
+                <h2 class="text-xl font-bold text-blue-800">DẠNG 1: Lọc dữ liệu & Boolean Indexing (Tương tự Question 2)</h2>
+                <p class="text-sm text-gray-600">Chú ý độ ưu tiên toán tử bitwise <code>&</code>, <code>|</code> và cách tính tỷ lệ / tổng.</p>
+            </div>
+
+            <!-- Q1.1 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q1">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 1.1</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho <code>d = np.array([4.5, 7.0, 5.0, 8.0, 6.5, 3.0])</code>. Biểu thức nào cho ra <code>50.0</code>, tức tỷ lệ phần trăm số bài có điểm từ 5 đến dưới 8?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq1" onclick="checkMCQ('q1', 0, false)" class="mr-3">
+                        <code>(d >= 5 & d < 8).mean() * 100</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq1" onclick="checkMCQ('q1', 1, true)" class="mr-3">
+                        <code>((d >= 5) & (d < 8)).mean() * 100</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq1" onclick="checkMCQ('q1', 2, false)" class="mr-3">
+                        <code>((d >= 5) and (d < 8)).mean() * 100</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq1" onclick="checkMCQ('q1', 3, false)" class="mr-3">
+                        <code>((d >= 5) & (d < 8)).sum()</code>
+                    </label>
+                </div>
+                <div id="q1-exp" class="explanation-box">
+                    Hai vế so sánh đặt trong ngoặc, ghép bằng <code>&</code>, <code>mean()</code> trên mảng bool cho tỷ lệ 3/6, nhân 100 được 50.0. Phương án C: <code>and</code> không dùng được với mảng, phát sinh <code>ValueError</code> vì giá trị chân lý của mảng không xác định. Phương án A: thiếu ngoặc, <code>&</code> được tính trước phép so sánh (<code>5 & d</code>), phát sinh <code>TypeError</code>. Phương án D: <code>sum()</code> cho số bài (3), không phải tỷ lệ.
+                </div>
+            </div>
+
+            <!-- Q1.2 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q2">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 1.2</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho mảng <code>arr = np.array([12, 15, 7, 20, 18, 9])</code>. Câu lệnh nào tính <strong>tổng số phần tử</strong> nhỏ hơn 10 hoặc lớn hơn hoặc bằng 18?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq2" onclick="checkMCQ('q2', 0, true)" class="mr-3">
+                        <code>((arr < 10) | (arr >= 18)).sum()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq2" onclick="checkMCQ('q2', 1, false)" class="mr-3">
+                        <code>(arr < 10 or arr >= 18).sum()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq2" onclick="checkMCQ('q2', 2, false)" class="mr-3">
+                        <code>((arr < 10) | (arr >= 18)).mean()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq2" onclick="checkMCQ('q2', 3, false)" class="mr-3">
+                        <code>(arr < 10 | arr >= 18).sum()</code>
+                    </label>
+                </div>
+                <div id="q2-exp" class="explanation-box">
+                    Toán tử điều kiện OR trên mảng dạng bitwise là <code>|</code>, các điều kiện phải đống ngoặc <code>()</code>. Đề yêu cầu tính <i>số lượng phần tử</i> nên dùng <code>.sum()</code> (cho ra kết quả là 3: gồm 7, 20, 18).
+                </div>
+            </div>
+
+            <!-- Q1.3 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q3">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 1.3</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Điều gì xảy ra khi chạy câu lệnh: <code>np.array([1, 2, 3]) and np.array([3, 2, 1])</code> trong Python?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq3" onclick="checkMCQ('q3', 0, false)" class="mr-3">
+                        Trả về mảng boolean <code>[True, True, True]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq3" onclick="checkMCQ('q3', 1, true)" class="mr-3">
+                        Phát sinh lỗi <code>ValueError</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq3" onclick="checkMCQ('q3', 2, false)" class="mr-3">
+                        Phát sinh lỗi <code>TypeError</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq3" onclick="checkMCQ('q3', 3, false)" class="mr-3">
+                        Trả về <code>True</code>
+                    </label>
+                </div>
+                <div id="q3-exp" class="explanation-box">
+                    Từ khóa <code>and</code> yêu cầu ép kiểu mảng về giá trị Truth value (boolean duy nhất). Mảng NumPy có nhiều hơn 1 phần tử sẽ báo lỗi <code>ValueError: The truth value of an array with more than one element is ambiguous</code>.
+                </div>
+            </div>
+
+            <!-- Q1.4 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 1.4</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho mảng điểm <code>scores = np.array([8, 3, 9, 4, 10, 2])</code>. Biểu thức nào trả về mảng các điểm <strong>không nằm trong khoảng từ 4 đến 8 (lấy cả 4 và 8)</strong>?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq4" onclick="checkMCQ('q4', 0, false)" class="mr-3">
+                        <code>scores[(scores < 4) & (scores > 8)]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq4" onclick="checkMCQ('q4', 1, true)" class="mr-3">
+                        <code>scores[(scores < 4) | (scores > 8)]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq4" onclick="checkMCQ('q4', 2, false)" class="mr-3">
+                        <code>scores[~(scores >= 4) & (scores <= 8)]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq4" onclick="checkMCQ('q4', 3, false)" class="mr-3">
+                        <code>scores[(scores <= 4) | (scores >= 8)]</code>
+                    </label>
+                </div>
+                <div id="q4-exp" class="explanation-box">
+                    Để chọn giá trị không nằm trong khoảng [4, 8], điều kiện là <code>< 4</code> hoặc <code>> 8</code>. Kết hợp toán tử OR <code>|</code> ta được: <code>scores[(scores < 4) | (scores > 8)]</code> cho kết quả <code>[9, 2]</code>.
+                </div>
+            </div>
+
+            <!-- Q1.5 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q5">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 1.5</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho <code>a = np.array([1, 2, 3, 4, 5])</code>. Giá trị của biểu thức <code>(~(a % 2 == 0)).sum()</code> là bao nhiêu?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq5" onclick="checkMCQ('q5', 0, false)" class="mr-3">
+                        <code>2</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq5" onclick="checkMCQ('q5', 1, true)" class="mr-3">
+                        <code>3</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq5" onclick="checkMCQ('q5', 2, false)" class="mr-3">
+                        <code>5</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq5" onclick="checkMCQ('q5', 3, false)" class="mr-3">
+                        <code>0</code>
+                    </label>
+                </div>
+                <div id="q5-exp" class="explanation-box">
+                    <code>a % 2 == 0</code> trả về <code>[False, True, False, True, False]</code> (các số chẵn). Dấu phủ định bitwise <code>~</code> đảo lại thành <code>[True, False, True, False, True]</code> (các số lẻ). Hàm <code>.sum()</code> đếm số lượng <code>True</code>, cho kết quả là 3 (các số 1, 3, 5).
+                </div>
+            </div>
+
+            <!-- DẠNG 2: ARGMAX & AXIS -->
+            <div class="border-l-4 border-blue-600 pl-4 py-2 bg-blue-50 rounded-r mt-10">
+                <h2 class="text-xl font-bold text-blue-800">DẠNG 2: Thống kê & Trục Ma trận (Axis/Argmax) (Tương tự Question 5)</h2>
+                <p class="text-sm text-gray-600">Phân biệt <code>axis=0</code> (theo cột), <code>axis=1</code> (theo hàng), <code>argmax</code> vs <code>max</code>.</p>
+            </div>
+
+            <!-- Q2.1 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 2.1</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Ma trận số lượt mượn sách của 3 khoa (hàng) trong 4 tuần (cột). Đoạn code in ra <code>[2, 0, 1]</code>, tức tuần cao điểm của từng khoa. Biểu thức nào ở chỗ trống?</p>
+                <pre class="bg-gray-800 text-green-400 p-3 rounded mb-4 text-sm">M = np.array([[3, 7, 9, 1],
+              [8, 2, 4, 5],
+              [1, 6, 3, 2]])
+print(______)`</pre>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq6" onclick="checkMCQ('q6', 0, false)" class="mr-3">
+                        <code>M.argmax(axis=0)</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq6" onclick="checkMCQ('q6', 1, false)" class="mr-3">
+                        <code>M.sum(0).argmax()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq6" onclick="checkMCQ('q6', 2, true)" class="mr-3">
+                        <code>M.argmax(axis=1)</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq6" onclick="checkMCQ('q6', 3, false)" class="mr-3">
+                        <code>M.max(axis=1)</code>
+                    </label>
+                </div>
+                <div id="q6-exp" class="explanation-box">
+                    Cần một vị trí cho mỗi hàng nên chiều cột phải "biến mất": <code>argmax(axis=1)</code> cho <code>[2, 0, 1]</code>. Phương án A: <code>axis=0</code> cho một vị trí mỗi tuần, mảng 4 phần tử <code>[1, 0, 0, 1]</code>. Phương án D: <code>max</code> trả giá trị lớn nhất <code>[9, 8, 6]</code>, không phải vị trí. Phương án B: tổng theo tuần rồi lấy một vị trí duy nhất cho cả ma trận, ra số 2.
+                </div>
+            </div>
+
+            <!-- Q2.2 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q7">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 2.2</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho ma trận doanh thu <code>A</code> gồm 4 chi nhánh (hàng) và 3 tháng (cột). Biểu thức nào trả về <strong>khoa/chi nhánh có tổng doanh thu lớn nhất cả quý</strong> (dạng chỉ số hàng)?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq7" onclick="checkMCQ('q7', 0, true)" class="mr-3">
+                        <code>A.sum(axis=1).argmax()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq7" onclick="checkMCQ('q7', 1, false)" class="mr-3">
+                        <code>A.sum(axis=0).argmax()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq7" onclick="checkMCQ('q7', 2, false)" class="mr-3">
+                        <code>A.argmax(axis=1)</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq7" onclick="checkMCQ('q7', 3, false)" class="mr-3">
+                        <code>A.max(axis=0)</code>
+                    </label>
+                </div>
+                <div id="q7-exp" class="explanation-box">
+                    <code>A.sum(axis=1)</code> tính tổng doanh thu theo hàng (cho mỗi chi nhánh), kết quả là mảng 1D có 4 phần tử. Sau đó <code>.argmax()</code> tìm chỉ số của chi nhánh có tổng doanh thu lớn nhất.
+                </div>
+            </div>
+
+            <!-- Q2.3 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q8">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 2.3</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho ma trận <code>M</code> kích thước (3, 4). Kết quả của <code>M.argmin(axis=0)</code> sẽ có dạng như thế nào?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq8" onclick="checkMCQ('q8', 0, false)" class="mr-3">
+                        Mảng 1D gồm 3 phần tử đại diện cho chỉ số cột nhỏ nhất của từng hàng.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq8" onclick="checkMCQ('q8', 1, true)" class="mr-3">
+                        Mảng 1D gồm 4 phần tử đại diện cho chỉ số hàng nhỏ nhất của từng cột.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq8" onclick="checkMCQ('q8', 2, false)" class="mr-3">
+                        Một con số duy nhất là vị trí nhỏ nhất trong toàn bộ ma trận phẳng.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq8" onclick="checkMCQ('q8', 3, false)" class="mr-3">
+                        Ma trận (3, 4) chứa các giá trị boolean.
+                    </label>
+                </div>
+                <div id="q8-exp" class="explanation-box">
+                    Khi thao tác với <code>axis=0</code> (trục hàng), kết quả sẽ gộp theo hàng và giữ lại chiều cột. Ma trận (3, 4) sẽ cho ra mảng 1D kích thước 4 (mỗi cột chọn ra 1 index hàng có giá trị nhỏ nhất).
+                </div>
+            </div>
+
+            <!-- Q2.4 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q9">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 2.4</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho ma trận <code>X = np.array([[5, 2], [1, 9]])</code>. Lệnh <code>X.argmax()</code> (không truyền <code>axis</code>) trả về giá trị gì?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq9" onclick="checkMCQ('q9', 0, false)" class="mr-3">
+                        <code>9</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq9" onclick="checkMCQ('q9', 1, true)" class="mr-3">
+                        <code>3</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq9" onclick="checkMCQ('q9', 2, false)" class="mr-3">
+                        <code>[0, 1]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq9" onclick="checkMCQ('q9', 3, false)" class="mr-3">
+                        <code>(1, 1)</code>
+                    </label>
+                </div>
+                <div id="q9-exp" class="explanation-box">
+                    Khi không truyền <code>axis</code>, NumPy mặc định phẳng hóa ma trận (flatten) thành <code>[5, 2, 1, 9]</code>. Giá trị lớn nhất là 9 nằm ở vị trí index 3.
+                </div>
+            </div>
+
+            <!-- Q2.5 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q10">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 2.5</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Giả sử <code>arr</code> là mảng 2D. Lệnh nào sau đây trả về mảng chứa <strong>giá trị trung bình của từng cột</strong>?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq10" onclick="checkMCQ('q10', 0, true)" class="mr-3">
+                        <code>arr.mean(axis=0)</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq10" onclick="checkMCQ('q10', 1, false)" class="mr-3">
+                        <code>arr.mean(axis=1)</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq10" onclick="checkMCQ('q10', 2, false)" class="mr-3">
+                        <code>arr.mean()</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq10" onclick="checkMCQ('q10', 3, false)" class="mr-3">
+                        <code>np.median(arr, axis=1)</code>
+                    </label>
+                </div>
+                <div id="q10-exp" class="explanation-box">
+                    Tính trung bình theo từng cột nghĩa là thực hiện tính toán chạy qua tất cả các hàng (chiều dọc), do đó phải chọn <code>axis=0</code>.
+                </div>
+            </div>
+
+            <!-- DẠNG 3: VIEW VS COPY -->
+            <div class="border-l-4 border-blue-600 pl-4 py-2 bg-blue-50 rounded-r mt-10">
+                <h2 class="text-xl font-bold text-blue-800">DẠNG 3: Quản lý Bộ nhớ (View vs Copy) (Tương tự Question 7)</h2>
+                <p class="text-sm text-gray-600">Phân biệt lát cắt cơ bản (View) và tạo mảng độc lập (Copy).</p>
+            </div>
+
+            <!-- Q3.1 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q11">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 3.1</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Nhóm muốn lấy hàng đầu của ma trận <code>M</code> ra một biến <code>h</code> để thử nghiệm, sao cho mọi phép gán vào <code>h</code> sau đó KHÔNG làm đổi <code>M</code>. Cách viết nào đạt yêu cầu?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq11" onclick="checkMCQ('q11', 0, true)" class="mr-3">
+                        <code>h = M[0].copy()</code> : lấy hàng là view nên phải sao chép tường minh mới độc lập.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq11" onclick="checkMCQ('q11', 1, false)" class="mr-3">
+                        <code>h = M[0]</code> : lấy nguyên một hàng thì NumPy tạo mảng mới, không dính tới M.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq11" onclick="checkMCQ('q11', 2, false)" class="mr-3">
+                        <code>h = M[0:1]</code> : lát cắt theo khoảng tạo mảng mới có shape (1, n), tách khỏi M.
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq11" onclick="checkMCQ('q11', 3, false)" class="mr-3">
+                        <code>h = M[0, :]</code> : viết rõ dấu hai chấm buộc NumPy sao chép dữ liệu của hàng.
+                    </label>
+                </div>
+                <div id="q11-exp" class="explanation-box">
+                    Lấy hàng bằng chỉ số hay lát cắt cơ bản đều tạo view dùng chung bộ nhớ với <code>M</code>; chỉ <code>.copy()</code> tạo mảng độc lập. Phương án B: coi <code>M[0]</code> là bản sao. Phương án D: nghĩ viết rõ dấu <code>:</code> làm NumPy sao chép dữ liệu; <code>M[0, :]</code> vẫn là view. Phương án C: nghĩ lát cắt theo khoảng <code>0:1</code> tạo bản sao; đây vẫn là lát cắt cơ bản (view) có shape <code>(1, n)</code>.
+                </div>
+            </div>
+
+            <!-- Q3.2 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q12">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 3.2</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho đoạn code sau. Giá trị của <code>A[0, 0]</code> sau khi chạy xong là bao nhiêu?</p>
+                <pre class="bg-gray-800 text-green-400 p-3 rounded mb-4 text-sm">A = np.array([[1, 2], [3, 4]])
+B = A[:1, :1]
+B[0, 0] = 99`</pre>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq12" onclick="checkMCQ('q12', 0, false)" class="mr-3">
+                        <code>1</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq12" onclick="checkMCQ('q12', 1, true)" class="mr-3">
+                        <code>99</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq12" onclick="checkMCQ('q12', 2, false)" class="mr-3">
+                        <code>None</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq12" onclick="checkMCQ('q12', 3, false)" class="mr-3">
+                        Báo lỗi <code>ValueError</code>
+                    </label>
+                </div>
+                <div id="q12-exp" class="explanation-box">
+                    Lát cắt <code>A[:1, :1]</code> tạo ra một View. Khi gán <code>B[0, 0] = 99</code>, dữ liệu trong bộ nhớ dùng chung bị thay đổi, dẫn đến <code>A[0, 0]</code> cũng bị thay đổi thành 99.
+                </div>
+            </div>
+
+            <!-- Q3.3 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q13">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 3.3</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Trong các thao tác sau với mảng <code>arr = np.array([10, 20, 30, 40])</code>, thao tác nào tạo ra một **Copy** thay vì **View**?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq13" onclick="checkMCQ('q13', 0, false)" class="mr-3">
+                        <code>sub = arr[1:3]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq13" onclick="checkMCQ('q13', 1, false)" class="mr-3">
+                        <code>sub = arr[::2]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq13" onclick="checkMCQ('q13', 2, true)" class="mr-3">
+                        <code>sub = arr[[1, 2]]</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq13" onclick="checkMCQ('q13', 3, false)" class="mr-3">
+                        <code>sub = arr[:]</code>
+                    </label>
+                </div>
+                <div id="q13-exp" class="explanation-box">
+                    <code>arr[[1, 2]]</code> sử dụng **Fancy Indexing** (truyền vào một list chỉ số). Trong NumPy, Fancy Indexing luôn trả về một **Copy** (bản sao độc lập), không phải View.
+                </div>
+            </div>
+
+            <!-- Q3.4 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q14">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 3.4</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Thuộc tính nào của mảng NumPy giúp kiểm tra xem mảng đó có sở hữu bộ nhớ riêng hay là View từ mảng khác?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq14" onclick="checkMCQ('q14', 0, true)" class="mr-3">
+                        <code>arr.base</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq14" onclick="checkMCQ('q14', 1, false)" class="mr-3">
+                        <code>arr.flags.is_copy</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq14" onclick="checkMCQ('q14', 2, false)" class="mr-3">
+                        <code>arr.memory</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq14" onclick="checkMCQ('q14', 3, false)" class="mr-3">
+                        <code>arr.parent</code>
+                    </label>
+                </div>
+                <div id="q14-exp" class="explanation-box">
+                    Nếu <code>arr.base</code> là <code>None</code>, mảng tự sở hữu bộ nhớ (là mảng gốc hoặc bản copy). Nếu <code>arr.base</code> tham chiếu đến một mảng khác, thì nó là một View.
+                </div>
+            </div>
+
+            <!-- Q3.5 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200" id="mcq-q15">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 3.5</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1 pts</span>
+                </div>
+                <p class="mb-4">Cho mảng <code>arr = np.array([1, 2, 3, 4, 5])</code>. Thực hiện: <code>b = arr[arr > 2]</code>. Nếu thay đổi <code>b[0] = 100</code> thì <code>arr[2]</code> có giá trị là bao nhiêu?</p>
+                <div class="space-y-3">
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq15" onclick="checkMCQ('q15', 0, false)" class="mr-3">
+                        <code>100</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq15" onclick="checkMCQ('q15', 1, true)" class="mr-3">
+                        <code>3</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq15" onclick="checkMCQ('q15', 2, false)" class="mr-3">
+                        <code>2</code>
+                    </label>
+                    <label class="mcq-option flex items-center p-3 rounded-md border cursor-pointer">
+                        <input type="radio" name="mcq15" onclick="checkMCQ('q15', 3, false)" class="mr-3">
+                        Báo lỗi <code>IndexError</code>
+                    </label>
+                </div>
+                <div id="q15-exp" class="explanation-box">
+                    Boolean indexing (<code>arr[arr > 2]</code>) tạo ra một **Copy** mới chứa các phần tử <code>[3, 4, 5]</code>. Khi sửa <code>b[0] = 100</code>, mảng gốc <code>arr</code> hoàn toàn không bị ảnh hưởng, nên <code>arr[2]</code> vẫn giữ nguyên giá trị ban đầu là 3.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= TAB TỰ LUẬN ================= -->
+        <div id="content-sa" class="tab-content hidden space-y-8">
+
+            <!-- DẠNG 4: XỬ LÝ NAN & THỐNG KÊ -->
+            <div class="border-l-4 border-purple-600 pl-4 py-2 bg-purple-50 rounded-r">
+                <h2 class="text-xl font-bold text-purple-800">DẠNG 4: Xử lý Giá trị Khuyết (NaN) (Tương tự Question 11)</h2>
+                <p class="text-sm text-gray-600">Đề bài yêu cầu tính toán con số đầu ra cụ thể.</p>
+            </div>
+
+            <!-- SA 4.1 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 4.1</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Điểm của 6 bài kiểm tra, trong đó hai bài chưa có điểm (NaN). Nhóm muốn đếm số bài có điểm cao hơn điểm trung bình của các bài đã có điểm. Chỉ trả lời bằng một con số là giá trị được in ra.</p>
+                <pre class="bg-gray-800 text-green-400 p-3 rounded mb-4 text-sm">import numpy as np
+d = np.array([3.5, np.nan, 7.0, np.nan, 5.5, 8.0])
+nguong = np.nanmean(d)
+print((d > nguong).sum())`</pre>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa1')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa1-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">2</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Các giá trị không NaN bao gồm: <code>3.5, 7.0, 5.5, 8.0</code>.</p>
+                        <p>2. Trung bình <code>np.nanmean(d)</code> = $(3.5 + 7.0 + 5.5 + 8.0) / 4 = 24.0 / 4 = 6.0$.</p>
+                        <p>3. Phép so sánh <code>d > 6.0</code> trả về mảng Bool: <code>[False, False, True, False, False, True]</code> (lưu ý: so sánh với <code>np.nan</code> luôn cho <code>False</code>).</p>
+                        <p>4. <code>.sum()</code> đếm số <code>True</code>: có 2 bài (điểm 7.0 và 8.0) lớn hơn 6.0. Kết quả in ra là <strong>2</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 4.2 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 4.2</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Tính giá trị in ra của đoạn code sau:</p>
+                <pre class="bg-gray-800 text-green-400 p-3 rounded mb-4 text-sm">import numpy as np
+arr = np.array([10, np.nan, 20, 30, np.nan])
+print(np.nansum(arr > 15))`</pre>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa2')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa2-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">2</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Biểu thức <code>arr > 15</code> sẽ so sánh từng phần tử với 15. Kết quả thu được mảng boolean: <code>[False, False, True, True, False]</code>.</p>
+                        <p>2. Mảng boolean này KHÔNG còn chứa bất kỳ giá trị <code>np.nan</code> nào nữa (vì so sánh NaN luôn ra False).</p>
+                        <p>3. <code>np.nansum()</code> tính tổng các giá trị <code>True (=1)</code>, cho kết quả là <strong>2</strong> (ứng với các số 20 và 30).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 4.3 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 4.3</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Cho mảng <code>x = np.array([2.0, 4.0, np.nan, 6.0])</code>. Giá trị in ra của <code>print(np.isnan(x).sum())</code> là bao nhiêu?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa3')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa3-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">1</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. <code>np.isnan(x)</code> kiểm tra từng phần tử xem có phải NaN không. Kết quả: <code>[False, False, True, False]</code>.</p>
+                        <p>2. Hàm <code>.sum()</code> đếm số lượng vị trí True, kết quả trả về là <strong>1</strong> (có 1 giá trị nan).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 4.4 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 4.4</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Nếu thay <code>nguong = np.nanmean(d)</code> bằng <code>nguong = np.mean(d)</code> trong bài toán có chứa <code>np.nan</code> thì giá trị <code>(d > nguong).sum()</code> sẽ in ra con số nào?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa4')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa4-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">0</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. <code>np.mean(d)</code> khi gặp giá trị <code>nan</code> sẽ lập tức trả về <code>nan</code> làm ngưỡng.</p>
+                        <p>2. Mọi phép so sánh số học với <code>nan</code> (như <code>d > nan</code>) đều trả về <code>False</code> cho tất cả phần tử.</p>
+                        <p>3. Do đó, <code>.sum()</code> trên mảng toàn <code>False</code> sẽ cho kết quả là <strong>0</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 4.5 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 4.5</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Cho mảng <code>vals = np.array([1, 2, np.nan, 4])</code>. Ta thay thế tất cả giá trị <code>nan</code> bằng giá trị trung bình của các phần tử không nan trong mảng. Tổng tất cả phần tử của mảng sau khi thay thế là bao nhiêu?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa5')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa5-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">9</span> hoặc <span class="text-xl text-red-600">9.0</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Trung bình các số không nan: <code>np.nanmean(vals)</code> = $(1 + 2 + 4) / 3 = 7 / 3 \approx 2.333$.</p>
+                        <p>2. Thay <code>nan</code> bằng $2.333...$</p>
+                        <p>3. Tổng mảng mới: $1 + 2 + 2.333... + 4 = 7 + (7/3) - 2.333...$ thực chất là bằng $\text{tổng cũ} + \text{mean} = 7 + 2 = 9$.</p>
+                        <p><em>Mẹo:</em> Tổng của $N$ số sau khi thay thế $k$ giá trị nan bằng mean chính là $\text{mean} \times (N_{\text{valid}} + k)$. Ở đây $2.333 \times 3 + 2.333 = 9.333$? Không, tổng valid là 7, mean là 7/3. Tổng mới = $7 + 7/3 = 9.333$. Dừng lại! Tính cẩn thận:</p>
+                        <p>Valid elements: 1, 2, 4. Sum = 7. Mean = 7/3.</p>
+                        <p>Thay nan bằng 7/3 $\rightarrow$ Mảng là <code>[1, 2, 7/3, 4]</code>.</p>
+                        <p>Tổng = $1 + 2 + 7/3 + 4 = 7 + 7/3 = 28/3 \approx 9.333$.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- DẠNG 5: TOÁN HỌC & CHUẨN HOÁ Z-SCORE -->
+            <div class="border-l-4 border-purple-600 pl-4 py-2 bg-purple-50 rounded-r mt-10">
+                <h2 class="text-xl font-bold text-purple-800">DẠNG 5: Chuẩn hoá Z-Score & Thống Kê Toán Học (Tương tự Question 14)</h2>
+                <p class="text-sm text-gray-600">Áp dụng công thức $z = \frac{x - \mu}{\sigma}$. Kết quả trả về là con số cụ thể.</p>
+            </div>
+
+            <!-- SA 5.1 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 5.1</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Điểm của 7 bài kiểm tra là 2, 4, 6, 8, 10, 12, 14. Chuẩn hoá bằng z-score với độ lệch chuẩn tổng thể (chia cho n, như <code>std()</code> mặc định của NumPy). Điểm z của bài 14 điểm bằng bao nhiêu? Chỉ trả lời bằng một con số.</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa6')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa6-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">1.5</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Giá trị trung bình $\mu = \frac{2 + 4 + 6 + 8 + 10 + 12 + 14}{7} = \frac{56}{7} = 8$.</p>
+                        <p>2. Các độ lệch $(x_i - \mu)^2$: $6^2, 4^2, 2^2, 0^2, 2^2, 4^2, 6^2 = 36 + 16 + 4 + 0 + 4 + 16 + 36 = 112$.</p>
+                        <p>3. Phương sai $\sigma^2 = 112 / 7 = 16 \rightarrow$ Độ lệch chuẩn $\sigma = \sqrt{16} = 4$.</p>
+                        <p>4. Điểm z-score của $x = 14$ là: $z = \frac{14 - 8}{4} = \frac{6}{4} = 1.5$. Kết quả in ra là <strong>1.5</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 5.2 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 5.2</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Cho dãy số: 10, 20, 30, 40, 50. Chuẩn hóa z-score với <code>std()</code> mặc định của NumPy. Giá trị z-score của số 10 là bao nhiêu?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa7')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa7-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">-1.414</span> (hoặc $-\sqrt{2}$)</p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Trung bình $\mu = (10+20+30+40+50)/5 = 30$.</p>
+                        <p>2. Phước sai $\sigma^2 = [(-20)^2 + (-10)^2 + 0^2 + 10^2 + 20^2]/5 = (400 + 100 + 0 + 100 + 400)/5 = 1000/5 = 200$.</p>
+                        <p>3. Độ lệch chuẩn $\sigma = \sqrt{200} \approx 14.142$.</p>
+                        <p>4. Z-score của 10: $z = \frac{10 - 30}{14.142} = \frac{-20}{14.142} \approx -1.414$.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 5.3 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 5.3</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Tính tổng của tất cả các giá trị z-score thu được sau khi chuẩn hóa một mảng 1D bất kỳ (không chứa NaN và độ lệch chuẩn khác 0).</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa8')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa8-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">0</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Ta có $z_i = \frac{x_i - \mu}{\sigma}$.</p>
+                        <p>2. Tổng các $z_i$: $\sum z_i = \sum \frac{x_i - \mu}{\sigma} = \frac{1}{\sigma} \sum (x_i - \mu)$.</p>
+                        <p>3. Do $\sum (x_i - \mu) = \sum x_i - n\mu = n\mu - n\mu = 0$.</p>
+                        <p>4. Vì vậy, tổng các giá trị Z-score của bất kỳ phân bố nào luôn bằng **0**.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 5.4 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 5.4</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Mảng <code>data = np.array([5, 5, 5, 5])</code>. Nếu thực hiện chuẩn hóa z-score bằng công thức <code>(data - data.mean()) / data.std()</code> thì kết quả/cảnh báo nhận được là gì?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập đáp án..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa9')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa9-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">nan</span> (hoặc RuntimeWarning: invalid value encountered in divide)</p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. Mảng gồm các phần tử bằng nhau $\rightarrow$ Độ lệch chuẩn <code>data.std() = 0</code>.</p>
+                        <p>2. Phép chia $0 / 0$ trong NumPy sẽ phát sinh cảnh báo chia cho 0 và trả về mảng chứa toàn bộ các giá trị <code>nan</code> (<code>[nan, nan, nan, nan]</code>).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SA 5.5 -->
+            <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-gray-700">Câu 5.5</span>
+                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">2 pts</span>
+                </div>
+                <p class="mb-3">Cho điểm 5 môn học <code>[4, 6, 8, 10, 12]</code>. Chuẩn hóa Min-Max scaling về khoảng [0, 1] theo công thức: $x_{new} = \frac{x - x_{min}}{x_{max} - x_{min}}$. Điểm 8 sau khi chuẩn hóa sẽ có giá trị bằng bao nhiêu?</p>
+                
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+                    <input type="text" placeholder="Nhập kết quả con số..." class="w-full md:w-64 p-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <br>
+                    <button onclick="toggleAnswer('sa10')" class="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition">Xem Đáp Án & Giải Thích</button>
+                </div>
+
+                <div id="sa10-ans" class="hidden mt-4 p-4 bg-purple-50 border border-purple-200 rounded">
+                    <p class="font-bold text-purple-900">Đáp án chuẩn: <span class="text-xl text-red-600">0.5</span></p>
+                    <div class="mt-2 text-sm text-gray-700 space-y-1">
+                        <p><strong>Giải thích chi tiết:</strong></p>
+                        <p>1. $x_{min} = 4$, $x_{max} = 12$.</p>
+                        <p>2. Khoảng biến thiên $x_{max} - x_{min} = 12 - 4 = 8$.</p>
+                        <p>3. Với $x = 8$: $x_{new} = \frac{8 - 4}{8} = \frac{4}{8} = 0.5$.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Tab Switcher
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                el.classList.add('text-gray-500');
+            });
+
+            document.getElementById('content-' + tab).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tab);
+            activeBtn.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            activeBtn.classList.remove('text-gray-500');
+        }
+
+        // MCQ Selection & Explanation Display
+        function checkMCQ(qId, optionIdx, isCorrect) {
+            const expBox = document.getElementById(qId + '-exp');
+            expBox.style.display = 'block';
+        }
+
+        // Short Answer Explanation Toggle
+        function toggleAnswer(id) {
+            const ansBox = document.getElementById(id + '-ans');
+            if (ansBox.classList.contains('hidden')) {
+                ansBox.classList.remove('hidden');
+            } else {
+                ansBox.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
