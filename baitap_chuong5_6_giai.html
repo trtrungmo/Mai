@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HƯỚNG DẪN GIẢI BÀI TẬP VẬT LÝ ĐẠI CƯƠNG II - TUẦN 3</title>
+    
+    <!-- Cấu hình MathJax tránh lỗi font công thức toán -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Google Fonts: Roboto & Noto Sans hỗ trợ tiếng Việt chuẩn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-color: #dd6b20;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --theory-bg: #ebf8ff;
+            --teacher-note-bg: #feefc3;
+        }
+
+        body {
+            font-family: 'Roboto', 'Noto Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .problem-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .problem-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .problem-header {
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .problem-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .badge-type {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .problem-body {
+            padding: 1.5rem;
+        }
+
+        .problem-statement {
+            background-color: #f7fafc;
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .theory-box {
+            background-color: var(--theory-bg);
+            border: 1px solid #bee3f8;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .theory-box h4 {
+            margin-top: 0;
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-step {
+            margin-bottom: 1rem;
+        }
+
+        .solution-step h5 {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+            margin-top: 1rem;
+        }
+
+        .teacher-note {
+            background-color: var(--teacher-note-bg);
+            border-left: 4px solid #d69e2e;
+            padding: 0.75rem 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+        }
+
+        .teacher-note strong {
+            color: #744210;
+        }
+
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+
+        svg text {
+            font-family: 'Roboto', 'Arial', sans-serif !important;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .problem-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1> BÀI GIẢNG & LỜI GIẢI CHI TIẾT VẬT LÝ ĐẠI CƯƠNG II</h1>
+    <p>Chương 5: Dòng điện, Điện trở & Suất điện động | Chương 6: Mạch điện một chiều[cite: 2]</p>
+    <p><i>Giảng viên biên soạn hướng dẫn chuẩn mực, chính xác và trực quan</i></p>
+</header>
+
+<div class="container">
+
+    <!-- ========================================== -->
+    <!-- CHƯƠNG 5 -->
+    <!-- ========================================== -->
+    <h2 class="section-title"> CHƯƠNG 5: DÒNG ĐIỆN, ĐIỆN TRỞ VÀ SUẤT ĐIỆN ĐỘNG</h2>
+
+    <!-- BÀI 1 (25.4) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 1 (25.4)</h3>
+            <span class="badge-type">Dạng 1: Dòng điện, Mật độ dòng điện & Tốc độ trôi</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Một dây đồng cỡ 18-gauge (đường kính $1.02\text{ mm}$) mang một dòng điện với mật độ dòng điện là $3.20 \times 10^6\text{ A/m}^2$. Mật độ electron tự do của đồng là $8.5 \times 10^{28}\text{ electron/m}^3$. Tính:[cite: 1]
+                <br>(a) Cường độ dòng điện trong dây.[cite: 1]
+                <br>(b) Tốc độ trôi của các electron trong dây.[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Tiết diện dây tròn: $A = \pi r^2 = \pi \left(\frac{d}{2}\right)^2$[cite: 2]</li>
+                    <li>Mật độ dòng điện: $J = \frac{I}{A} \implies I = J \cdot A$[cite: 2]</li>
+                    <li>Tốc độ trôi của electron: $J = n |q| v_d \implies v_d = \frac{J}{n e}$ (với $e = 1.6 \times 10^{-19}\text{ C}$)[cite: 2]</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>(a) Tính cường độ dòng điện $I$:</strong></p>
+                <p>Tiết diện ngang của dây đồng là:</p>
+                $$A = \pi \left(\frac{1.02 \times 10^{-3}\text{ m}}{2}\right)^2 = 8.171 \times 10^{-7}\text{ m}^2$$
+                <p>Cường độ dòng điện qua dây:</p>
+                $$I = J \cdot A = (3.20 \times 10^6\text{ A/m}^2) \times (8.171 \times 10^{-7}\text{ m}^2) \approx \mathbf{2.61\text{ A}}$$
+
+                <p><strong>(b) Tính tốc độ trôi $v_d$:</strong></p>
+                $$v_d = \frac{J}{n e} = \frac{3.20 \times 10^6\text{ A/m}^2}{(8.5 \times 10^{28}\text{ m}^{-3})(1.60 \times 10^{-19}\text{ C})} = 2.35 \times 10^{-4}\text{ m/s} = \mathbf{0.235\text{ mm/s}}$$
+            </div>
+
+            <div class="teacher-note">
+                <strong>Nhận xét của Giảng viên:</strong> Tốc độ trôi của electron cực kỳ nhỏ (chỉ cỡ phân đoạn mm/s)[cite: 2], tuy nhiên điện trường trong dây được thiết lập với tốc độ ánh sáng nên dòng điện xuất hiện tức thì trên toàn mạch[cite: 2].
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 2 (25.10) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 2 (25.10)</h3>
+            <span class="badge-type">Dạng 2: Định luật Ohm vi phân & Điện trở suất</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> 
+                <br>(a) Ở nhiệt độ phòng, cường độ điện trường trong một dây đồng cỡ 12-gauge (đường kính $2.05\text{ mm}$) cần có là bao nhiêu để tạo ra một dòng điện $4.50\text{ A}$ chạy qua?[cite: 1]
+                <br>(b) Cường độ điện trường sẽ là bao nhiêu nếu dây đó được làm bằng bạc (silver) thay vì đồng?[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Tra bảng điện trở suất ở nhiệt độ phòng ($20^\circ\text{C}$): $\rho_{\text{đồng}} = 1.72 \times 10^{-8}\ \Omega\cdot\text{m}$; $\rho_{\text{bạc}} = 1.47 \times 10^{-8}\ \Omega\cdot\text{m}$[cite: 2].</li>
+                    <li>Định luật Ohm dạng vi phân: $E = \rho J = \rho \frac{I}{A}$[cite: 2].</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Tiết diện của dây 12-gauge ($d = 2.05\text{ mm}$):</p>
+                $$A = \pi \left(\frac{2.05 \times 10^{-3}}{2}\right)^2 = 3.301 \times 10^{-6}\text{ m}^2$$
+                <p>Mật độ dòng điện trong dây:</p>
+                $$J = \frac{I}{A} = \frac{4.50\text{ A}}{3.301 \times 10^{-6}\text{ m}^2} = 1.363 \times 10^6\text{ A/m}^2$$
+
+                <p><strong>(a) Trường hợp dây đồng:</strong></p>
+                $$E_{\text{Cu}} = \rho_{\text{Cu}} J = (1.72 \times 10^{-8}\ \Omega\cdot\text{m}) \times (1.363 \times 10^6\text{ A/m}^2) = \mathbf{0.0234\text{ V/m}}$$
+
+                <p><strong>(b) Trường hợp dây bạc:</strong></p>
+                $$E_{\text{Ag}} = \rho_{\text{Ag}} J = (1.47 \times 10^{-8}\ \Omega\cdot\text{m}) \times (1.363 \times 10^6\text{ A/m}^2) = \mathbf{0.0200\text{ V/m}}$$
+            </div>
+
+            <div class="teacher-note">
+                <strong>Nhận xét của Giảng viên:</strong> Vì bạc có điện trở suất nhỏ hơn đồng[cite: 2], nên để duy trì cùng một dòng điện thì điện trường cần thiết trong dây bạc nhỏ hơn dây đồng.
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 3 (25.12) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 3 (25.12)</h3>
+            <span class="badge-type">Dạng 1 & 2: Dây dẫn tiết diện vuông & Thời gian chuyển động</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Một dây đồng có tiết diện vuông với cạnh $2.3\text{ mm}$. Dây dài $4.0\text{ m}$ và mang dòng điện $3.6\text{ A}$. Mật độ electron tự do là $8.5 \times 10^{28}/\text{m}^3$. Tìm độ lớn của:[cite: 1]
+                <br>(a) Mật độ dòng điện trong dây.[cite: 1]
+                <br>(b) Điện trường trong dây.[cite: 1]
+                <br>(c) Cần bao nhiêu thời gian để một electron đi hết chiều dài của dây?[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Tiết diện hình vuông: $A = a^2$</li>
+                    <li>Mật độ dòng: $J = \frac{I}{A}$[cite: 2]</li>
+                    <li>Điện trường: $E = \rho J$[cite: 2]</li>
+                    <li>Thời gian electron trôi hết chiều dài $L$: $t = \frac{L}{v_d} = \frac{L \cdot n e}{J}$[cite: 2]</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Diện tích tiết diện vuông: $A = (2.3 \times 10^{-3}\text{ m})^2 = 5.29 \times 10^{-6}\text{ m}^2$</p>
+
+                <p><strong>(a) Mật độ dòng điện:</strong></p>
+                $$J = \frac{I}{A} = \frac{3.6\text{ A}}{5.29 \times 10^{-6}\text{ m}^2} = \mathbf{6.81 \times 10^5\text{ A/m}^2}$$
+
+                <p><strong>(b) Điện trường trong dây ($\rho_{\text{Cu}} = 1.72 \times 10^{-8}\ \Omega\cdot\text{m}$):</strong></p>
+                $$E = \rho_{\text{Cu}} J = (1.72 \times 10^{-8}) \times (6.81 \times 10^5) = \mathbf{0.0117\text{ V/m}}$$
+
+                <p><strong>(c) Tốc độ trôi và thời gian di chuyển:</strong></p>
+                $$v_d = \frac{J}{n e} = \frac{6.81 \times 10^5}{(8.5 \times 10^{28})(1.6 \times 10^{-19})} = 5.00 \times 10^{-5}\text{ m/s}$$
+                $$t = \frac{L}{v_d} = \frac{4.0\text{ m}}{5.00 \times 10^{-5}\text{ m/s}} = 80000\text{ s} \approx \mathbf{22.2\text{ giờ}}$$
+            </div>
+
+            <div class="teacher-note">
+                <strong>Nhận xét của Giảng viên:</strong> Mất tới hơn 22 tiếng để một electron đi hết đoạn dây 4m! Điều này minh chứng tính chính xác của lý thuyết dòng điện trôi[cite: 2].
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 4 (25.20) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 4 (25.20)</h3>
+            <span class="badge-type">Dạng 3: Tính toán Điện trở & Điện trở suất</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Đặt một hiệu điện thế $4.50\text{ V}$ giữa hai đầu của một dây dẫn dài $2.50\text{ m}$ và có bán kính $0.654\text{ mm}$. Dòng điện chạy qua dây dẫn là $17.6\text{ A}$. Điện trở suất của dây dẫn là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Định luật Ohm: $R = \frac{V}{I}$[cite: 2]</li>
+                    <li>Công thức điện trở hình trụ: $R = \rho \frac{L}{A} \implies \rho = \frac{R \cdot A}{L} = \frac{V \cdot \pi r^2}{I \cdot L}$[cite: 2]</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Tiết diện tròn của dây dẫn:</p>
+                $$A = \pi r^2 = \pi (0.654 \times 10^{-3}\text{ m})^2 = 1.344 \times 10^{-6}\text{ m}^2$$
+                <p>Điện trở của dây dẫn:</p>
+                $$R = \frac{V}{I} = \frac{4.50\text{ V}}{17.6\text{ A}} = 0.2557\ \Omega$$
+                <p>Điện trở suất $\rho$ của dây dẫn:</p>
+                $$\rho = R \frac{A}{L} = 0.2557 \times \frac{1.344 \times 10^{-6}\text{ m}^2}{2.50\text{ m}} = \mathbf{1.37 \times 10^{-7}\ \Omega\cdot\text{m}}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 5 (25.26) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 5 (25.26)</h3>
+            <span class="badge-type">Dạng 4: Mạch chứa Nguồn thực & Điện áp đầu cực</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Xem xét mạch điện được minh họa như trong Hình E25.26. Điện áp đầu cực (terminal voltage) của pin $24.0\text{ V}$ là $21.2\text{ V}$.[cite: 1]
+                <br>(a) Điện trở trong $r$ của pin là bao nhiêu?[cite: 1]
+                <br>(b) Điện trở $R$ trong mạch là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="280" height="160" viewBox="0 0 280 160">
+                    <rect x="10" y="10" width="260" height="140" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <rect x="70" y="1" width="140" height="20" fill="#feefc3" stroke="#d69e2e"/>
+                    <path d="M 80 10 L 85 5 L 95 15 L 105 5 L 115 15 L 120 10" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <line x1="145" y1="2" x2="145" y2="18" stroke="#2d3748" stroke-width="3"/>
+                    <line x1="152" y1="6" x2="152" y2="14" stroke="#2d3748" stroke-width="1.5"/>
+                    <text x="135" y="-3" font-size="12" fill="#2d3748">+</text>
+                    <text x="110" y="-5" font-size="12" font-weight="bold">r  24.0 V</text>
+
+                    <path d="M 110 150 L 115 142 L 125 158 L 135 142 L 145 158 L 160 142 L 165 150" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="135" y="135" font-size="14" font-weight="bold" fill="#2d3748">R</text>
+
+                    <path d="M 20 100 L 20 70" stroke="#805ad5" stroke-width="2" marker-end="url(#arrow)"/>
+                    <text x="30" y="85" font-size="12" fill="#805ad5" font-weight="bold">4.00 A</text>
+
+                    <path d="M 260 60 L 260 90" stroke="#805ad5" stroke-width="2" marker-end="url(#arrow)"/>
+                    <text x="210" y="85" font-size="12" fill="#805ad5" font-weight="bold">4.00 A</text>
+
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#805ad5"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Khi nguồn đang phát dòng điện $I$: Điện áp đầu cực $V_{ab} = \mathcal{E} - I \cdot r$[cite: 2].</li>
+                    <li>Định luật Ohm cho mạch ngoài: $V_{ab} = I \cdot R$[cite: 2].</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Theo đề bài: $\mathcal{E} = 24.0\text{ V}$, $V_{ab} = 21.2\text{ V}$, $I = 4.00\text{ A}$.</p>
+
+                <p><strong>(a) Tìm điện trở trong $r$:</strong></p>
+                $$V_{ab} = \mathcal{E} - I r \implies 21.2 = 24.0 - (4.00) r$$
+                $$r = \frac{24.0 - 21.2}{4.00} = \mathbf{0.700\ \Omega}$$
+
+                <p><strong>(b) Tìm điện trở ngoài $R$:</strong></p>
+                $$V_{ab} = I R \implies R = \frac{V_{ab}}{I} = \frac{21.2\text{ V}}{4.00\text{ A}} = \mathbf{5.30\ \Omega}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 6 (25.29) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 6 (25.29)</h3>
+            <span class="badge-type">Dạng 4: Xác định Suất điện động & Điện trở trong thực nghiệm</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Khi công tắc S trong Hình E25.29 mở, vôn kế V đọc được $3.08\text{ V}$. Khi công tắc đóng, số đọc của vôn kế giảm xuống còn $2.97\text{ V}$, và ampe kế A đọc được $1.65\text{ A}$. Tìm suất điện động ($\mathcal{E}$) của pin, điện trở trong ($r$) của pin, và điện trở mạch ($R$). Giả sử thiết bị đo lý tưởng.[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="160" viewBox="0 0 260 160">
+                    <rect x="30" y="40" width="200" height="90" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <path d="M 30 40 L 30 10 L 230 10 L 230 40" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <circle cx="130" cy="10" r="14" fill="#fff" stroke="#3182ce" stroke-width="2"/>
+                    <text x="125" y="15" font-weight="bold" fill="#3182ce">V</text>
+
+                    <rect x="70" y="31" width="100" height="18" fill="#feefc3" stroke="#d69e2e"/>
+                    <path d="M 80 40 L 85 33 L 95 47 L 105 33 L 110 40" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <line x1="135" y1="33" x2="135" y2="47" stroke="#2d3748" stroke-width="3"/>
+                    <line x1="140" y1="36" x2="140" y2="44" stroke="#2d3748" stroke-width="1.5"/>
+                    <text x="90" y="27" font-size="11">r</text>
+                    <text x="145" y="27" font-size="11" font-weight="bold">Ɛ</text>
+
+                    <circle cx="60" cy="130" r="3" fill="#000"/>
+                    <circle cx="80" cy="130" r="3" fill="#000"/>
+                    <line x1="60" y1="130" x2="78" y2="120" stroke="#2d3748" stroke-width="2"/>
+                    <text x="65" y="148" font-weight="bold">S</text>
+
+                    <path d="M 110 130 L 115 122 L 125 138 L 135 122 L 145 138 L 150 130" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="125" y="150" font-weight="bold">R</text>
+
+                    <circle cx="190" cy="130" r="12" fill="#fff" stroke="#38a169" stroke-width="2"/>
+                    <text x="185" y="135" font-weight="bold" fill="#38a169">A</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>1. Khi công tắc $S$ mở ($I = 0$):</strong></p>
+                <p>Vôn kế đo trực tiếp suất điện động của nguồn khi không tải (Ví dụ 5.4 trong slide)[cite: 2]:</p>
+                $$\mathcal{E} = V_{\text{mở}} = \mathbf{3.08\text{ V}}$$
+
+                <p><strong>2. Khi công tắc $S$ đóng ($I = 1.65\text{ A}$):</strong></p>
+                <p>Số chỉ vôn kế là điện áp đầu cực khi có tải: $V_{\text{đóng}} = 2.97\text{ V}$.</p>
+                <p>Tính điện trở mạch ngoài $R$:</p>
+                $$R = \frac{V_{\text{đóng}}}{I} = \frac{2.97\text{ V}}{1.65\text{ A}} = \mathbf{1.80\ \Omega}$$
+
+                <p>Tính điện trở trong $r$ của nguồn:</p>
+                $$V_{\text{đóng}} = \mathcal{E} - I r \implies 2.97 = 3.08 - (1.65) r \implies r = \frac{3.08 - 2.97}{1.65} = \mathbf{0.0667\ \Omega}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 7 (25.35) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 7 (25.35)</h3>
+            <span class="badge-type">Dạng 5: Công suất định mức của thiết bị điện</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Đánh giá công suất định mức của một bóng đèn là công suất bóng đèn tiêu tán khi nối vào hiệu điện thế $120\text{ V}$.[cite: 1]
+                <br>Tính điện trở của: (a) Bóng $100\text{ W}$, (b) Bóng $60\text{ W}$.[cite: 1]
+                <br>(c) Mỗi bóng đèn tiêu thụ dòng điện bao nhiêu trong điều kiện bình thường?[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Công suất điện tiêu thụ: $P = \frac{V^2}{R} \implies R = \frac{V^2}{P}$[cite: 2]</li>
+                    <li>Cường độ dòng điện định mức: $I = \frac{P}{V}$[cite: 2]</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>(a) Bóng đèn $100\text{ W}$ ($V = 120\text{ V}$):</strong></p>
+                $$R_{100} = \frac{(120)^2}{100} = \mathbf{144\ \Omega}$$
+
+                <p><strong>(b) Bóng đèn $60\text{ W}$ ($V = 120\text{ V}$):</strong></p>
+                $$R_{60} = \frac{(120)^2}{60} = \mathbf{240\ \Omega}$$
+
+                <p><strong>(c) Cường độ dòng điện qua mỗi bóng:</strong></p>
+                $$I_{100} = \frac{100\text{ W}}{120\text{ V}} \approx \mathbf{0.833\text{ A}}$$
+                $$I_{60} = \frac{60\text{ W}}{120\text{ V}} = \mathbf{0.500\text{ A}}$$
+            </div>
+            <div class="teacher-note">
+                <strong>Lưu ý:</strong> Đèn có công suất lớn hơn thì có điện trở nhỏ hơn[cite: 2].
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 8 (25.73) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 8 (25.73)</h3>
+            <span class="badge-type">Dạng 6: Mạch chứa Điện trở & Tụ điện ở trạng thái xác lập</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Xét mạch điện Hình P25.73. Nguồn có điện trở trong không đáng kể. Các điện trở $R_1 = 6.00\ \Omega$, $R_2 = 4.00\ \Omega$. Tụ điện có $C = 9.00\ \mu\text{F}$. Khi tụ điện được sạc đầy, điện tích trên bản cực là $Q = 36.0\ \mu\text{C}$. Tính suất điện động $\mathcal{E}$.[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="130" viewBox="0 0 260 130">
+                    <rect x="30" y="20" width="200" height="90" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <path d="M 70 20 L 75 12 L 85 28 L 95 12 L 105 28 L 110 20" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="85" y="10" font-weight="bold">R₂</text>
+
+                    <line x1="30" y1="60" x2="30" y2="70" stroke="#2d3748" stroke-width="3"/>
+                    <line x1="25" y1="65" x2="35" y2="65" stroke="#2d3748" stroke-width="1"/>
+                    <line x1="22" y1="73" x2="38" y2="73" stroke="#2d3748" stroke-width="2"/>
+                    <text x="10" y="70" font-weight="bold">Ɛ</text>
+
+                    <line x1="130" y1="20" x2="130" y2="110" stroke="#2d3748" stroke-width="2"/>
+                    <path d="M 130 50 L 122 55 L 138 65 L 122 75 L 138 85 L 130 90" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="142" y="70" font-weight="bold">R₁</text>
+
+                    <line x1="220" y1="60" x2="240" y2="60" stroke="#2d3748" stroke-width="2"/>
+                    <line x1="220" y1="68" x2="240" y2="68" stroke="#2d3748" stroke-width="2"/>
+                    <text x="238" y="68" font-weight="bold"> C</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>Phân tích trạng thái tĩnh (sạc đầy):</strong></p>
+                <p>Khi tụ $C$ đã sạc đầy, không có dòng điện đi qua nhánh chứa tụ điện ($I_C = 0$). Do đó, tụ $C$ mắc song song với điện trở $R_1$, suy ra điện áp hai đầu tụ điện bằng điện áp hai đầu $R_1$ ($V_C = V_{R1}$).</p>
+
+                <p>Hiệu điện thế hai đầu tụ điện $C$ là:</p>
+                $$V_C = \frac{Q}{C} = \frac{36.0 \times 10^{-6}\text{ C}}{9.00 \times 10^{-6}\text{ F}} = 4.00\text{ V}$$
+                $$\implies V_{R1} = 4.00\text{ V}$$
+
+                <p>Vì $I_C = 0$, mạch chính gồm $R_2$ mắc nối tiếp với $R_1$. Dòng điện chạy trong mạch chính là:</p>
+                $$I = \frac{V_{R1}}{R_1} = \frac{4.00\text{ V}}{6.00\ \Omega} = \frac{2}{3}\text{ A}$$
+
+                <p>Suất điện động của nguồn $\mathcal{E}$ (do $r = 0$):</p>
+                $$\mathcal{E} = I(R_1 + R_2) = \left(\frac{2}{3}\text{ A}\right) \times (6.00\ \Omega + 4.00\ \Omega) = \frac{20}{3}\text{ V} \approx \mathbf{6.67\text{ V}}$$
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- CHƯƠNG 6 -->
+    <!-- ========================================== -->
+    <h2 class="section-title"> CHƯƠNG 6: MẠCH ĐIỆN MỘT CHIỀU</h2>
+
+    <!-- BÀI 1 CHƯƠNG 6 (26.2) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 1 / C6 (26.2)</h3>
+            <span class="badge-type">Dạng 7: Mạch điện trở tương đương Nối tiếp & Song song</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Một bộ phận máy có điện trở X nhô ra. Điện trở này nối với 3 điện trở như Hình E26.2. Một ôm kế nối giữa a và b đo được giá trị $2.00\ \Omega$. Điện trở X là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="280" height="130" viewBox="0 0 280 130">
+                    <text x="10" y="30" font-weight="bold">a</text>
+                    <text x="10" y="100" font-weight="bold">b</text>
+                    <circle cx="25" cy="25" r="3"/>
+                    <circle cx="25" cy="95" r="3"/>
+                    <line x1="25" y1="25" x2="60" y2="25" stroke="#000" stroke-width="2"/>
+                    <line x1="25" y1="95" x2="60" y2="95" stroke="#000" stroke-width="2"/>
+
+                    <path d="M 60 25 L 65 18 L 75 32 L 85 18 L 90 25" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="72" y="12" font-weight="bold" fill="#e53e3e">X</text>
+
+                    <line x1="90" y1="25" x2="110" y2="25" stroke="#000" stroke-width="2"/>
+                    <line x1="110" y1="25" x2="110" y2="95" stroke="#000" stroke-width="2"/>
+                    
+                    <path d="M 110 25 L 130 25 L 135 18 L 145 32 L 155 18 L 160 25 L 180 25" fill="none" stroke="#2b6cb0" stroke-width="2"/>
+                    <text x="135" y="12" font-size="11">15.0 Ω</text>
+                    
+                    <path d="M 110 60 L 130 60 L 135 53 L 145 67 L 155 53 L 160 60 L 180 60" fill="none" stroke="#2b6cb0" stroke-width="2"/>
+                    <text x="135" y="48" font-size="11">5.0 Ω</text>
+
+                    <path d="M 110 95 L 130 95 L 135 88 L 145 102 L 155 88 L 160 95 L 180 95" fill="none" stroke="#2b6cb0" stroke-width="2"/>
+                    <text x="135" y="83" font-size="11">10.0 Ω</text>
+
+                    <line x1="180" y1="25" x2="180" y2="95" stroke="#000" stroke-width="2"/>
+                    <line x1="180" y1="95" x2="60" y2="95" stroke="#000" stroke-width="2"/>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Sơ đồ gồm điện trở $X$ mắc nối tiếp với cụm 3 điện trở mắc song song ($15.0\ \Omega \parallel 5.0\ \Omega \parallel 10.0\ \Omega$).</p>
+                <p>Tính điện trở tương đương của cụm song song $R_p$:</p>
+                $$\frac{1}{R_p} = \frac{1}{15.0} + \frac{1}{5.0} + \frac{1}{10.0} = \frac{2 + 6 + 3}{30} = \frac{11}{30}\ \Omega^{-1}$$
+                $$\implies R_p = \frac{30}{11}\ \Omega \approx 2.727\ \Omega$$
+
+                <p>Điện trở toàn mạch đo bởi ôm kế giữa $a$ và $b$ là:</p>
+                $$R_{ab} = X + R_p \implies 2.00 = X + 2.727$$
+                $$X = 2.00 - 2.727 = \mathbf{-0.727\ \Omega}$$
+
+                <div class="teacher-note">
+                    <strong>Đánh giá lý thuyết:</strong> Giá trị điện trở thụ động $X$ ra âm chứng tỏ có sự nhầm lẫn về số liệu đề bài thực tế hoặc điện trở trong cấu trúc linh kiện chủ động.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 2 CHƯƠNG 6 (26.7) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 2 / C6 (26.7)</h3>
+            <span class="badge-type">Dạng 7: Thu gọn mạch điện trở phức hợp</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Đối với mạch điện Hình E26.7, tìm số đọc của ampe kế lý tưởng nếu pin có suất điện động $25.0\text{ V}$ và điện trở trong $r = 3.26\ \Omega$.[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="150" viewBox="0 0 260 150">
+                    <rect x="20" y="20" width="220" height="110" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <line x1="20" y1="75" x2="240" y2="75" stroke="#2d3748" stroke-width="2"/>
+
+                    <path d="M 100 20 L 105 12 L 115 28 L 125 12 L 135 28 L 140 20" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="105" y="10" font-size="12" font-weight="bold">45.0 Ω</text>
+
+                    <line x1="45" y1="70" x2="45" y2="80" stroke="#000" stroke-width="3"/>
+                    <line x1="50" y1="72" x2="50" y2="78" stroke="#000" stroke-width="1.5"/>
+                    <text x="30" y="65" font-size="11" font-weight="bold">25.0V</text>
+
+                    <path d="M 100 75 L 105 67 L 115 83 L 125 67 L 135 83 L 140 75" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="105" y="65" font-size="12" font-weight="bold">18.0 Ω</text>
+
+                    <circle cx="190" cy="75" r="12" fill="#fff" stroke="#38a169" stroke-width="2"/>
+                    <text x="185" y="80" font-weight="bold" fill="#38a169">A</text>
+
+                    <path d="M 100 130 L 105 122 L 115 138 L 125 122 L 135 138 L 140 130" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="105" y="148" font-size="12" font-weight="bold">15.0 Ω</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Nhánh trên ($45.0\ \Omega$) mắc song song với nhánh dưới ($15.0\ \Omega$). Điện trở tương đương ngoài $R_p$ của hai nhánh này là:</p>
+                $$R_p = \frac{45.0 \times 15.0}{45.0 + 15.0} = \frac{675}{60} = 11.25\ \Omega$$
+
+                <p>Mạch chính gồm nguồn ($\mathcal{E} = 25.0\text{ V}, r = 3.26\ \Omega$), điện trở $18.0\ \Omega$, ampe kế A và cụm song song $R_p$ mắc nối tiếp với nhau.</p>
+
+                <p>Tổng điện trở toàn mạch là:</p>
+                $$R_{\text{tổng}} = R_p + 18.0 + r = 11.25 + 18.0 + 3.26 = 32.51\ \Omega$$
+
+                <p>Số chỉ của ampe kế (dòng điện mạch chính):</p>
+                $$I = \frac{\mathcal{E}}{R_{\text{tổng}}} = \frac{25.0\text{ V}}{32.51\ \Omega} \approx \mathbf{0.769\text{ A}}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 3 CHƯƠNG 6 (26.11) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 3 / C6 (26.11)</h3>
+            <span class="badge-type">Dạng 7: Phân tích dòng điện & điện áp mạch hỗn hợp</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Trong Hình E26.11, $R_1 = 3.00\ \Omega$, $R_2 = 6.00\ \Omega$, $R_3 = 5.00\ \Omega$. Nguồn có $r = 0$. Dòng điện qua $R_2$ là $I_2 = 4.00\text{ A}$.[cite: 1]
+                <br>(a) Các dòng điện $I_1$ và $I_3$ là bao nhiêu?[cite: 1]
+                <br>(b) Suất điện động $\mathcal{E}$ của pin là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="140" viewBox="0 0 260 140">
+                    <rect x="20" y="20" width="220" height="100" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <line x1="20" y1="65" x2="20" y2="75" stroke="#000" stroke-width="3"/>
+                    <line x1="12" y1="70" x2="28" y2="70" stroke="#000" stroke-width="1.5"/>
+                    <text x="5" y="65" font-weight="bold">Ɛ</text>
+
+                    <line x1="80" y1="20" x2="80" y2="80" stroke="#000" stroke-width="2"/>
+                    <line x1="160" y1="20" x2="160" y2="80" stroke="#000" stroke-width="2"/>
+
+                    <path d="M 100 20 L 105 12 L 115 28 L 125 12 L 135 28 L 140 20" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="115" y="10" font-weight="bold">R₁</text>
+
+                    <path d="M 100 80 L 105 72 L 115 88 L 125 72 L 135 88 L 140 80" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="115" y="70" font-weight="bold">R₂</text>
+
+                    <path d="M 110 120 L 115 112 L 125 128 L 135 112 L 145 128 L 150 120" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="125" y="138" font-weight="bold">R₃</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>(a) Tính dòng điện $I_1$ và $I_3$:</strong></p>
+                <p>Vì $R_1$ mắc song song với $R_2$, hiệu điện thế giữa hai đầu cụm song song là:</p>
+                $$V_p = I_2 R_2 = (4.00\text{ A}) \times (6.00\ \Omega) = 24.0\text{ V}$$
+                <p>Dòng điện qua $R_1$ là:</p>
+                $$I_1 = \frac{V_p}{R_1} = \frac{24.0\text{ V}}{3.00\ \Omega} = \mathbf{8.00\text{ A}}$$
+                <p>Dòng điện $I_3$ đi qua $R_3$ chính là dòng điện mạch chính:</p>
+                $$I_3 = I_1 + I_2 = 8.00\text{ A} + 4.00\text{ A} = \mathbf{12.00\text{ A}}$$
+
+                <p><strong>(b) Suất điện động $\mathcal{E}$:</strong></p>
+                $$V_{R3} = I_3 R_3 = (12.00\text{ A}) \times (5.00\ \Omega) = 60.0\text{ V}$$
+                $$\mathcal{E} = V_p + V_{R3} = 24.0\text{ V} + 60.0\text{ V} = \mathbf{84.0\text{ V}}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 4 CHƯƠNG 6 (26.12) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 4 / C6 (26.12)</h3>
+            <span class="badge-type">Dạng 7: Tính giá trị điện trở trong mạch hỗn hợp</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Trong Hình E26.11, pin có $\mathcal{E} = 35.0\text{ V}, r = 0$. Điện trở $R_1 = 5.00\ \Omega$, dòng điện qua $R_1$ là $1.50\text{ A}$, dòng điện qua $R_3$ là $4.50\text{ A}$. Tìm các điện trở $R_2$ và $R_3$.[cite: 1]
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Hiệu điện thế hai đầu cụm song song ($R_1 \parallel R_2$):</p>
+                $$V_p = I_1 R_1 = (1.50\text{ A}) \times (5.00\ \Omega) = 7.50\text{ V}$$
+
+                <p>Dòng điện chạy qua $R_2$ bằng tổng dòng trừ đi dòng qua $R_1$:</p>
+                $$I_2 = I_3 - I_1 = 4.50\text{ A} - 1.50\text{ A} = 3.00\text{ A}$$
+
+                <p>Giá trị điện trở $R_2$:</p>
+                $$R_2 = \frac{V_p}{I_2} = \frac{7.50\text{ V}}{3.00\text{ A}} = \mathbf{2.50\ \Omega}$$
+
+                <p>Hiệu điện thế hai đầu điện trở $R_3$:</p>
+                $$V_{R3} = \mathcal{E} - V_p = 35.0\text{ V} - 7.50\text{ V} = 27.5\text{ V}$$
+
+                <p>Giá trị điện trở $R_3$:</p>
+                $$R_3 = \frac{V_{R3}}{I_3} = \frac{27.5\text{ V}}{4.50\text{ A}} \approx \mathbf{6.11\ \Omega}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 5 CHƯƠNG 6 (26.18) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 5 / C6 (26.18)</h3>
+            <span class="badge-type">Dạng 8: Mạch điện khi Khóa K (Công tắc S) Đóng/Mở</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Trong mạch điện Hình E26.18, $\mathcal{E} = 36.0\text{ V}$, $R_1 = 4.00\ \Omega$, $R_2 = 6.00\ \Omega$, $R_3 = 3.00\ \Omega$.[cite: 1]
+                <br>(a) Hiệu điện thế $V_{ab}$ giữa điểm a và b là bao nhiêu khi công tắc S mở và khi S đóng?[cite: 1]
+                <br>(b) Với mỗi điện trở, tính dòng điện qua nó khi S mở và khi S đóng? Dòng điện tăng hay giảm khi S đóng?[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="150" viewBox="0 0 260 150">
+                    <rect x="20" y="20" width="220" height="110" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <circle cx="50" cy="20" r="3" fill="#000"/>
+                    <text x="45" y="12" font-weight="bold">a</text>
+                    <circle cx="170" cy="20" r="3" fill="#000"/>
+                    <text x="170" y="12" font-weight="bold">b</text>
+
+                    <path d="M 50 20 L 50 40 L 170 40 L 170 20" fill="none" stroke="#2d3748" stroke-width="1.5"/>
+                    <circle cx="80" cy="40" r="2"/>
+                    <line x1="80" y1="40" x2="95" y2="30" stroke="#000" stroke-width="2"/>
+                    <text x="85" y="55" font-weight="bold">S</text>
+                    <path d="M 110 40 L 115 32 L 125 48 L 135 32 L 140 40" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="120" y="55" font-weight="bold">R₁</text>
+
+                    <path d="M 90 20 L 95 12 L 105 28 L 115 12 L 125 20" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="105" y="10" font-weight="bold">R₂</text>
+
+                    <path d="M 240 50 L 232 55 L 248 65 L 232 75 L 240 80" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="215" y="65" font-weight="bold">R₃</text>
+
+                    <line x1="120" y1="130" x2="120" y2="120" stroke="#000" stroke-width="3"/>
+                    <line x1="125" y1="130" x2="125" y2="120" stroke="#000" stroke-width="1"/>
+                    <text x="115" y="145" font-weight="bold">Ɛ</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                
+                <p><strong>TRƯỜNG HỢP 1: Công tắc S MỞ</strong></p>
+                <ul>
+                    <li>Không có dòng điện qua $R_1 \implies I_1 = 0$.</li>
+                    <li>Mạch gồm $R_2$ mắc nối tiếp với $R_3$. Tổng điện trở: $R_{\text{mở}} = R_2 + R_3 = 6.00 + 3.00 = 9.00\ \Omega$.</li>
+                    <li>Dòng điện mạch chính: $I = \frac{36.0\text{ V}}{9.00\ \Omega} = 4.00\text{ A}$.</li>
+                    <li>Dòng qua các điện trở: $I_2 = 4.00\text{ A}$, $I_3 = 4.00\text{ A}$.</li>
+                    <li>Hiệu điện thế $V_{ab} = V_{R2} = I_2 R_2 = 4.00 \times 6.00 = \mathbf{24.0\text{ V}}$.</li>
+                </ul>
+
+                <p><strong>TRƯỜNG HỢP 2: Công tắc S ĐỐNG</strong></p>
+                <ul>
+                    <li>$R_1$ mắc song song với $R_2$: $R_{ab} = \frac{R_1 R_2}{R_1 + R_2} = \frac{4.00 \times 6.00}{4.00 + 6.00} = 2.40\ \Omega$.</li>
+                    <li>Tổng điện trở toàn mạch: $R_{\text{đóng}} = 2.40 + 3.00 = 5.40\ \Omega$.</li>
+                    <li>Dòng điện mạch chính mới: $I_3' = \frac{36.0\text{ V}}{5.40\ \Omega} = \mathbf{6.67\text{ A}}$.</li>
+                    <li>Hiệu điện thế mới $V_{ab}' = I_3' R_{ab} = 6.67 \times 2.40 = \mathbf{16.0\text{ V}}$.</li>
+                    <li>Dòng điện qua $R_1$: $I_1' = \frac{16.0\text{ V}}{4.00\ \Omega} = \mathbf{4.00\text{ A}}$.</li>
+                    <li>Dòng điện qua $R_2$: $I_2' = \frac{16.0\text{ V}}{6.00\ \Omega} = \mathbf{2.67\text{ A}}$.</li>
+                </ul>
+
+                <div class="teacher-note">
+                    <strong>Tóm tắt sự thay đổi khi đóng khóa S:</strong>
+                    <ul>
+                        <li>$V_{ab}$ giảm từ $24.0\text{ V}$ xuống $16.0\text{ V}$.</li>
+                        <li>Dòng điện qua $R_1$ tăng từ $0$ lên $4.00\text{ A}$.</li>
+                        <li>Dòng điện qua $R_2$ giảm từ $4.00\text{ A}$ xuống $2.67\text{ A}$.</li>
+                        <li>Dòng điện qua $R_3$ tăng từ $4.00\text{ A}$ lên $6.67\text{ A}$.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 6 CHƯƠNG 6 (26.24) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 6 / C6 (26.24)</h3>
+            <span class="badge-type">Dạng 9: Quy tắc Kirchhoff cho mạch Mạng lưới</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Các pin trong mạch điện Hình E26.24 có điện trở trong không đáng kể. Tìm dòng điện chạy qua: (a) Điện trở $30.0\ \Omega$; (b) Điện trở $20.0\ \Omega$; (c) Pin $10.0\text{ V}$.[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="260" height="150" viewBox="0 0 260 150">
+                    <rect x="30" y="20" width="200" height="110" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <line x1="130" y1="20" x2="130" y2="130" stroke="#2d3748" stroke-width="2"/>
+
+                    <line x1="30" y1="65" x2="30" y2="75" stroke="#000" stroke-width="3"/>
+                    <line x1="22" y1="70" x2="38" y2="70" stroke="#000" stroke-width="1.5"/>
+                    <text x="5" y="70" font-size="11" font-weight="bold">10.0V</text>
+
+                    <path d="M 130 60 L 122 65 L 138 75 L 122 85 L 130 90" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="140" y="75" font-size="11" font-weight="bold">30.0 Ω</text>
+
+                    <path d="M 230 40 L 222 45 L 238 55 L 222 65 L 230 70" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="180" y="55" font-size="11" font-weight="bold">20.0 Ω</text>
+
+                    <line x1="230" y1="95" x2="230" y2="105" stroke="#000" stroke-width="3"/>
+                    <line x1="222" y1="100" x2="238" y2="100" stroke="#000" stroke-width="1.5"/>
+                    <text x="185" y="105" font-size="11" font-weight="bold">5.00V</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Vì các nguồn pin có $r = 0$, hiệu điện thế hai đầu các nhánh song song song song được xác định trực tiếp:</p>
+                <p>Hiệu điện thế hai đầu nhánh middle chứa điện trở $30.0\ \Omega$ chính bằng điện áp pin $10.0\text{ V}$.</p>
+
+                <p><strong>(a) Dòng điện qua điện trở $30.0\ \Omega$:</strong></p>
+                $$I_{30} = \frac{10.0\text{ V}}{30.0\ \Omega} = \mathbf{0.333\text{ A}}$$
+
+                <p><strong>(b) Dòng điện qua điện trở $20.0\ \Omega$:</strong></p>
+                <p>Xét vòng bên phải chứa nguồn $10.0\text{ V}$, điện trở $20.0\ \Omega$ và nguồn $5.00\text{ V}$ (xét chiều cùng chiều kim đồng hồ):</p>
+                $$10.0\text{ V} - I_{20} (20.0\ \Omega) - 5.00\text{ V} = 0 \implies I_{20} = \frac{10.0 - 5.00}{20.0} = \mathbf{0.250\text{ A}}$$
+
+                <p><strong>(c) Dòng điện qua pin $10.0\text{ V}$:</strong></p>
+                <p>Áp dụng quy tắc nút Kirchhoff tại nút phía trên: Dòng điện từ pin $10\text{ V}$ rẽ vào nhánh $30\ \Omega$ và nhánh $20\ \Omega$:</p>
+                $$I_{10\text{V}} = I_{30} + I_{20} = 0.333\text{ A} + 0.250\text{ A} = \mathbf{0.583\text{ A}}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 7 CHƯƠNG 6 (26.25) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 7 / C6 (26.25)</h3>
+            <span class="badge-type">Dạng 9: Ứng dụng đầy đủ Quy tắc Kirchhoff</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Trong mạch điện Hình E26.25, tìm:[cite: 1]
+                <br>(a) Dòng điện trong điện trở R.[cite: 1]
+                <br>(b) Giá trị điện trở R.[cite: 1]
+                <br>(c) Suất điện động ($\mathcal{E}$) chưa biết.[cite: 1]
+                <br>(d) Nếu mạch bị đứt tại điểm x, dòng điện trong điện trở R là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="svg-container">
+                <svg width="280" height="160" viewBox="0 0 280 160">
+                    <rect x="30" y="20" width="220" height="120" fill="none" stroke="#2d3748" stroke-width="2"/>
+                    <line x1="30" y1="80" x2="250" y2="80" stroke="#2d3748" stroke-width="2"/>
+
+                    <line x1="70" y1="15" x2="70" y2="25" stroke="#000" stroke-width="3"/>
+                    <text x="50" y="15" font-size="11" font-weight="bold">28.0V</text>
+                    <path d="M 160 20 L 165 12 L 175 28 L 185 12 L 190 20" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="175" y="10" font-weight="bold">R</text>
+
+                    <line x1="70" y1="75" x2="70" y2="85" stroke="#000" stroke-width="3"/>
+                    <text x="55" y="75" font-size="11" font-weight="bold">Ɛ</text>
+                    <circle cx="120" cy="80" r="3" fill="#000"/>
+                    <text x="118" y="95" font-weight="bold">x</text>
+                    <path d="M 170 80 L 175 72 L 185 88 L 195 72 L 200 80" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="175" y="70" font-size="11" font-weight="bold">6.00 Ω</text>
+                    <text x="200" y="95" font-size="11" fill="#805ad5" font-weight="bold">← 4.00 A</text>
+
+                    <path d="M 120 140 L 125 132 L 135 148 L 145 132 L 150 140" fill="none" stroke="#e53e3e" stroke-width="2"/>
+                    <text x="130" y="158" font-size="11" font-weight="bold">3.00 Ω</text>
+                    <text x="180" y="135" font-size="11" fill="#805ad5" font-weight="bold">6.00 A →</text>
+                </svg>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p><strong>(a) Dòng điện trong điện trở R ($I_R$):</strong></p>
+                <p>Áp dụng quy tắc nút Kirchhoff tại nút bên phải:</p>
+                $$I_R + 4.00\text{ A} = 6.00\text{ A} \implies I_R = 6.00 - 4.00 = \mathbf{2.00\text{ A}}\text{ (hướng sang trái)}$$
+
+                <p><strong>(b) Điện trở R:</strong></p>
+                <p>Áp dụng quy tắc vòng Kirchhoff cho vòng ngoài cùng (chứa $28.0\text{ V}$, $R$ và $3.00\ \Omega$):</p>
+                $$28.0\text{ V} - I_R \cdot R - (6.00\text{ A})(3.00\ \Omega) = 0$$
+                $$28.0 - 2.00 \cdot R - 18.0 = 0 \implies 2.00 \cdot R = 10.0 \implies R = \mathbf{5.00\ \Omega}$$
+
+                <p><strong>(c) Suất điện động $\mathcal{E}$:</strong></p>
+                <p>Xét vòng dưới (chứa $\mathcal{E}$, $6.00\ \Omega$ và $3.00\ \Omega$):</p>
+                $$-\mathcal{E} - (4.00\text{ A})(6.00\ \Omega) + (6.00\text{ A})(3.00\ \Omega) = 0$$
+                $$-\mathcal{E} - 24.0 + 18.0 = 0 \implies \mathcal{E} = \mathbf{-6.00\text{ V}}$$
+                <p><i>(Dấu âm cho biết cực dương thực tế của nguồn $\mathcal{E}$ quay sang phải)</i>.</p>
+
+                <p><strong>(d) Khi mạch bị đứt tại điểm x:</strong></p>
+                <p>Dòng điện qua nhánh giữa bằng $0$. Mạch chỉ còn vòng ngoài gồm nguồn $28.0\text{ V}$ mắc nối tiếp với $R = 5.00\ \Omega$ và điện trở $3.00\ \Omega$:</p>
+                $$I_R' = \frac{28.0\text{ V}}{5.00\ \Omega + 3.00\ \Omega} = \frac{28.0}{8.00} = \mathbf{3.50\text{ A}}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- BÀI 8 CHƯƠNG 6 (26.39) -->
+    <div class="problem-card">
+        <div class="problem-header">
+            <h3 class="problem-title">Bài 8 / C6 (26.39)</h3>
+            <span class="badge-type">Dạng 10: Quá trình Phóng điện Tụ điện trong mạch RC</span>
+        </div>
+        <div class="problem-body">
+            <div class="problem-statement">
+                <strong>Đề bài:</strong> Một tụ điện được nạp đến hiệu điện thế $12.0\text{ V}$ và sau đó được nối với một vôn kế có điện trở trong $3.40\text{ M}\Omega$. Sau thời gian $4.00\text{ s}$, vôn kế đọc được $3.0\text{ V}$. Hỏi:[cite: 1]
+                <br>(a) Điện dung của tụ điện?[cite: 1]
+                <br>(b) Hằng số thời gian của mạch là bao nhiêu?[cite: 1]
+            </div>
+
+            <div class="theory-box">
+                <h4> Cơ sở lý thuyết:</h4>
+                <ul>
+                    <li>Sự phóng điện của tụ điện qua điện trở $R$: $V(t) = V_0 \cdot e^{-t / \tau}$[cite: 2]</li>
+                    <li>Hằng số thời gian: $\tau = R \cdot C$[cite: 2]</li>
+                </ul>
+            </div>
+
+            <div class="solution-step">
+                <h5>Lời giải chi tiết:</h5>
+                <p>Theo đề bài: $V_0 = 12.0\text{ V}$, $V(t) = 3.0\text{ V}$ tại $t = 4.00\text{ s}$, $R = 3.40 \times 10^6\ \Omega$.</p>
+
+                <p><strong>(a) Tính hằng số thời gian $\tau$:</strong></p>
+                $$\frac{V(t)}{V_0} = e^{-t / \tau} \implies \frac{3.0}{12.0} = 0.25 = e^{-4.00 / \tau}$$
+                $$\ln(0.25) = -\frac{4.00}{\tau} \implies -1.3863 = -\frac{4.00}{\tau}$$
+                $$\tau = \frac{4.00}{1.3863} \approx \mathbf{2.89\text{ s}}$$
+
+                <p><strong>(b) Tính điện dung $C$:</strong></p>
+                $$\tau = R \cdot C \implies C = \frac{\tau}{R} = \frac{2.885\text{ s}}{3.40 \times 10^6\ \Omega} \approx \mathbf{8.49 \times 10^{-7}\text{ F}} = \mathbf{0.849\ \mu\text{F}}$$
+            </div>
+
+            <div class="teacher-note">
+                <strong>Nhận xét của Giảng viên:</strong> Bài toán ứng dụng vôn kế có điện trở hữu hạn làm điện trở phóng điện cho tụ[cite: 2]. Hằng số thời gian $\tau$ phản ánh tốc độ giảm điện áp của mạch[cite: 2].
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Bài giảng Vật lý Đại cương II - Bộ môn Vật lý, Trường Đại học Công nghệ, ĐHQGHN[cite: 2]</p>
+</footer>
+
+</body>
+</html>

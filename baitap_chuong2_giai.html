@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giải bài tập trọng tâm Chương 2 — Định luật Gauss (VLĐC2)</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      tags: 'none'
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root{
+    --bg:#0e1117;
+    --bg-panel:#161b22;
+    --bg-panel2:#1c232f;
+    --border:#2a3240;
+    --text:#e6edf3;
+    --text-dim:#9aa7b5;
+    --accent:#5fb3ff;
+    --accent2:#7ee7c7;
+    --warn:#ffcf6b;
+    --danger:#ff8787;
+    --answer-bg:#0f2a20;
+    --answer-border:#2e7d5b;
+    --given-bg:#1a2233;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65;
+    scroll-behavior:smooth;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  header.top{
+    padding:34px 20px 18px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#131824,#0e1117);
+  }
+  header.top h1{
+    margin:0 0 6px;
+    font-size:1.6rem;
+    color:var(--accent2);
+    letter-spacing:.3px;
+  }
+  header.top p{margin:0;color:var(--text-dim);font-size:.95rem;}
+
+  nav.sticky{
+    position:sticky;top:0;z-index:50;
+    background:rgba(14,17,23,.96);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+    padding:10px 14px;
+    display:flex;flex-wrap:wrap;gap:6px 8px;
+    justify-content:center;
+  }
+  nav.sticky a{
+    font-size:.82rem;
+    color:var(--text-dim);
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    padding:5px 10px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  nav.sticky a:hover{color:var(--accent);border-color:var(--accent);text-decoration:none;}
+
+  .wrap{max-width:920px;margin:0 auto;padding:22px 16px 80px;}
+
+  .toolbar{
+    display:flex;justify-content:flex-end;gap:10px;margin:6px 0 18px;
+  }
+  .toolbar button{
+    background:var(--bg-panel2);
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:7px 14px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:.85rem;
+  }
+  .toolbar button:hover{border-color:var(--accent);color:var(--accent);}
+
+  details.theory{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:22px;
+    padding:0;
+  }
+  details.theory summary{
+    cursor:pointer;
+    padding:14px 18px;
+    font-weight:600;
+    color:var(--warn);
+    list-style:none;
+  }
+  details.theory summary::-webkit-details-marker{display:none;}
+  details.theory summary::before{content:"▸ ";}
+  details.theory[open] summary::before{content:"▾ ";}
+  .theory-body{padding:0 20px 18px;color:var(--text-dim);font-size:.94rem;}
+  .theory-body table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.9rem;}
+  .theory-body td,.theory-body th{border:1px solid var(--border);padding:6px 10px;text-align:left;}
+  .theory-body th{color:var(--accent2);}
+
+  section.problem{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:20px;
+    overflow:hidden;
+    scroll-margin-top:70px;
+  }
+  .problem-head{
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    background:var(--bg-panel2);
+    border-bottom:1px solid var(--border);
+  }
+  .problem-head h2{
+    margin:0;
+    font-size:1.05rem;
+    color:var(--accent);
+  }
+  .tag{
+    font-size:.72rem;
+    color:#0e1117;
+    background:var(--accent2);
+    padding:2px 9px;
+    border-radius:20px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .statement{
+    padding:16px 20px 4px;
+    color:var(--text);
+    font-size:.97rem;
+  }
+  .statement .given{
+    background:var(--given-bg);
+    border-left:3px solid var(--accent);
+    padding:10px 14px;
+    border-radius:6px;
+    margin:10px 0 14px;
+    font-size:.92rem;
+    color:var(--text-dim);
+  }
+
+  details.solution{margin:0 20px 18px;}
+  details.solution summary{
+    cursor:pointer;
+    padding:9px 14px;
+    background:#20293a;
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--accent2);
+    font-weight:600;
+    font-size:.92rem;
+    list-style:none;
+  }
+  details.solution summary::-webkit-details-marker{display:none;}
+  details.solution summary::before{content:"▸ Lời giải chi tiết  ";}
+  details.solution[open] summary::before{content:"▾ Lời giải chi tiết  ";}
+  .sol-body{padding:14px 4px 4px;}
+  .sol-body h4{
+    margin:16px 0 6px;color:var(--warn);font-size:.9rem;text-transform:uppercase;letter-spacing:.4px;
+  }
+  .sol-body h4:first-child{margin-top:2px;}
+  .sol-body p{margin:6px 0;}
+
+  .answer{
+    background:var(--answer-bg);
+    border:1px solid var(--answer-border);
+    border-radius:8px;
+    padding:10px 16px;
+    margin:12px 0 4px;
+    font-weight:600;
+    color:var(--accent2);
+  }
+  .answer .label{
+    color:#8fd6b4;font-weight:700;text-transform:uppercase;font-size:.72rem;letter-spacing:.5px;display:block;margin-bottom:4px;
+  }
+
+  .note{
+    color:var(--text-dim);
+    font-style:italic;
+    font-size:.88rem;
+  }
+
+  figure{margin:14px 0;text-align:center;}
+  figcaption{color:var(--text-dim);font-size:.82rem;margin-top:6px;}
+
+  footer{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:.82rem;
+    padding:30px 10px 10px;
+    border-top:1px solid var(--border);
+    margin-top:30px;
+  }
+
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:#2a3240;border-radius:6px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>BÀI TẬP TRỌNG TÂM CHƯƠNG 2 — ĐỊNH LUẬT GAUSS</h1>
+  <p>Vật lý đại cương 2 · Lời giải chi tiết 15 bài · trình bày bởi giảng viên bài tập</p>
+</header>
+
+<nav class="sticky" id="navbar">
+  <a href="#top">Đầu trang</a>
+  <a href="#ly-thuyet">Lý thuyết</a>
+  <a href="#bai1">B1</a>
+  <a href="#bai2">B2</a>
+  <a href="#bai3">B3</a>
+  <a href="#bai4">B4</a>
+  <a href="#bai5">B5</a>
+  <a href="#bai6">B6</a>
+  <a href="#bai7">B7</a>
+  <a href="#bai8">B8</a>
+  <a href="#bai9">B9</a>
+  <a href="#bai10">B10</a>
+  <a href="#bai11">B11</a>
+  <a href="#bai12">B12</a>
+  <a href="#bai13">B13</a>
+  <a href="#bai14">B14</a>
+  <a href="#bai15">B15</a>
+</nav>
+
+<div class="wrap" id="top">
+
+  <div class="toolbar">
+    <button onclick="toggleAll(true)">Mở tất cả lời giải</button>
+    <button onclick="toggleAll(false)">Đóng tất cả lời giải</button>
+  </div>
+
+  <details class="theory" id="ly-thuyet">
+    <summary>Tóm tắt lý thuyết cần dùng — Định luật Gauss</summary>
+    <div class="theory-body">
+      <p><b>Định luật Gauss (dạng tích phân):</b></p>
+      \[ \Phi_E = \oint_S \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\varepsilon_0} \]
+      <p>trong đó \(Q_{\text{enc}}\) là tổng điện tích nằm <b>bên trong</b> mặt kín Gauss \(S\); \(\varepsilon_0 = 8.85\times10^{-12}\ \text{C}^2/(\text{N}\cdot\text{m}^2)\); hằng số Coulomb \(k = \dfrac{1}{4\pi\varepsilon_0} = 8.99\times10^{9}\ \text{N}\cdot\text{m}^2/\text{C}^2\).</p>
+      <p><b>Nguyên lý quan trọng:</b> thông lượng qua mặt kín chỉ phụ thuộc điện tích <i>bên trong</i>, không phụ thuộc hình dạng/kích thước mặt Gauss hay vị trí chính xác của điện tích bên trong.</p>
+      <table>
+        <tr><th>Hệ điện tích</th><th>Điện trường</th><th>Ghi chú</th></tr>
+        <tr><td>Dây thẳng dài vô hạn, mật độ dài \(\lambda\)</td><td>\(E=\dfrac{\lambda}{2\pi\varepsilon_0 r}\)</td><td>\(r\): khoảng cách vuông góc tới dây</td></tr>
+        <tr><td>Mặt phẳng vô hạn, mật độ mặt \(\sigma\)</td><td>\(E=\dfrac{\sigma}{2\varepsilon_0}\)</td><td>không đổi theo khoảng cách</td></tr>
+        <tr><td>Mặt cầu mỏng tích điện đều Q, bán kính R</td><td>\(E=0\ (r<R)\); \(E=\dfrac{kQ}{r^2}\ (r>R)\)</td><td>tính đối xứng cầu</td></tr>
+        <tr><td>Quả cầu đặc dẫn điện, điện tích Q</td><td>\(E=0\) bên trong (điện tích ở mặt ngoài); \(E=\dfrac{kQ}{r^2}\ (r>R)\)</td><td>vật dẫn cân bằng tĩnh điện</td></tr>
+        <tr><td>Trụ dài vô hạn tích điện đều mật độ khối \(\rho\)</td><td>Gauss trụ, \(E\cdot 2\pi r l = Q_{enc}/\varepsilon_0\)</td><td>tính theo từng miền bán kính</td></tr>
+      </table>
+      <p><b>Vật dẫn cân bằng tĩnh điện:</b> điện trường bên trong khối vật dẫn luôn bằng 0; nếu có điện tích đặt trong hốc rỗng của vật dẫn thì mặt trong của hốc sẽ xuất hiện điện tích cảm ứng trái dấu và bằng độ lớn để tổng điện tích trong mặt Gauss nằm trong lòng vật dẫn luôn bằng 0.</p>
+    </div>
+  </details>
+
+  <!-- ================= BÀI 1 ================= -->
+  <section class="problem" id="bai1">
+    <div class="problem-head"><h2>Bài 1 (22.4*)</h2><span class="tag">Dây dài vô hạn</span></div>
+    <div class="statement">
+      <div class="given">
+        Dây thẳng dài vô hạn, mật độ dài \(\lambda = 3\ \mu\text{C/m}\). Mặt trụ Gauss tưởng tượng bao quanh dây: bán kính \(r=0.25\ \text{m}\), chiều dài \(l=0.4\ \text{m}\).
+      </div>
+      <p>a) Tính thông lượng điện qua hình trụ. b) Nếu bán kính dây là \(r=0.5\ \text{m}\)? c) Nếu \(l=0.8\ \text{m}\)?</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Ý tưởng</h4>
+        <p>Theo định luật Gauss, thông lượng qua mặt kín <b>chỉ phụ thuộc điện tích nằm bên trong</b> mặt đó, không phụ thuộc bán kính hay hình dạng của mặt Gauss — miễn là dây vẫn nằm bên trong hình trụ. Điện tích bị bao bởi hình trụ chiều dài \(l\) là \(Q_{enc}=\lambda l\).</p>
+        <h4>Câu a)</h4>
+        \[ \Phi_E = \frac{Q_{enc}}{\varepsilon_0} = \frac{\lambda l}{\varepsilon_0} = \frac{(3\times10^{-6})(0.4)}{8.85\times10^{-12}} \]
+        <div class="answer"><span class="label">Kết quả</span>\( \Phi_E \approx 1.356\times10^{5}\ \text{N}\cdot\text{m}^2/\text{C} \)</div>
+        <h4>Câu b) — bán kính dây tăng lên \(r=0.5\ \text{m}\)</h4>
+        <p>Việc đổi bán kính của mặt trụ Gauss <b>không</b> làm thay đổi điện tích bị bao bên trong (vẫn là toàn bộ đoạn dây dài \(l=0.4\ \text{m}\), với cùng \(\lambda\)). Do đó thông lượng <b>không đổi</b>:</p>
+        <div class="answer"><span class="label">Kết quả</span>\( \Phi_E \approx 1.356\times10^{5}\ \text{N}\cdot\text{m}^2/\text{C} \) (giữ nguyên như câu a)</div>
+        <h4>Câu c) — chiều dài trụ tăng lên \(l=0.8\ \text{m}\)</h4>
+        <p>Lúc này điện tích bị bao tăng gấp đôi vì đoạn dây nằm trong trụ dài gấp đôi:</p>
+        \[ \Phi_E = \frac{\lambda l}{\varepsilon_0} = \frac{(3\times10^{-6})(0.8)}{8.85\times10^{-12}} \]
+        <div class="answer"><span class="label">Kết quả</span>\( \Phi_E \approx 2.712\times10^{5}\ \text{N}\cdot\text{m}^2/\text{C} \)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 2 ================= -->
+  <section class="problem" id="bai2">
+    <div class="problem-head"><h2>Bài 2 (22.6*)</h2><span class="tag">Khối lập phương</span></div>
+    <div class="statement">
+      <div class="given">
+        Khối lập phương cạnh \(L=10\ \text{cm}=0.1\ \text{m}\), đặt trong điện trường đều \(E=4\times10^3\ \text{N/C}\), \(\vec E\) song song mặt phẳng \(xy\) và hợp với trục \(Ox\) góc \(53.1^\circ\) (chiều từ \(Ox\) sang \(Oy\)). Các mặt: S1 (trái, \(\perp Oy\), \(y=0\)), S3 (phải, \(\perp Oy\), \(y=L\)), S5 (trước, \(\perp Ox\), \(x=0\)), S6 (sau, \(\perp Ox\), \(x=L\)), S2 (trên), S4 (dưới).
+      </div>
+      <p>a) Tính thông lượng qua mỗi mặt. b) Tính tổng thông lượng qua cả 6 mặt.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Phân tích điện trường</h4>
+        <p>Vì \(\vec E\) nằm trong mặt phẳng \(xy\) (không có thành phần \(z\)), ta có \(53.1^\circ\) là góc "3-4-5" quen thuộc: \(\cos53.1^\circ=0.6\), \(\sin53.1^\circ=0.8\).</p>
+        \[ E_x = E\cos53.1^\circ = 4000\times0.6 = 2400\ \text{N/C} \]
+        \[ E_y = E\sin53.1^\circ = 4000\times0.8 = 3200\ \text{N/C},\qquad E_z=0 \]
+        <p>Diện tích mỗi mặt: \(A=L^2 = (0.1)^2 = 0.01\ \text{m}^2\).</p>
+        <h4>Câu a) — thông lượng từng mặt</h4>
+        <p>Mặt trên (S2) và mặt dưới (S4) có pháp tuyến theo \(\hat z\), mà \(E_z=0\) nên:</p>
+        \[ \Phi_{S2}=\Phi_{S4}=0 \]
+        <p>Mặt trước S5 (pháp tuyến \(-\hat x\)) và mặt sau S6 (pháp tuyến \(+\hat x\)):</p>
+        \[ \Phi_{S5} = -E_xA = -2400\times0.01 = -24\ \text{N}\cdot\text{m}^2/\text{C} \]
+        \[ \Phi_{S6} = +E_xA = +24\ \text{N}\cdot\text{m}^2/\text{C} \]
+        <p>Mặt trái S1 (pháp tuyến \(-\hat y\)) và mặt phải S3 (pháp tuyến \(+\hat y\)):</p>
+        \[ \Phi_{S1} = -E_yA = -3200\times0.01 = -32\ \text{N}\cdot\text{m}^2/\text{C} \]
+        \[ \Phi_{S3} = +E_yA = +32\ \text{N}\cdot\text{m}^2/\text{C} \]
+        <div class="answer"><span class="label">Kết quả câu a</span>
+          S1 = −32; S3 = +32; S5 = −24; S6 = +24; S2 = S4 = 0 &nbsp;(N·m²/C)
+        </div>
+        <h4>Câu b) — tổng thông lượng</h4>
+        \[ \Phi_{tot} = (-32)+(32)+(-24)+(24)+0+0 = 0 \]
+        <div class="answer"><span class="label">Kết quả câu b</span>\( \Phi_{tot}=0 \)</div>
+        <p class="note">Phù hợp với định luật Gauss: khối lập phương không chứa điện tích nào (điện trường đều do nguồn ở ngoài gây ra) nên tổng thông lượng qua mặt kín phải bằng 0.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 3 ================= -->
+  <section class="problem" id="bai3">
+    <div class="problem-head"><h2>Bài 3 (22.9**)</h2><span class="tag">Vỏ cầu tích điện mỏng</span></div>
+    <div class="statement">
+      <div class="given">
+        Lớp sơn dẫn điện rất mỏng phủ đều trên quả cầu nhựa đường kính \(12\ \text{cm}\) (\(R=6\ \text{cm}=0.06\ \text{m}\)), tổng điện tích \(Q=-49\ \mu\text{C}\).
+      </div>
+      <p>a) \(E\) tại các điểm bên trong quả cầu. b) \(E\) ngay bên ngoài lớp sơn. c) \(E\) tại điểm cách bề mặt lớp sơn 5 cm.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Ý tưởng</h4>
+        <p>Điện tích phân bố đều trên một lớp cầu mỏng (giống vỏ cầu tích điện đều). Áp dụng định luật Gauss với mặt cầu đồng tâm bán kính \(r\):</p>
+        <h4>Câu a) — bên trong quả cầu (\(r<R\))</h4>
+        <p>Mặt Gauss bán kính \(r<R\) không bao điện tích nào (toàn bộ điện tích nằm trên lớp sơn ở bán kính \(R\)):</p>
+        <div class="answer"><span class="label">Kết quả</span>\(E=0\) tại mọi điểm bên trong quả cầu</div>
+        <h4>Câu b) — ngay bên ngoài lớp sơn (\(r=R=0.06\ \text{m}\))</h4>
+        \[ E = \frac{k|Q|}{R^2} = \frac{(8.99\times10^{9})(49\times10^{-6})}{(0.06)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 1.224\times10^{8}\ \text{N/C}\), hướng vào tâm (vì Q âm)</div>
+        <h4>Câu c) — cách bề mặt lớp sơn 5 cm, tức \(r = 0.06+0.05 = 0.11\ \text{m}\)</h4>
+        \[ E = \frac{k|Q|}{r^2} = \frac{(8.99\times10^{9})(49\times10^{-6})}{(0.11)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 3.641\times10^{7}\ \text{N/C}\), hướng vào tâm</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 4 ================= -->
+  <section class="problem" id="bai4">
+    <div class="problem-head"><h2>Bài 4 (22.10*)</h2><span class="tag">Hai điện tích điểm — mặt cầu Gauss</span></div>
+    <div class="statement">
+      <div class="given">
+        \(q_1=4\ \text{nC}\) tại \((x,y)=(2,0)\ \text{m}\); \(q_2=-6\ \text{nC}\) tại \((0,1)\ \text{m}\). Mặt cầu Gauss tâm tại gốc tọa độ, bán kính \(a\).
+      </div>
+      <p>Tính thông lượng tổng qua mặt cầu khi a) \(a=0.5\ \text{m}\), b) \(a=1.5\ \text{m}\), c) \(a=2.5\ \text{m}\).</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Ý tưởng</h4>
+        <p>Khoảng cách từ gốc tọa độ tới \(q_1\) là \(2\ \text{m}\), tới \(q_2\) là \(1\ \text{m}\). Chỉ điện tích nào nằm trong bán kính \(a\) mới đóng góp vào \(Q_{enc}\).</p>
+        <h4>Câu a) \(a=0.5\ \text{m}\)</h4>
+        <p>Cả \(q_1\) (cách 2 m) và \(q_2\) (cách 1 m) đều nằm <b>ngoài</b> mặt cầu \(\Rightarrow Q_{enc}=0\).</p>
+        <div class="answer"><span class="label">Kết quả</span>\(\Phi_E = 0\)</div>
+        <h4>Câu b) \(a=1.5\ \text{m}\)</h4>
+        <p>\(q_1\) (2 m) vẫn ở ngoài; \(q_2\) (1 m) nay nằm <b>trong</b> mặt cầu \(\Rightarrow Q_{enc}=q_2=-6\ \text{nC}\).</p>
+        \[ \Phi_E = \frac{q_2}{\varepsilon_0} = \frac{-6\times10^{-9}}{8.85\times10^{-12}} \]
+        <div class="answer"><span class="label">Kết quả</span>\(\Phi_E \approx -6.78\times10^{2}\ \text{N}\cdot\text{m}^2/\text{C}\)</div>
+        <h4>Câu c) \(a=2.5\ \text{m}\)</h4>
+        <p>Cả hai điện tích đều nằm trong mặt cầu \(\Rightarrow Q_{enc}=q_1+q_2 = 4-6=-2\ \text{nC}\).</p>
+        \[ \Phi_E = \frac{-2\times10^{-9}}{8.85\times10^{-12}} \]
+        <div class="answer"><span class="label">Kết quả</span>\(\Phi_E \approx -2.26\times10^{2}\ \text{N}\cdot\text{m}^2/\text{C}\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 5 ================= -->
+  <section class="problem" id="bai5">
+    <div class="problem-head"><h2>Bài 5 (22.14**)</h2><span class="tag">Quả cầu kim loại đặc</span></div>
+    <div class="statement">
+      <div class="given">
+        Quả cầu kim loại đặc bán kính \(R=0.45\ \text{m}\), điện tích \(Q=0.25\ \text{nC}\).
+      </div>
+      <p>a) \(E\) tại điểm bên ngoài, cách mặt cầu 0.1 m. b) \(E\) tại điểm bên trong, cách mặt cầu 0.1 m.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Câu a) — bên ngoài, \(r=R+0.1=0.55\ \text{m}\)</h4>
+        <p>Vì là vật dẫn, điện tích phân bố hết trên mặt ngoài; bên ngoài quả cầu, điện trường giống hệt điện tích điểm \(Q\) đặt tại tâm:</p>
+        \[ E = \frac{kQ}{r^2} = \frac{(8.99\times10^{9})(0.25\times10^{-9})}{(0.55)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 7.43\ \text{N/C}\)</div>
+        <h4>Câu b) — bên trong khối kim loại, cách mặt cầu 0.1 m (\(r=0.35\ \text{m}<R\))</h4>
+        <p>Đây là quả cầu <b>đặc và là vật dẫn</b> ở trạng thái cân bằng tĩnh điện, nên điện trường bên trong khối vật dẫn luôn bằng 0, bất kể vị trí (miễn còn nằm trong kim loại):</p>
+        <div class="answer"><span class="label">Kết quả</span>\(E = 0\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 6 ================= -->
+  <section class="problem" id="bai6">
+    <div class="problem-head"><h2>Bài 6 (22.15**)</h2><span class="tag">Thêm electron vào vật dẫn cầu</span></div>
+    <div class="statement">
+      <div class="given">
+        Vật dẫn hình cầu cô lập, đường kính \(26\ \text{cm}\) (\(R=0.13\ \text{m}\)). Cần tạo điện trường \(E=1150\ \text{N/C}\) ngay bên ngoài bề mặt.
+      </div>
+      <p>Phải thêm bao nhiêu electron?</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Bước 1 — tìm điện tích cần có</h4>
+        <p>Ngoài mặt cầu dẫn điện, trường giống điện tích điểm tại tâm: \(E=\dfrac{kQ}{R^2} \Rightarrow Q=\dfrac{ER^2}{k}\).</p>
+        \[ Q = \frac{(1150)(0.13)^2}{8.99\times10^{9}} = \frac{1150\times0.0169}{8.99\times10^{9}} \]
+        \[ Q \approx 2.162\times10^{-9}\ \text{C} \]
+        <h4>Bước 2 — số electron</h4>
+        <p>Electron mang điện tích âm nên để tạo ra điện tích âm này, ta cần thêm electron với độ lớn điện tích tương ứng:</p>
+        \[ n = \frac{|Q|}{e} = \frac{2.162\times10^{-9}}{1.602\times10^{-19}} \]
+        <div class="answer"><span class="label">Kết quả</span>\(n \approx 1.35\times10^{10}\) electron</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 7 ================= -->
+  <section class="problem" id="bai7">
+    <div class="problem-head"><h2>Bài 7 (22.19**)</h2><span class="tag">Vỏ cầu dẫn điện + điện tích điểm ở tâm</span></div>
+    <div class="statement">
+      <div class="given">
+        Vỏ cầu rỗng dẫn điện: bán kính ngoài \(b=0.25\ \text{m}\), bán kính trong \(a=0.2\ \text{m}\), mật độ điện mặt (ban đầu, ở mặt ngoài) \(\sigma=6.37\times10^{-6}\ \text{C/m}^2\). Sau đó đặt điện tích \(q=-0.5\ \mu\text{C}\) tại tâm.
+      </div>
+      <p>a) Mật độ điện tích mặt mới ở mặt ngoài. b) \(E\) ngay bên ngoài quả cầu. c) Thông lượng qua mặt cầu bên trong vỏ (giữa \(a\) và \(b\)).</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Bước 1 — tổng điện tích ban đầu của vỏ</h4>
+        <p>Vì vỏ là vật dẫn cô lập, chưa có điện tích ở tâm, toàn bộ điện tích nằm ở mặt ngoài bán kính \(b\):</p>
+        \[ Q_{vo} = \sigma\cdot 4\pi b^2 = (6.37\times10^{-6})(4\pi)(0.25)^2 \approx 5.0\times10^{-6}\ \text{C} = +5\ \mu\text{C} \]
+        <h4>Bước 2 — đặt \(q=-0.5\ \mu\text{C}\) vào tâm</h4>
+        <p>Bên trong kim loại (giữa \(a\) và \(b\)), \(E=0\) (vật dẫn cân bằng). Mặt Gauss bán kính giữa \(a\) và \(b\) phải bao điện tích tổng bằng 0:</p>
+        \[ Q_{trong} = -q = +0.5\ \mu\text{C}\quad(\text{điện tích cảm ứng ở mặt trong}) \]
+        <p>Theo bảo toàn điện tích trên vỏ dẫn (tổng vẫn là \(+5\ \mu\text{C}\)):</p>
+        \[ Q_{ngoai} = Q_{vo}-Q_{trong} = 5-0.5 = 4.5\ \mu\text{C} \]
+        <h4>Câu a) — mật độ điện tích mặt mới ở mặt ngoài</h4>
+        \[ \sigma'_{ngoai} = \frac{Q_{ngoai}}{4\pi b^2} = \frac{4.5\times10^{-6}}{4\pi(0.25)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(\sigma'_{ngoai} \approx 5.73\times10^{-6}\ \text{C/m}^2\)</div>
+        <h4>Câu b) — \(E\) ngay bên ngoài quả cầu (\(r=b=0.25\ \text{m}\))</h4>
+        <p>Mặt Gauss ở \(r=b^+\) bao toàn bộ: điện tích tâm \(q\) và toàn bộ điện tích vỏ \(Q_{vo}\):</p>
+        \[ Q_{enc} = q+Q_{vo} = -0.5+5 = 4.5\ \mu\text{C} \]
+        \[ E = \frac{kQ_{enc}}{b^2} = \frac{(8.99\times10^{9})(4.5\times10^{-6})}{(0.25)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 6.473\times10^{5}\ \text{N/C}\), hướng ra ngoài</div>
+        <h4>Câu c) — thông lượng qua mặt cầu bên trong vỏ (\(a<r<b\))</h4>
+        <p>Vì \(E=0\) trong toàn bộ khối kim loại của vỏ dẫn, thông lượng qua mọi mặt cầu nằm trong đó đều bằng 0 (cũng phù hợp với \(Q_{enc}=q+Q_{trong}=-0.5+0.5=0\)):</p>
+        <div class="answer"><span class="label">Kết quả</span>\(\Phi_E = 0\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 8 ================= -->
+  <section class="problem" id="bai8">
+    <div class="problem-head"><h2>Bài 8 (22.23**)</h2><span class="tag">Electron chuyển động trong trường của tấm cách điện</span></div>
+    <div class="statement">
+      <div class="given">
+        Electron phóng ra từ trạng thái nghỉ, cách tấm cách điện lớn 0.3 m. Tấm tích điện đều mật độ mặt \(\sigma=2.9\times10^{-12}\ \text{C/m}^2\).
+      </div>
+      <p>a) Công của điện trường khi electron di chuyển đến cách tấm 0.05 m. b) Tốc độ electron tại đó.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Bước 1 — điện trường của tấm (không đổi theo khoảng cách)</h4>
+        \[ E = \frac{\sigma}{2\varepsilon_0} = \frac{2.9\times10^{-12}}{2(8.85\times10^{-12})} \approx 0.1638\ \text{N/C} \]
+        <p>Tấm tích điện dương nên hút electron (electron mang điện âm) — electron bị kéo lại gần tấm, phù hợp với đề (khoảng cách giảm từ 0.3 m xuống 0.05 m).</p>
+        <h4>Câu a) — Công của lực điện</h4>
+        <p>Lực tác dụng lên electron: \(F=eE\), luôn hướng về tấm; vì trường đều nên lực không đổi trên suốt quãng đường, dịch chuyển \(d = 0.3-0.05=0.25\ \text{m}\) cùng chiều với lực:</p>
+        \[ F = eE = (1.602\times10^{-19})(0.1638) \approx 2.624\times10^{-20}\ \text{N} \]
+        \[ W = F\cdot d = (2.624\times10^{-20})(0.25) \]
+        <div class="answer"><span class="label">Kết quả</span>\(W \approx 6.56\times10^{-21}\ \text{J}\)</div>
+        <h4>Câu b) — tốc độ tại vị trí cách tấm 0.05 m</h4>
+        <p>Áp dụng định lý động năng (\(v_0=0\)):</p>
+        \[ W = \frac{1}{2}m_ev^2 \;\Rightarrow\; v=\sqrt{\frac{2W}{m_e}} = \sqrt{\frac{2(6.56\times10^{-21})}{9.11\times10^{-31}}} \]
+        <div class="answer"><span class="label">Kết quả</span>\(v \approx 1.20\times10^{5}\ \text{m/s}\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 9 ================= -->
+  <section class="problem" id="bai9">
+    <div class="problem-head"><h2>Bài 9 (22.28*)</h2><span class="tag">Tấm vuông cách điện</span></div>
+    <div class="statement">
+      <div class="given">
+        Tấm cách điện hình vuông cạnh \(0.8\ \text{m}\), nằm ngang, tích điện đều \(Q=4.5\ \text{nC}\).
+      </div>
+      <p>a) \(E\) tại điểm cách tâm tấm 0.1 mm. b) \(E\) tại điểm cách tâm tấm 100 m. c) Nếu tấm là vật dẫn thì kết quả a), b) có đổi không?</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Câu a) — rất gần tấm (0.1 mm ≪ 0.8 m)</h4>
+        <p>Ở khoảng cách rất nhỏ so với kích thước tấm, có thể coi tấm như mặt phẳng vô hạn:</p>
+        \[ \sigma = \frac{Q}{A}=\frac{4.5\times10^{-9}}{(0.8)^2} \approx 7.03\times10^{-9}\ \text{C/m}^2 \]
+        \[ E = \frac{\sigma}{2\varepsilon_0} = \frac{7.03\times10^{-9}}{2(8.85\times10^{-12})} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 397\ \text{N/C}\)</div>
+        <h4>Câu b) — rất xa tấm (100 m ≫ 0.8 m)</h4>
+        <p>Ở khoảng cách này, tấm coi như điện tích điểm \(Q\):</p>
+        \[ E = \frac{kQ}{r^2} = \frac{(8.99\times10^{9})(4.5\times10^{-9})}{(100)^2} \]
+        <div class="answer"><span class="label">Kết quả</span>\(E \approx 4.05\times10^{-3}\ \text{N/C}\)</div>
+        <h4>Câu c) — nếu tấm là vật dẫn</h4>
+        <p>Với vật dẫn cô lập mang điện tích \(Q\), điện tích tự phân bố đều ra <b>hai mặt</b> (mỗi mặt \(Q/2\)) để đạt cân bằng. Sát một mặt, điện trường (tính theo công thức vật dẫn \(E=\sigma_{mat}/\varepsilon_0\) với \(\sigma_{mat}=(Q/2)/A\)) cho:</p>
+        \[ E = \frac{\sigma_{mat}}{\varepsilon_0} = \frac{Q/(2A)}{\varepsilon_0} = \frac{Q}{2A\varepsilon_0} \]
+        <p>— đúng bằng công thức \(\sigma/2\varepsilon_0\) của tấm cách điện (với \(\sigma=Q/A\) là mật độ tổng). Còn ở xa, trường chỉ phụ thuộc tổng điện tích \(Q\), không phụ thuộc nó phân bố kiểu gì.</p>
+        <div class="answer"><span class="label">Kết quả</span>Cả hai câu a) và b) đều <b>không đổi</b>, vì tổng điện tích Q như nhau và cách phân bố lại (một mặt hay hai mặt) không ảnh hưởng đến giá trị E tính theo hai công thức trên.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 10 ================= -->
+  <section class="problem" id="bai10">
+    <div class="problem-head"><h2>Bài 10 (22.30*)</h2><span class="tag">Hệ 4 mặt phẳng tích điện</span></div>
+    <div class="statement">
+      <div class="given">
+        Hai tấm nhựa cách điện dày 10 cm mỗi tấm, có 4 mặt tích điện: \(\sigma_1=-6,\ \sigma_2=5,\ \sigma_3=2,\ \sigma_4=4\) (\(\mu\text{C/m}^2\)). Chọn trục \(x\) vuông góc các tấm, hướng phải: tấm trái từ \(x=0\) (mặt \(\sigma_1\)) đến \(x=10\ \text{cm}\) (mặt \(\sigma_2\)); khoảng trống 12 cm; tấm phải từ \(x=22\ \text{cm}\) (mặt \(\sigma_3\)) đến \(x=32\ \text{cm}\) (mặt \(\sigma_4\)). Điểm A cách mặt trái của tấm trái 5 cm (\(x=-5\ \text{cm}\)); điểm B cách mặt trong tấm phải 1.25 cm (\(x=20.75\ \text{cm}\), trong khoảng trống); điểm C ở giữa tấm phải (\(x=27\ \text{cm}\)).
+      </div>
+      <p>Tìm độ lớn và hướng của \(\vec E\) tại A, B, C.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Nguyên lý chồng chất</h4>
+        <p>Mỗi mặt tích điện phẳng vô hạn tạo trường độ lớn \(\sigma_i/2\varepsilon_0\) ở hai phía, hướng ra xa mặt nếu \(\sigma_i>0\), hướng vào mặt nếu \(\sigma_i<0\). Tổng hợp 4 mặt bằng cách cộng vectơ (dọc trục \(x\)).</p>
+        <p>Đặt \(k_0=\dfrac{1\ \mu\text{C/m}^2}{2\varepsilon_0}\approx 5.65\times10^{4}\ \text{N/C}\) (trường do 1 μC/m² gây ra).</p>
+        <h4>Điểm A (\(x=-5\) cm) — nằm bên trái cả 4 mặt</h4>
+        <p>Với mọi mặt nằm bên phải A, phần đóng góp "hướng ra xa mặt" là hướng \(-\hat x\) (trừ khi \(\sigma<0\) thì đảo chiều tự động theo dấu). Gộp lại:</p>
+        \[ E_A = -\frac{(\sigma_1+\sigma_2+\sigma_3+\sigma_4)}{2\varepsilon_0} = -(-6+5+2+4)\,k_0 = -5k_0 \]
+        <div class="answer"><span class="label">Kết quả tại A</span>\(E_A \approx 2.82\times10^{5}\ \text{N/C}\), hướng theo \(-\hat x\) (sang trái, ra xa hệ hai tấm)</div>
+        <h4>Điểm B (\(x=20.75\) cm) — bên phải \(\sigma_1,\sigma_2\); bên trái \(\sigma_3,\sigma_4\)</h4>
+        \[ E_B = \frac{(\sigma_1+\sigma_2)}{2\varepsilon_0} - \frac{(\sigma_3+\sigma_4)}{2\varepsilon_0} = (-6+5)k_0 - (2+4)k_0 = -k_0-6k_0=-7k_0 \]
+        <div class="answer"><span class="label">Kết quả tại B</span>\(E_B \approx 3.95\times10^{5}\ \text{N/C}\), hướng theo \(-\hat x\) (sang trái)</div>
+        <h4>Điểm C (\(x=27\) cm) — bên phải \(\sigma_1,\sigma_2,\sigma_3\); bên trái \(\sigma_4\)</h4>
+        \[ E_C = \frac{(\sigma_1+\sigma_2+\sigma_3)}{2\varepsilon_0} - \frac{\sigma_4}{2\varepsilon_0} = (-6+5+2)k_0-4k_0 = 1k_0-4k_0=-3k_0 \]
+        <div class="answer"><span class="label">Kết quả tại C</span>\(E_C \approx 1.69\times10^{5}\ \text{N/C}\), hướng theo \(-\hat x\) (sang trái)</div>
+        <p class="note">Cả ba điểm đều có trường hướng sang trái (−x) vì tổng "trọng số có dấu" của các mặt phía phải điểm luôn thắng thế theo cách tính trên.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 11 ================= -->
+  <section class="problem" id="bai11">
+    <div class="problem-head"><h2>Bài 11 (22.32**)</h2><span class="tag">Chuyển động trong trường của tấm tích điện</span></div>
+    <div class="statement">
+      <div class="given">
+        Vật nhỏ khối lượng \(m=8.2\times10^{-9}\ \text{kg}\), điện tích \(q=+6.5\times10^{-9}\ \text{C}\), bắn thẳng vào tấm cách điện lớn tích điện đều dương \(\sigma=5.9\times10^{-8}\ \text{C/m}^2\). Ban đầu vật cách tấm 0.4 m.
+      </div>
+      <p>Vật cần vận tốc ban đầu bao nhiêu để bay tới vị trí cách tấm 0.1 m?</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Ý tưởng</h4>
+        <p>Vật mang điện dương bay về phía tấm dương \(\Rightarrow\) bị đẩy lại (lực cản chuyển động), vật chậm dần. "Bay tới được" vị trí cách tấm 0.1 m ứng với trường hợp <b>tới hạn</b>: vận tốc vừa giảm về 0 đúng lúc chạm mốc 0.1 m (vận tốc ban đầu nhỏ hơn giá trị này thì không tới nơi).</p>
+        <h4>Bước 1 — lực điện không đổi (trường của tấm vô hạn)</h4>
+        \[ E=\frac{\sigma}{2\varepsilon_0}=\frac{5.9\times10^{-8}}{2(8.85\times10^{-12})}\approx 3333\ \text{N/C} \]
+        \[ F=qE = (6.5\times10^{-9})(3333)\approx 2.166\times10^{-5}\ \text{N} \]
+        <h4>Bước 2 — định lý động năng trên quãng đường \(d=0.4-0.1=0.3\ \text{m}\)</h4>
+        <p>Lực điện ngược chiều chuyển động (cản lại), sinh công âm \(-Fd\); tại đích \(v=0\):</p>
+        \[ 0 - \frac{1}{2}mv_0^2 = -Fd \;\Rightarrow\; v_0 = \sqrt{\frac{2Fd}{m}} \]
+        \[ v_0 = \sqrt{\frac{2(2.166\times10^{-5})(0.3)}{8.2\times10^{-9}}} \]
+        <div class="answer"><span class="label">Kết quả</span>\(v_0 \approx 39.8\ \text{m/s}\), hướng thẳng vào tấm</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 12 ================= -->
+  <section class="problem" id="bai12">
+    <div class="problem-head"><h2>Bài 12 (22.36**)</h2><span class="tag">Trường không đều qua mặt vuông</span></div>
+    <div class="statement">
+      <div class="given">
+        Điện trường \(\vec E\) theo hướng \(z\), độ lớn phụ thuộc tọa độ \(x\): \(E=964x\ \text{N/(C·m)}\). Mặt vuông cạnh 0.35 m nằm trong mặt phẳng \(Oxy\), một cạnh dọc theo chiều dương \(Ox\), một cạnh dọc theo chiều dương \(Oy\) (góc vuông tại gốc tọa độ).
+      </div>
+      <p>Tính thông lượng điện qua mặt vuông.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Ý tưởng</h4>
+        <p>Vì \(E\) phụ thuộc \(x\) (không đều), phải tính bằng tích phân mặt thay vì nhân trực tiếp \(E\times A\):</p>
+        \[ \Phi_E=\int_S E_z\,dA = \int_0^{0.35}\!\!\int_0^{0.35} 964x\;dy\,dx \]
+        <h4>Tính tích phân</h4>
+        \[ \Phi_E = 964\left(\int_0^{0.35}x\,dx\right)\left(\int_0^{0.35}dy\right) = 964\cdot\frac{(0.35)^2}{2}\cdot(0.35) \]
+        \[ \Phi_E = 964 \times 0.06125 \times 0.35 = 964\times0.0214375 \]
+        <div class="answer"><span class="label">Kết quả</span>\(\Phi_E \approx 20.67\ \text{N}\cdot\text{m}^2/\text{C}\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 13 ================= -->
+  <section class="problem" id="bai13">
+    <div class="problem-head"><h2>Bài 13 (22.38*)</h2><span class="tag">Dây + tấm — vị trí trường triệt tiêu</span></div>
+    <div class="statement">
+      <div class="given">
+        Dây thẳng dài tích điện đều \(\lambda=50\ \mu\text{C/m}\), song song và cách bề mặt một tấm nhựa phẳng (\(\sigma=-100\ \mu\text{C/m}^2\)) một khoảng 10 cm.
+      </div>
+      <p>Tìm vị trí mà tổng lực điện lên hạt alpha (điện tích dương) bằng 0.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Thiết lập</h4>
+        <p>Lực triệt tiêu \(\Leftrightarrow\) \(\vec E_{tong}=0\). Chọn trục \(x\) vuông góc tấm, tấm tại \(x=0\), dây tại \(x=0.1\ \text{m}\) (song song tấm). Xét các điểm trên trục \(x\) (đường vuông góc nối tấm và dây).</p>
+        <p>Trường của tấm (\(|\sigma|=100\ \mu\text{C/m}^2\), luôn không đổi độ lớn, hướng <b>vào</b> tấm vì tấm âm):</p>
+        \[ E_{tam} = \frac{|\sigma|}{2\varepsilon_0} \]
+        <p>Trường của dây tại khoảng cách \(s\) tới dây (hướng ra xa dây, vì \(\lambda>0\)):</p>
+        \[ E_{day} = \frac{\lambda}{2\pi\varepsilon_0 s} \]
+        <p>Giữa tấm và dây (\(0<x<0.1\)): cả hai trường đều hướng về phía tấm (cùng chiều) \(\Rightarrow\) không thể triệt tiêu ở vùng này.</p>
+        <h4>Trường hợp 1 — điểm nằm ngoài dây, xa tấm hơn (\(x>0.1\))</h4>
+        <p>Tại đây, trường của tấm hướng vào tấm (chiều \(-x\)); trường của dây hướng ra xa dây theo chiều \(+x\). Đặt \(s=x-0.1\), cân bằng độ lớn:</p>
+        \[ \frac{\lambda}{2\pi\varepsilon_0 s} = \frac{|\sigma|}{2\varepsilon_0} \;\Rightarrow\; s = \frac{\lambda}{\pi|\sigma|} = \frac{50\times10^{-6}}{\pi(100\times10^{-6})} = \frac{1}{2\pi}\approx 0.159\ \text{m} \]
+        \[ x = 0.1+0.159 = 0.259\ \text{m} \]
+        <div class="answer"><span class="label">Kết quả 1</span>Vị trí cách dây 15.9 cm (về phía xa tấm), tức cách tấm khoảng <b>25.9 cm</b></div>
+        <h4>Trường hợp 2 — điểm nằm phía sau tấm, xa dây hơn (\(x<0\))</h4>
+        <p>Tại đây, trường tấm hướng về tấm theo chiều \(+x\); trường dây hướng ra xa dây theo chiều \(-x\) — hai chiều ngược nhau, có thể triệt tiêu. Đặt \(s=0.1-x\):</p>
+        \[ \frac{\lambda}{2\pi\varepsilon_0 s} = \frac{|\sigma|}{2\varepsilon_0} \;\Rightarrow\; s=\frac{1}{2\pi}\approx0.159\ \text{m} \]
+        \[ x = 0.1-0.159 = -0.059\ \text{m} \]
+        <div class="answer"><span class="label">Kết quả 2</span>Vị trí cách tấm khoảng <b>5.9 cm</b>, về phía đối diện với dây</div>
+        <p class="note">Vậy có <b>hai vị trí</b> thỏa mãn: một ở phía ngoài dây (cách tấm ≈25.9 cm) và một ở phía sau tấm, đối diện dây (cách tấm ≈5.9 cm). Vùng giữa tấm và dây không có nghiệm.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 14 ================= -->
+  <section class="problem" id="bai14">
+    <div class="problem-head"><h2>Bài 14 (22.40*)</h2><span class="tag">Ống trụ dẫn điện rỗng + dây trục</span></div>
+    <div class="statement">
+      <div class="given">
+        Ống dẫn điện hình trụ rỗng, bán kính trong \(a\), bán kính ngoài \(b\), tích điện đều với mật độ dài \(+\alpha\). Một dây thẳng tích điện đều mật độ dài \(+\alpha\) đặt dọc trục ống.
+      </div>
+      <p>a) Tính \(E(r)\) trong ba miền: \(r<a\), \(a<r<b\), \(r>b\); vẽ đồ thị \(E(r)\). b) Mật độ điện tích mặt trong và mặt ngoài ống.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Câu a) — dùng mặt Gauss hình trụ đồng trục, chiều dài \(l\)</h4>
+        <p><b>Miền \(r<a\)</b> (trong lòng ống, quanh dây trục): chỉ có dây bị bao, \(Q_{enc}=\alpha l\):</p>
+        \[ E\cdot 2\pi r l = \frac{\alpha l}{\varepsilon_0}\;\Rightarrow\; E(r)=\frac{\alpha}{2\pi\varepsilon_0 r} \]
+        <p><b>Miền \(a<r<b\)</b> (bên trong khối kim loại của ống — vật dẫn cân bằng tĩnh điện):</p>
+        \[ E(r) = 0 \]
+        <p><b>Miền \(r>b\)</b> (ngoài ống): bao gồm cả dây (\(+\alpha\)) và toàn bộ ống (\(+\alpha\)), tổng \(Q_{enc}=2\alpha l\):</p>
+        \[ E\cdot2\pi r l = \frac{2\alpha l}{\varepsilon_0}\;\Rightarrow\; E(r) = \frac{\alpha}{\pi\varepsilon_0 r} \]
+        <div class="answer"><span class="label">Kết quả câu a</span>
+          \(E(r)=\dfrac{\alpha}{2\pi\varepsilon_0 r}\) khi \(r<a\)&nbsp;&nbsp;|&nbsp;&nbsp;\(E=0\) khi \(a<r<b\)&nbsp;&nbsp;|&nbsp;&nbsp;\(E(r)=\dfrac{\alpha}{\pi\varepsilon_0 r}\) khi \(r>b\)
+        </div>
+        <figure>
+          <svg viewBox="0 0 560 260" width="100%" style="max-width:520px;background:#0f1420;border:1px solid #2a3240;border-radius:8px;">
+            <line x1="55" y1="220" x2="530" y2="220" stroke="#5b6472" stroke-width="1.5"/>
+            <line x1="55" y1="220" x2="55" y2="20" stroke="#5b6472" stroke-width="1.5"/>
+            <text x="535" y="225" fill="#9aa7b5" font-size="13">r</text>
+            <text x="30" y="20" fill="#9aa7b5" font-size="13">E</text>
+            <line x1="120" y1="220" x2="120" y2="20" stroke="#3a4454" stroke-width="1" stroke-dasharray="4 4"/>
+            <line x1="260" y1="220" x2="260" y2="20" stroke="#3a4454" stroke-width="1" stroke-dasharray="4 4"/>
+            <text x="112" y="238" fill="#9aa7b5" font-size="13">a</text>
+            <text x="253" y="238" fill="#9aa7b5" font-size="13">b</text>
+            <path d="M 60 40 Q 90 100 120 165" stroke="#5fb3ff" stroke-width="2.5" fill="none"/>
+            <line x1="120" y1="165" x2="260" y2="165" stroke="#7ee7c7" stroke-width="2.5"/>
+            <path d="M 260 100 Q 350 140 530 175" stroke="#ffcf6b" stroke-width="2.5" fill="none"/>
+            <text x="65" y="35" fill="#5fb3ff" font-size="12">E ~ 1/r</text>
+            <text x="150" y="155" fill="#7ee7c7" font-size="12">E = 0</text>
+            <text x="330" y="130" fill="#ffcf6b" font-size="12">E ~ 1/r (dốc hơn, hệ số gấp đôi)</text>
+          </svg>
+          <figcaption>Đồ thị định tính E(r): tăng dần dạng 1/r trong lòng ống, bằng 0 trong khối kim loại, rồi giảm dạng 1/r (với hệ số gấp đôi) ngoài ống.</figcaption>
+        </figure>
+        <h4>Câu b) — mật độ điện tích mặt</h4>
+        <p><b>Mặt trong (bán kính \(a\)):</b> vì \(E=0\) trong kim loại, mặt Gauss trụ giữa \(a\) và \(b\) phải có \(Q_{enc}=0\), tức điện tích cảm ứng ở mặt trong triệt tiêu dây trục:</p>
+        \[ \lambda_{trong} = -\alpha \;\Rightarrow\; \sigma_{trong} = \frac{\lambda_{trong}}{2\pi a} = -\frac{\alpha}{2\pi a} \]
+        <p><b>Mặt ngoài (bán kính \(b\)):</b> theo bảo toàn điện tích trên ống (tổng \(=\alpha\) trên một đơn vị dài):</p>
+        \[ \lambda_{ngoai} = \alpha - \lambda_{trong} = \alpha-(-\alpha)=2\alpha \;\Rightarrow\; \sigma_{ngoai} = \frac{2\alpha}{2\pi b}=\frac{\alpha}{\pi b} \]
+        <div class="answer"><span class="label">Kết quả câu b</span>\(\sigma_{trong} = -\dfrac{\alpha}{2\pi a}\)&nbsp;&nbsp;;&nbsp;&nbsp;\(\sigma_{ngoai} = \dfrac{\alpha}{\pi b}\)</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BÀI 15 ================= -->
+  <section class="problem" id="bai15">
+    <div class="problem-head"><h2>Bài 15 (22.49***)</h2><span class="tag">Vỏ cầu với mật độ khối biến thiên</span></div>
+    <div class="statement">
+      <div class="given">
+        Vỏ cầu rỗng cách điện, bán kính trong \(a\), bán kính ngoài \(b\). Trong lớp vỏ (\(a<r<b\)), mật độ điện tích khối \(\rho(r)=\alpha/r\) (\(\alpha>0\)).
+      </div>
+      <p>a) Tính \(E(r)\) tại \(a<r<b\) theo \(a,\alpha\). b) Đặt thêm điện tích điểm \(q\) tại tâm — tìm \(q\) để \(E\) là hằng số trong miền \(a<r<b\); tính giá trị \(E\) đó.</p>
+    </div>
+    <details class="solution">
+      <summary></summary>
+      <div class="sol-body">
+        <h4>Câu a) — chưa có điện tích điểm ở tâm</h4>
+        <p>Tính điện tích bao trong mặt cầu bán kính \(r\) (\(a<r<b\)) bằng cách lấy tích phân các lớp cầu mỏng bề dày \(dr'\):</p>
+        \[ Q_{enc}(r) = \int_a^r \rho(r')\,4\pi r'^2\,dr' = \int_a^r \frac{\alpha}{r'}\,4\pi r'^2\,dr' = 4\pi\alpha\int_a^r r'\,dr' = 2\pi\alpha(r^2-a^2) \]
+        <p>Áp dụng định luật Gauss:</p>
+        \[ E(r)\cdot4\pi r^2 = \frac{Q_{enc}(r)}{\varepsilon_0} = \frac{2\pi\alpha(r^2-a^2)}{\varepsilon_0} \]
+        <div class="answer"><span class="label">Kết quả câu a</span>\( E(r) = \dfrac{\alpha}{2\varepsilon_0}\left(1-\dfrac{a^2}{r^2}\right) \)</div>
+        <h4>Câu b) — thêm điện tích điểm \(q\) tại tâm</h4>
+        <p>Bây giờ \(Q_{enc}(r) = q + 2\pi\alpha(r^2-a^2)\). Định luật Gauss cho:</p>
+        \[ E(r) = \frac{q+2\pi\alpha(r^2-a^2)}{4\pi\varepsilon_0 r^2} = \underbrace{\left[\frac{q}{4\pi\varepsilon_0}-\frac{\alpha a^2}{2\varepsilon_0}\right]}_{\text{hệ số của }1/r^2}\cdot\frac{1}{r^2} + \frac{\alpha}{2\varepsilon_0} \]
+        <p>Để \(E(r)\) <b>không phụ thuộc \(r\)</b> (hằng số), số hạng \(1/r^2\) phải triệt tiêu:</p>
+        \[ \frac{q}{4\pi\varepsilon_0} = \frac{\alpha a^2}{2\varepsilon_0} \;\Rightarrow\; q = 2\pi\alpha a^2 \]
+        <p>Khi đó, phần còn lại chính là giá trị hằng số của điện trường:</p>
+        <div class="answer"><span class="label">Kết quả câu b</span>
+          \( q = 2\pi\alpha a^2 \)&nbsp;&nbsp;và khi đó&nbsp;&nbsp;\( E = \dfrac{\alpha}{2\varepsilon_0} \) (không đổi trong toàn miền \(a<r<b\))
+        </div>
+      </div>
+    </details>
+  </section>
+
+</div>
+
+<footer>
+  Hết 15 bài — Chương 2: Định luật Gauss. Đơn vị dùng \(k=8.99\times10^{9}\ \text{N·m}^2/\text{C}^2\), \(\varepsilon_0=8.85\times10^{-12}\ \text{C}^2/(\text{N·m}^2)\).
+</footer>
+
+<script>
+function toggleAll(open){
+  document.querySelectorAll('details.solution').forEach(d=>{ d.open = open; });
+}
+</script>
+
+</body>
+</html>
