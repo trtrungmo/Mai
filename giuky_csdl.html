@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ôn Thi Giữa Kỳ CSDL - Chương 3: Mô Hình Quan Hệ & Đại Số Quan Hệ</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.5);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 font-bold text-white text-lg">
+          🗄️
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            CSDL · Chương 3
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Giữa Kỳ 45'
+            </span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">
+            Mô hình quan hệ · Ràng buộc · Đại số quan hệ · Chuyển đổi ER/EER
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center space-x-1 sm:space-x-2">
+        <button id="tab-exam-btn" onclick="switchTab('exam')" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm">
+          <span>📝</span>
+          <span class="hidden md:inline">Thi Thử Giữa Kỳ</span>
+          <span class="md:hidden">Thi Thử</span>
+        </button>
+        <button id="tab-practice-btn" onclick="switchTab('practice')" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-800">
+          <span>📚</span>
+          <span class="hidden md:inline">Ngân Hàng Ôn Tập (82)</span>
+          <span class="md:hidden">Ngân Hàng</span>
+        </button>
+        <button id="tab-cheatsheet-btn" onclick="switchTab('cheatsheet')" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-800">
+          <span>📖</span>
+          <span class="hidden md:inline">Sổ Tay Cốt Lõi</span>
+          <span class="md:hidden">Sổ Tay</span>
+        </button>
+        
+        <!-- Dark/Light Theme Toggle -->
+        <button onclick="toggleTheme()" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Đổi giao diện Sáng / Tối">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: EXAM SIMULATION (THI THỬ 15 CÂU · 45 PHÚT) -->
+    <!-- ========================================================================= -->
+    <section id="view-exam" class="tab-content block">
+      
+      <!-- Welcome / Pre-exam Card -->
+      <div id="exam-intro-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl max-w-3xl mx-auto my-4 text-center">
+        <div class="inline-flex p-3 rounded-2xl bg-indigo-500/10 text-indigo-400 mb-4 text-3xl">
+          🎯
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+          Đề Thi Thử Giữa Kỳ Chuẩn
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-6">
+          Mô phỏng 100% cấu trúc và áp lực thời gian của đề thi thật do giảng viên công bố.
+        </p>
+
+        <!-- Spec badges -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto mb-8 text-left">
+          <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+            <div class="text-xs font-semibold text-slate-400 uppercase">Số lượng câu hỏi</div>
+            <div class="text-base font-bold text-white mt-0.5">15 câu trắc nghiệm</div>
+            <div class="text-xs text-indigo-300 mt-1">10 đơn + 5 đa lựa chọn</div>
+          </div>
+          <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+            <div class="text-xs font-semibold text-slate-400 uppercase">Thời gian làm bài</div>
+            <div class="text-base font-bold text-white mt-0.5">45 phút</div>
+            <div class="text-xs text-amber-400 mt-1">Có đếm ngược & nộp tự động</div>
+          </div>
+          <div class="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+            <div class="text-xs font-semibold text-slate-400 uppercase">Cơ chế chấm điểm</div>
+            <div class="text-base font-bold text-white mt-0.5">Thang 10 điểm</div>
+            <div class="text-xs text-rose-400 mt-1 font-semibold">Chọn sai bị trừ điểm!</div>
+          </div>
+        </div>
+
+        <!-- Rules explanation box -->
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-left text-xs sm:text-sm text-amber-200/90 mb-8 max-w-xl mx-auto space-y-1.5">
+          <div class="font-bold flex items-center gap-1.5 text-amber-300">
+            <span>⚠️</span> Quy tắc trừ điểm câu hỏi nhiều đáp án:
+          </div>
+          <p>
+            Mỗi câu nhiều đáp án có điểm = <code class="bg-amber-950/60 px-1.5 py-0.5 rounded text-amber-100 font-mono">max(0, Đúng/C - Sai/W) × Điểm_câu</code>.
+          </p>
+          <p class="text-xs text-amber-300/80">
+            Nếu chọn bừa các đáp án sai, điểm của câu sẽ bị trừ tương ứng (không trừ âm quá 0 điểm cho câu đó).
+          </p>
+        </div>
+
+        <button onclick="startNewExam()" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+          🚀 Bắt Đầu Làm Bài Thi
+        </button>
+      </div>
+
+      <!-- Live Exam Interface (Hidden initially) -->
+      <div id="exam-live-interface" class="hidden">
+        <!-- Exam Header Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4 shadow-md sticky top-20 z-30">
+          <div class="flex items-center space-x-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Đề thi số <span id="exam-seed-id">001</span>
+            </span>
+            <div class="text-sm font-medium text-slate-300">
+              Đã làm: <span id="exam-progress-count" class="font-bold text-indigo-400">0</span>/15 câu
+            </div>
+          </div>
+
+          <!-- Timer display -->
+          <div class="flex items-center space-x-3">
+            <div id="exam-timer-box" class="px-4 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 font-mono font-bold text-lg flex items-center gap-2">
+              <span id="timer-icon">⏳</span>
+              <span id="exam-timer-text">45:00</span>
+            </div>
+            <button onclick="confirmSubmitExam()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm transition shadow-sm">
+              Nộp Bài
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <!-- Question Area (Left 3 cols) -->
+          <div class="lg:col-span-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+              <!-- Question meta badge -->
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span id="q-index-badge" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white font-bold text-xs">
+                    Câu 1/15
+                  </span>
+                  <span id="q-topic-badge" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 text-xs">
+                    Chủ đề
+                  </span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="q-type-badge" class="px-2.5 py-1 rounded-md text-xs font-semibold">
+                    Loại câu
+                  </span>
+                  <button id="q-flag-btn" onclick="toggleFlagCurrentQuestion()" class="px-2.5 py-1 rounded-md border text-xs font-medium transition flex items-center gap-1 border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/40">
+                    <span>🚩</span>
+                    <span id="q-flag-text">Đặt cờ</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Question title -->
+              <h3 id="q-title-text" class="text-base sm:text-lg font-semibold text-white leading-relaxed mb-6">
+                Nội dung câu hỏi đang tải...
+              </h3>
+
+              <!-- Options container -->
+              <div id="q-options-container" class="space-y-3 mb-8">
+                <!-- Dynamically rendered -->
+              </div>
+
+              <!-- Navigation footer -->
+              <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                <button id="q-prev-btn" onclick="navigateQuestion(-1)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed">
+                  ← Câu Trước
+                </button>
+                <div class="text-xs text-slate-400">
+                  Phím tắt: <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">A</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">B</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">C</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">D</kbd>
+                </div>
+                <button id="q-next-btn" onclick="navigateQuestion(1)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition">
+                  Câu Tiếp →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Navigator Palette (Right 1 col) -->
+          <div class="lg:col-span-1">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl sticky top-40">
+              <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3">
+                Danh Sách Câu Hỏi
+              </h4>
+              <div id="exam-palette-grid" class="grid grid-cols-5 gap-2 mb-4">
+                <!-- 15 buttons generated dynamically -->
+              </div>
+
+              <div class="text-xs space-y-1.5 text-slate-400 pt-3 border-t border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded bg-indigo-600 inline-block"></span>
+                  <span>Đang xem</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded bg-emerald-700 inline-block"></span>
+                  <span>Đã trả lời</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded bg-slate-800 border border-slate-700 inline-block"></span>
+                  <span>Chưa trả lời</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded border-2 border-amber-400 bg-slate-800 inline-block"></span>
+                  <span>Đánh dấu cờ (xem lại)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exam Result / Scorecard View (Hidden initially) -->
+      <div id="exam-result-view" class="hidden">
+        <!-- Results Summary Hero Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl mb-8">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800">
+            <div class="text-center md:text-left">
+              <span id="result-status-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Hoàn thành xuất sắc
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">
+                Kết Quả Bài Thi Giữa Kỳ
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                Thời gian làm bài: <span id="result-time-spent" class="text-slate-200 font-semibold">24 phút 15 giây</span> · Số câu hỏi: 15
+              </p>
+            </div>
+
+            <!-- Big Score Badge -->
+            <div class="flex items-baseline gap-2 bg-slate-800/80 px-6 py-4 rounded-2xl border border-slate-700/80 shadow-inner">
+              <span id="result-score-val" class="text-4xl sm:text-5xl font-black text-indigo-400">
+                9.33
+              </span>
+              <span class="text-xl font-bold text-slate-400">/ 10.0</span>
+            </div>
+          </div>
+
+          <!-- Breakdown Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-800 text-center">
+              <div class="text-xs text-slate-400">Đúng hoàn toàn</div>
+              <div id="result-full-correct-count" class="text-2xl font-bold text-emerald-400 mt-1">13</div>
+              <div class="text-xs text-slate-500">câu hỏi</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-800 text-center">
+              <div class="text-xs text-slate-400">Đúng một phần</div>
+              <div id="result-partial-correct-count" class="text-2xl font-bold text-amber-400 mt-1">1</div>
+              <div class="text-xs text-slate-500">câu nhiều đáp án</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-800 text-center">
+              <div class="text-xs text-slate-400">Sai / Chưa làm</div>
+              <div id="result-wrong-count" class="text-2xl font-bold text-rose-400 mt-1">1</div>
+              <div class="text-xs text-slate-500">câu hỏi</div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-800 text-center">
+              <div class="text-xs text-slate-400">Điểm bị phạt trừ</div>
+              <div id="result-penalty-points" class="text-2xl font-bold text-rose-400 mt-1">-0.33</div>
+              <div class="text-xs text-slate-500">do chọn sai</div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-400">Lọc xem chi tiết:</span>
+              <button onclick="filterResultReviews('all')" id="res-filter-all" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-600 text-white">Tất cả (15)</button>
+              <button onclick="filterResultReviews('missed')" id="res-filter-missed" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">Bị mất điểm</button>
+              <button onclick="filterResultReviews('correct')" id="res-filter-correct" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">Đạt điểm tối đa</button>
+            </div>
+            <button onclick="startNewExam()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow transition">
+              🔄 Rút Đề Thi Mới (Ngẫu Nhiên)
+            </button>
+          </div>
+        </div>
+
+        <!-- Detailed Review List -->
+        <div id="result-review-list" class="space-y-4">
+          <!-- Dynamically populated review cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: QUESTION BANK PRACTICE (NGÂN HÀNG 82 CÂU TOÀN DIỆN) -->
+    <!-- ========================================================================= -->
+    <section id="view-practice" class="tab-content hidden">
+      <!-- Search & Filters Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 mb-6 shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Search input -->
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Tìm kiếm từ khóa câu hỏi</label>
+            <div class="relative">
+              <input type="text" id="bank-search-input" oninput="applyBankFilters()" placeholder="Ví dụ: Bậc, Siêu khóa, Tích Đề-các, 8A..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+              <span class="absolute right-3 top-2.5 text-slate-400 text-sm">🔍</span>
+            </div>
+          </div>
+
+          <!-- Topic selector -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Chủ đề kiến thức</label>
+            <select id="bank-topic-select" onchange="applyBankFilters()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <option value="all">Tất cả chủ đề (82)</option>
+              <option value="Khái niệm Mô hình Quan hệ">1. Khái niệm Mô hình Quan hệ (18)</option>
+              <option value="Ràng buộc Toàn vẹn & Cập nhật">2. Ràng buộc Toàn vẹn & Cập nhật (20)</option>
+              <option value="Đại số Quan hệ">3. Đại số Quan hệ (24)</option>
+              <option value="Chuyển đổi ER & EER">4. Chuyển đổi ER & EER (20)</option>
+            </select>
+          </div>
+
+          <!-- Type & Bookmark selector -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Dạng câu / Đánh dấu</label>
+            <select id="bank-type-select" onchange="applyBankFilters()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <option value="all">Tất cả dạng câu</option>
+              <option value="single">Chỉ câu chọn 1 đáp án</option>
+              <option value="multiple">Chỉ câu chọn nhiều đáp án</option>
+              <option value="starred">⭐ Đã lưu đánh dấu</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter counters -->
+        <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div>
+            Hiển thị: <span id="bank-filtered-count" class="font-bold text-indigo-400">82</span> / 82 câu
+          </div>
+          <button onclick="resetBankFilters()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">
+            Xóa bộ lọc
+          </button>
+        </div>
+      </div>
+
+      <!-- Bank Question Cards Container -->
+      <div id="bank-cards-container" class="space-y-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: CHEAT SHEET (SỔ TAY CỐT LÕI CHƯƠNG 3) -->
+    <!-- ========================================================================= -->
+    <section id="view-cheatsheet" class="tab-content hidden">
+      <div class="space-y-8">
+        
+        <!-- Table 1: Terms translation -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">📐</span>
+            <h3 class="text-lg font-bold text-white">
+              1. Bảng Đối Chiếu Thuật Ngữ Mô Hình Quan Hệ (Hình Thức vs RDBMS)
+            </h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-slate-800/50 text-slate-300 font-semibold">
+                  <th class="p-3">Thuật ngữ Toán học / Hình thức</th>
+                  <th class="p-3">Thuật ngữ Hệ CSDL (RDBMS / SQL)</th>
+                  <th class="p-3">Định nghĩa & Bản chất</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-slate-300">
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Quan hệ (Relation)</td>
+                  <td class="p-3 font-semibold text-white">Bảng (Table)</td>
+                  <td class="p-3">Tập hợp các bộ dữ liệu; không có thứ tự và không trùng lặp</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Bộ (Tuple)</td>
+                  <td class="p-3 font-semibold text-white">Hàng / Bản ghi (Row / Record)</td>
+                  <td class="p-3">Một phần tử của quan hệ biểu diễn một thực thể hoặc một liên kết</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Thuộc tính (Attribute)</td>
+                  <td class="p-3 font-semibold text-white">Cột / Trường (Column / Field)</td>
+                  <td class="p-3">Đặc trưng mô tả thực thể, gắn với một miền giá trị xác định</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Bậc (Degree / Arity)</td>
+                  <td class="p-3 font-semibold text-white">Tổng số cột (Number of columns)</td>
+                  <td class="p-3">Số lượng thuộc tính cấu thành lược đồ quan hệ</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Lực lượng (Cardinality)</td>
+                  <td class="p-3 font-semibold text-white">Tổng số dòng (Number of rows)</td>
+                  <td class="p-3">Số lượng các bộ dữ liệu hiện tại có trong quan hệ (biến thiên)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono text-indigo-400 font-semibold">Miền giá trị (Domain)</td>
+                  <td class="p-3 font-semibold text-white">Kiểu dữ liệu & Ràng buộc miền (Data Type / Check)</td>
+                  <td class="p-3">Tập hợp các giá trị nguyên tố hợp lệ (Atomic values) mà thuộc tính được nhận</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 2: Integrity Constraints -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">🛡️</span>
+            <h3 class="text-lg font-bold text-white">
+              2. Các Ràng Buộc Toàn Vẹn & Hành Vi Vi Phạm Khi Cập Nhật
+            </h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="p-4 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <h4 class="font-bold text-indigo-300 text-sm mb-1">Toàn Vẹn Thực Thể (Entity Integrity)</h4>
+              <p class="text-xs text-slate-300">
+                <strong>Quy tắc:</strong> Khóa chính (Primary Key) định danh từng bộ, nên <span class="text-rose-400 font-bold">KHÔNG được phép nhận giá trị NULL</span> ở bất kỳ thuộc tính thành phần nào.
+              </p>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-800/70 border border-slate-700/60">
+              <h4 class="font-bold text-sky-300 text-sm mb-1">Toàn Vẹn Tham Chiếu (Referential Integrity)</h4>
+              <p class="text-xs text-slate-300">
+                <strong>Quy tắc:</strong> Giá trị của khóa ngoại FK trong quan hệ R1 phải khớp với giá trị khóa chính PK của một bộ nào đó bên quan hệ R2, hoặc nhận giá trị NULL.
+              </p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-slate-800/50 text-slate-300 font-semibold">
+                  <th class="p-3">Chiến lược xử lý (Khi xóa/sửa bên cha)</th>
+                  <th class="p-3">Hành động của RDBMS</th>
+                  <th class="p-3">Điều kiện áp dụng</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-slate-300">
+                <tr>
+                  <td class="p-3 font-semibold text-rose-400">RESTRICT / NO ACTION</td>
+                  <td class="p-3">Từ chối thao tác xóa/sửa ngay lập tức và báo lỗi cho người dùng</td>
+                  <td class="p-3">Mặc định nếu không chỉ định rõ</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-amber-400">CASCADE (Lan truyền)</td>
+                  <td class="p-3">Tự động xóa (hoặc cập nhật) tất cả các bộ bên bảng con đang tham chiếu tới</td>
+                  <td class="p-3">Thường dùng cho quan hệ Thực thể Yếu hoặc Chi tiết hóa đơn</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-sky-400">SET NULL</td>
+                  <td class="p-3">Giữ nguyên các bộ bên con, đặt giá trị khóa ngoại của chúng thành NULL</td>
+                  <td class="p-3">Khóa ngoại bên con <span class="text-amber-300 font-semibold">phải cho phép NULL</span> (không có NOT NULL)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-emerald-400">SET DEFAULT</td>
+                  <td class="p-3">Đặt giá trị khóa ngoại bên con thành giá trị mặc định được định nghĩa trước</td>
+                  <td class="p-3">Phải có giá trị DEFAULT hợp lệ bên quan hệ cha</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 3: Relational Algebra Operators -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">⚡</span>
+            <h3 class="text-lg font-bold text-white">
+              3. Bảng Tra Cứu Đại Số Quan Hệ (Relational Algebra Cheat Sheet)
+            </h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 bg-slate-800/50 text-slate-300 font-semibold">
+                  <th class="p-3">Phép toán</th>
+                  <th class="p-3">Ký hiệu chuẩn</th>
+                  <th class="p-3">Số ngôi</th>
+                  <th class="p-3">Bậc & Tính chất quan trọng</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-slate-300 font-mono text-xs sm:text-sm">
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Chọn (Select)</td>
+                  <td class="p-3 text-indigo-400 font-bold">σ_đk(R)</td>
+                  <td class="p-3 font-sans">1 ngôi</td>
+                  <td class="p-3 font-sans">Lọc các bộ thỏa mãn điều kiện. Bậc giữ nguyên. Lực lượng ≤ |R|.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Chiếu (Project)</td>
+                  <td class="p-3 text-indigo-400 font-bold">π_danh_sách(R)</td>
+                  <td class="p-3 font-sans">1 ngôi</td>
+                  <td class="p-3 font-sans">Lọc lấy các cột. Tự động loại bỏ trùng lặp. Bậc = số cột chiếu.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Hợp (Union)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R ∪ S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Đòi hỏi khả hợp (cùng bậc, miền tương thích). Giao hoán.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Giao (Intersect)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R ∩ S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Đòi hỏi khả hợp. Tương đương: R - (R - S). Giao hoán.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Trừ (Difference)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R - S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Đòi hỏi khả hợp. Không có tính giao hoán: R - S ≠ S - R.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Tích Đề-các (Cartesian)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R × S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Bậc = bậc(R) + bậc(S). Lực lượng = |R| × |S|.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Nối tự nhiên (Natural Join)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R ⋈ S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Nối bằng trên các cột cùng tên, loại bỏ cột trùng. Giao hoán & kết hợp.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Phép chia (Division)</td>
+                  <td class="p-3 text-indigo-400 font-bold">R ÷ S</td>
+                  <td class="p-3 font-sans">2 ngôi</td>
+                  <td class="p-3 font-sans">Dành cho truy vấn "TẤT CẢ / CHO MỌI" (∀).</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-semibold text-white">Gom nhóm & Kết hợp</td>
+                  <td class="p-3 text-indigo-400 font-bold">_(nhóm)ℑ_(hàm)(R)</td>
+                  <td class="p-3 font-sans">1 ngôi (mở rộng)</td>
+                  <td class="p-3 font-sans">Tương đương GROUP BY & COUNT, SUM, AVG, MIN, MAX trong SQL.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table 4: 9 Steps ER/EER Mapping -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">🗺️</span>
+            <h3 class="text-lg font-bold text-white">
+              4. 9 Bước Vàng Chuyển Đổi ER & EER Sang Lược Đồ Quan Hệ
+            </h3>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 1</span>
+              <strong class="text-white">Thực thể mạnh:</strong> Tạo bảng riêng. Chỉ đưa thuộc tính đơn vào. Thuộc tính phức hợp làm phẳng thành các thành phần con. Khóa chính giữ nguyên.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 2</span>
+              <strong class="text-white">Thực thể yếu:</strong> Tạo bảng riêng. Khóa chính = <code class="text-amber-300 font-mono">[Khóa chính bảng chủ (làm FK)] + [Khóa bộ phận (partial key)]</code>.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 3</span>
+              <strong class="text-white">Liên kết 1:1:</strong> Phương pháp khóa ngoại (ưu tiên đặt FK ở bên tham gia toàn phần Total để tránh NULL). Nếu cả 2 đều Total -> Gộp bảng (Merged Relation).
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 4</span>
+              <strong class="text-white">Liên kết 1:N:</strong> Đưa Khóa chính của bên 1 sang làm Khóa ngoại (FK) ở bên N. Thuộc tính của mối liên kết cũng đặt ở bên N.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 5</span>
+              <strong class="text-white">Liên kết M:N:</strong> Bắt buộc tạo BẢNG MỚI (bảng trung gian). Khóa chính = tổ hợp các khóa ngoại tham chiếu đến 2 thực thể tham gia.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 6</span>
+              <strong class="text-white">Thuộc tính đa trị:</strong> Bắt buộc tạo BẢNG MỚI gồm [Khóa ngoại trỏ về thực thể gốc] + [Thuộc tính đa trị]. Khóa chính là cả hai.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 7</span>
+              <strong class="text-white">Liên kết đa ngôi (n > 2):</strong> Tạo BẢNG MỚI chứa khóa ngoại của tất cả n thực thể tham gia liên kết.
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 8</span>
+              <strong class="text-white">Chuyên biệt hóa / Tổng quát hóa (EER):</strong>
+              <ul class="list-disc pl-5 mt-1 space-y-1 text-xs text-slate-300">
+                <li><strong>8A:</strong> Tạo bảng cha + từng bảng con (Áp dụng tổng quát cho mọi trường hợp).</li>
+                <li><strong>8B:</strong> Chỉ tạo các bảng con (Chỉ áp dụng khi <em>Total + Disjoint</em>).</li>
+                <li><strong>8C:</strong> 1 bảng duy nhất với thuộc tính phân loại Type (Tốt khi <em>Disjoint</em>).</li>
+                <li><strong>8D:</strong> 1 bảng duy nhất với nhiều thuộc tính cờ Boolean Flag (Tốt khi <em>Overlap</em>).</li>
+              </ul>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-xs mr-2">Bước 9</span>
+              <strong class="text-white">Danh mục / Kiểu hợp (Category / Union Type):</strong> Tạo Khóa đại diện (Surrogate Key) làm khóa chính chung cho Category và làm khóa ngoại liên kết các bảng con.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CONFIRM SUBMISSION MODAL -->
+  <div id="submit-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-400 mx-auto flex items-center justify-center text-2xl mb-3">
+        ⚠️
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Xác Nhận Nộp Bài Thi</h3>
+      <p id="submit-modal-msg" class="text-slate-300 text-sm mb-6 leading-relaxed">
+        Bạn còn 3 câu chưa trả lời. Bạn có chắc chắn muốn nộp bài ngay bây giờ không?
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <button onclick="closeSubmitModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition">
+          Tiếp Tục Làm Bài
+        </button>
+        <button onclick="finalizeExamSubmission()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold transition">
+          Nộp Bài Ngay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBEDDED JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // 1. DATASET
+    const QUESTIONS_BANK = [
+  {
+    "id": 1,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Trong mô hình dữ liệu quan hệ, khái niệm 'Bậc' (Degree hoặc Arity) của một quan hệ R được định nghĩa là gì?",
+    "options": [
+      "Số lượng các bộ (tuples / hàng) hiện có trong quan hệ",
+      "Số lượng các thuộc tính (attributes / cột) trong lược đồ quan hệ",
+      "Số lượng khóa dự tuyển của quan hệ",
+      "Số lượng miền giá trị phân biệt được sử dụng trong quan hệ"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Bậc (Degree/Arity) của một lược đồ quan hệ R(A1, A2, ..., An) là tổng số thuộc tính n cấu thành nên quan hệ đó. Trong khi đó, số lượng các bộ (hàng) được gọi là Lực lượng (Cardinality)."
+  },
+  {
+    "id": 2,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Một quan hệ R có 6 thuộc tính và tại thời điểm hiện tại đang lưu trữ 120 dòng dữ liệu. Bậc và lực lượng của quan hệ R lần lượt là:",
+    "options": [
+      "Bậc là 120, lực lượng là 6",
+      "Bậc là 6, lực lượng là 120",
+      "Bậc là 6, lực lượng là 720",
+      "Bậc là 20, lực lượng là 6"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Bậc (Degree) = số thuộc tính = 6. Lực lượng (Cardinality) = số bộ/hàng dữ liệu = 120."
+  },
+  {
+    "id": 3,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Phát biểu nào sau đây là ĐÚNG về thứ tự của các bộ (tuples) trong một quan hệ theo định nghĩa toán học chuẩn?",
+    "options": [
+      "Các bộ phải luôn được sắp xếp tăng dần theo khóa chính",
+      "Thứ tự các bộ tuân thủ theo thời gian được chèn (INSERT) vào bảng",
+      "Các bộ trong quan hệ không có thứ tự xác định vì quan hệ là một tập hợp các bộ",
+      "Các bộ được sắp xếp vật lý cố định trên đĩa cứng theo thuật toán băm"
+    ],
+    "correct": [
+      2
+    ],
+    "explanation": "Theo lý thuyết tập hợp, quan hệ r(R) là một tập hợp các bộ {t1, t2, ..., tm}. Các phần tử trong một tập hợp toán học không có thứ tự (unordered)."
+  },
+  {
+    "id": 4,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Trong mô hình quan hệ cổ điển (1NF - Chuẩn 1), giá trị của một thuộc tính đối với mỗi bộ dữ liệu phải thỏa mãn tính chất nào?",
+    "options": [
+      "Tính nguyên tố (Atomic) - không thể phân chia thành các thành phần nhỏ hơn",
+      "Tính phức hợp (Composite) - luôn chứa nhiều giá trị liên kết",
+      "Tính đa trị (Multivalued) - là một tập hợp các giá trị",
+      "Tính quy nạp (Recursive) - tự tham chiếu đến chính thuộc tính đó"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Mô hình quan hệ yêu cầu thuộc tính phải mang giá trị nguyên tố (Atomic), nghĩa là không chấp nhận thuộc tính phức hợp hay thuộc tính đa trị (nguyên lý chuẩn 1NF)."
+  },
+  {
+    "id": 5,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Giá trị NULL trong cơ sở dữ liệu quan hệ được dùng để biểu diễn điều gì?",
+    "options": [
+      "Số 0 đối với kiểu số nguyên và chuỗi rỗng đối với kiểu ký tự",
+      "Giá trị chưa biết (unknown), bị thiếu (missing) hoặc không áp dụng được (not applicable)",
+      "Khoảng trắng (space) có độ dài bằng 1 ký tự",
+      "Một giá trị âm vô cùng để đánh dấu lỗi hệ thống"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "NULL trong CSDL không phải là số 0 hay chuỗi rỗng. NULL là ký hiệu đặc biệt biểu thị giá trị chưa biết (unknown - ví dụ chưa có số điện thoại), bị thiếu (missing) hoặc không áp dụng được (not applicable - ví dụ người chưa kết hôn thì không có 'Tên vợ/chồng')."
+  },
+  {
+    "id": 6,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Sự khác biệt căn bản giữa 'Lược đồ quan hệ' (Relation Schema) và 'Trạng thái quan hệ' (Relation State / Instance) là gì?",
+    "options": [
+      "Lược đồ quan hệ thay đổi liên tục khi thêm sửa xóa, còn trạng thái quan hệ thì cố định",
+      "Lược đồ quan hệ là cấu trúc logic tĩnh mô tả các thuộc tính và kiểu dữ liệu; trạng thái quan hệ là tập hợp các bộ dữ liệu cụ thể tại một thời điểm",
+      "Lược đồ quan hệ được lưu trên RAM, trạng thái quan hệ được lưu trong bộ nhớ ngoài",
+      "Lược đồ quan hệ chỉ dành cho quản trị viên (DBA), trạng thái quan hệ chỉ dành cho người dùng cuối"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Lược đồ quan hệ R(A1, ..., An) là định nghĩa mô tả cấu trúc, hiếm khi thay đổi (Intension). Trạng thái quan hệ r(R) là tập hợp các dữ liệu thực tế tại một thời điểm cụ thể, biến đổi liên tục qua các thao tác cập nhật (Extension)."
+  },
+  {
+    "id": 7,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Nếu miền giá trị của thuộc tính A là dom(A) = {1, 2} và của B là dom(B) = {x, y, z}. Số bộ tối đa có thể xuất hiện trong một trạng thái quan hệ R(A, B) là:",
+    "options": [
+      "5 bộ",
+      "6 bộ",
+      "8 bộ",
+      "Vô số bộ vì quan hệ có thể chứa các bộ trùng lặp"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Quan hệ r(R) là tập con của tích Đề-các: dom(A) × dom(B). Số phần tử tối đa của tích Đề-các là |dom(A)| × |dom(B)| = 2 × 3 = 6 bộ. Do quan hệ không chứa các bộ trùng lặp, số bộ tối đa là 6."
+  },
+  {
+    "id": 8,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Trong định nghĩa hình thức, một bộ t trong quan hệ R(A1, A2, ..., An) được ánh xạ như thế nào?",
+    "options": [
+      "Là một danh sách liên kết các con trỏ trỏ tới vùng nhớ trên đĩa",
+      "Là một ánh xạ gán mỗi thuộc tính Ai một giá trị vi ∈ dom(Ai)",
+      "Là một mảng một chiều các chuỗi ký tự không định kiểu",
+      "Là một hàm băm biến đổi tên bảng thành một số nguyên"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Một bộ t là một ánh xạ từ tập thuộc tính {A1, A2, ..., An} vào các miền giá trị tương ứng, sao cho t[Ai] ∈ dom(Ai) hoặc t[Ai] nhận giá trị NULL (nếu cho phép)."
+  },
+  {
+    "id": 9,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Tại sao trong một quan hệ chuẩn không thể tồn tại hai bộ (hàng) giống hệt nhau ở tất cả các thuộc tính?",
+    "options": [
+      "Vì hệ quản trị CSDL sẽ tự động xóa bộ được thêm vào sau",
+      "Vì quan hệ được định nghĩa là một tập hợp các bộ toán học (Set of tuples), mà tập hợp không chứa phần tử trùng lặp",
+      "Vì bộ nhớ máy tính không cho phép ghi đè các khối dữ liệu trùng tên",
+      "Vì hệ thống bắt buộc mỗi bảng phải có ít nhất 2 khóa ngoại"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Về mặt toán học, quan hệ r(R) là một tập hợp (mathematical set). Theo định nghĩa tập hợp, mọi phần tử phải phân biệt, do đó không có hai bộ dữ liệu nào hoàn toàn trùng lặp."
+  },
+  {
+    "id": 10,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Thuộc tính nào sau đây KHÔNG THỂ biểu diễn trực tiếp dưới dạng một cột đơn nguyên trong mô hình quan hệ chuẩn 1NF?",
+    "options": [
+      "Ngày sinh (kiểu DATE)",
+      "Số điện thoại (một người có thể sở hữu 3 đến 5 số điện thoại khác nhau)",
+      "Mã sinh viên (chuỗi ký tự cố định 8 ký tự)",
+      "Điểm trung bình tích lũy (kiểu FLOAT)"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Số điện thoại trong tình huống này là thuộc tính đa trị (multivalued attribute). Chuẩn 1NF không cho phép một ô chứa danh sách/tập hợp giá trị, mà phải tách thành bảng riêng hoặc chuẩn hóa."
+  },
+  {
+    "id": 11,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Cho quan hệ SINHVIEN(MaSV, HoTen, NgaySinh, QueQuan). Tập hợp các thuộc tính {MaSV, HoTen, NgaySinh, QueQuan} được gọi là:",
+    "options": [
+      "Trạng thái của quan hệ",
+      "Lược đồ của quan hệ",
+      "Lực lượng của quan hệ",
+      "Miền xác định của quan hệ"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Tên quan hệ kèm theo danh sách các thuộc tính và kiểu dữ liệu cấu thành nên 'Lược đồ quan hệ' (Relation Schema)."
+  },
+  {
+    "id": 12,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "single",
+    "question": "Ký hiệu t[Ai] hoặc t.Ai trong lý thuyết mô hình quan hệ dùng để chỉ:",
+    "options": [
+      "Địa chỉ vật lý của cột Ai trong bảng t",
+      "Giá trị của thuộc tính Ai tại bộ dữ liệu t",
+      "Số lượng dòng thỏa mãn điều kiện Ai trong bảng t",
+      "Lược đồ con tạo bởi thuộc tính Ai"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "t[Ai] biểu thị giá trị của thuộc tính Ai của bộ t."
+  },
+  {
+    "id": 13,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Những đặc trưng nào sau đây là ĐÚNG đối với một quan hệ trong mô hình dữ liệu quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Các bộ (tuples) trong một quan hệ không có thứ tự xác định từ trên xuống dưới",
+      "Các giá trị của mỗi thuộc tính trong từng bộ phải có tính nguyên tố (Atomic)",
+      "Một quan hệ có thể chứa hai bộ dữ liệu hoàn toàn giống nhau ở mọi thuộc tính",
+      "Tên của các thuộc tính trong cùng một lược đồ quan hệ phải phân biệt (duy nhất)"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "A đúng (tính chất tập hợp, không thứ tự bộ). B đúng (1NF, giá trị nguyên tố). D đúng (các cột trong cùng một bảng phải có tên khác nhau). C sai vì quan hệ là tập hợp các bộ, không cho phép hai bộ trùng hệt nhau."
+  },
+  {
+    "id": 14,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Những trường hợp nào sau đây có thể dẫn đến việc xuất hiện giá trị NULL trong một bộ của quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Giá trị của thuộc tính tồn tại nhưng hiện tại hệ thống chưa biết hoặc chưa thu thập được",
+      "Giá trị thuộc tính không áp dụng được cho thực thể đó (ví dụ: Bằng lái xe đối với người chưa biết lái xe)",
+      "Người dùng cố tình gán số 0 cho một thuộc tính số nguyên để tính toán",
+      "Hệ thống không biết chắc thuộc tính đó có áp dụng được hay không (unknown existence)"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "NULL thể hiện: (1) Value unknown but exists, (2) Value not applicable, (3) Unknown existence. Số 0 là một giá trị số học xác định, hoàn toàn khác với NULL."
+  },
+  {
+    "id": 15,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Những phát biểu nào sau đây phân biệt ĐÚNG giữa Mô hình CSDL Quan hệ và Bảng tính Excel / File dữ liệu phẳng? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Trong quan hệ, mỗi cột có một miền dữ liệu xác định nghiêm ngặt; trong khi các ô cùng một cột trong Excel có thể chứa nhiều kiểu dữ liệu hỗn hợp",
+      "Quan hệ không cho phép hai dòng giống hệt nhau tồn tại; Excel cho phép trùng lặp hoàn toàn các dòng dữ liệu",
+      "Mô hình quan hệ bắt buộc dữ liệu phải được lưu trên một máy chủ duy nhất, không thể phân tán",
+      "Mô hình quan hệ có các ràng buộc toàn vẹn dữ liệu được hệ quản trị CSDL đảm bảo tự động"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "A, B, D là những khác biệt căn bản mang tính lý thuyết và cài đặt giữa quan hệ chuẩn và bảng tính Excel. C sai vì CSDL quan hệ hoàn toàn có thể phân tán (Distributed Relational DBMS)."
+  },
+  {
+    "id": 16,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Xét lược đồ quan hệ R(A, B, C, D). Những nhận định nào sau đây là ĐÚNG? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Bậc của quan hệ R bằng 4",
+      "Lực lượng của quan hệ R luôn luôn bằng 4 bất kể trạng thái của CSDL",
+      "Một trạng thái quan hệ r(R) tại thời điểm bất kỳ là một tập con của tích Đề-các: dom(A) × dom(B) × dom(C) × dom(D)",
+      "Nếu dom(A) có 3 giá trị, dom(B) có 2 giá trị, dom(C) có 2 giá trị, dom(D) có 2 giá trị thì r(R) có tối đa 24 bộ dữ liệu"
+    ],
+    "correct": [
+      0,
+      2,
+      3
+    ],
+    "explanation": "A đúng (có 4 thuộc tính). B sai vì lực lượng là số bộ dữ liệu, thay đổi theo các thao tác thêm xóa. C đúng theo định nghĩa toán học của quan hệ. D đúng vì |dom(A) × dom(B) × dom(C) × dom(D)| = 3 × 2 × 2 × 2 = 24 bộ."
+  },
+  {
+    "id": 17,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Khi chuyển đổi giữa cách nhìn hình thức (toán học) và cách nhìn bảng trong hệ quản trị CSDL quan hệ (RDBMS), những cặp khái niệm nào sau đây tương đương nhau? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Quan hệ (Relation) ⟷ Bảng (Table)",
+      "Bộ (Tuple) ⟷ Hàng / Bản ghi (Row / Record)",
+      "Thuộc tính (Attribute) ⟷ Cột / Trường (Column / Field)",
+      "Bậc (Degree) ⟷ Tổng số dòng trong bảng (Total rows)"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "A, B, C là các cặp thuật ngữ tương đương chuẩn. D sai vì Bậc (Degree) tương đương số cột, còn tổng số dòng tương ứng với Lực lượng (Cardinality)."
+  },
+  {
+    "id": 18,
+    "topic": "Khái niệm Mô hình Quan hệ",
+    "type": "multiple",
+    "question": "Những nhận định nào sau đây là SAI về miền giá trị (Domain) trong mô hình dữ liệu quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Hai thuộc tính khác nhau trong cùng một lược đồ quan hệ không bao giờ được phép dùng chung một miền giá trị",
+      "Miền giá trị chỉ định rõ kiểu dữ liệu, định dạng và tập các giá trị hợp lệ mà một thuộc tính có thể nhận",
+      "Miền giá trị cho phép chứa các phần tử là tập hợp của nhiều giá trị khác trong chuẩn 1NF",
+      "Miền giá trị có thể là tập vô hạn (như tập số thực) hoặc tập hữu hạn (như tập các ngày trong tuần)"
+    ],
+    "correct": [
+      0,
+      2
+    ],
+    "explanation": "Câu hỏi yêu cầu tìm nhận định SAI: Option A sai vì nhiều thuộc tính có thể dùng chung miền giá trị (ví dụ: NgayVaoLam và NgaySinh đều dùng miền DATE). Option C sai vì trong 1NF miền giá trị phải là các giá trị nguyên tố (atomic). Do đó A và C là 2 nhận định sai cần chọn."
+  },
+  {
+    "id": 19,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Một tập thuộc tính SK của lược đồ quan hệ R được gọi là một 'Siêu khóa' (Superkey) nếu thỏa mãn điều kiện nào?",
+    "options": [
+      "SK không chứa bất kỳ tập con thực sự nào có thể xác định duy nhất một bộ",
+      "Không bao giờ tồn tại hai bộ phân biệt t1, t2 trong bất kỳ trạng thái hợp lệ nào của R mà t1[SK] = t2[SK]",
+      "SK phải được tạo thành từ ít nhất hai thuộc tính trở lên",
+      "SK là tập khóa ngoại trỏ đến quan hệ khác"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Siêu khóa (Superkey) là tập một hoặc nhiều thuộc tính xác định duy nhất mỗi bộ trong quan hệ, nghĩa là không có hai bộ nào có cùng giá trị trên tập SK này."
+  },
+  {
+    "id": 20,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Điểm khác biệt cốt lõi giữa 'Khóa dự tuyển' (Candidate Key) và 'Siêu khóa' (Superkey) là gì?",
+    "options": [
+      "Khóa dự tuyển có thể nhận giá trị NULL, còn siêu khóa thì không",
+      "Khóa dự tuyển là một siêu khóa tối thiểu (Minimal Superkey) - không thể loại bỏ bất kỳ thuộc tính nào mà vẫn giữ được tính duy nhất",
+      "Khóa dự tuyển chỉ gồm đúng 1 thuộc tính duy nhất",
+      "Siêu khóa luôn được hệ quản trị CSDL tạo chỉ mục (index), còn khóa dự tuyển thì không"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Khóa dự tuyển (Candidate Key) K là một siêu khóa có tính chất tối thiểu (minimality): nếu bỏ bất kỳ thuộc tính nào khỏi K thì tập thuộc tính còn lại không còn là siêu khóa nữa."
+  },
+  {
+    "id": 21,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Ràng buộc 'Toàn vẹn Thực thể' (Entity Integrity Constraint) quy định điều gì đối với quan hệ?",
+    "options": [
+      "Mọi giá trị khóa ngoại phải tham chiếu đến một khóa chính hợp lệ",
+      "Không có bất kỳ thuộc tính nào thuộc Khóa chính (Primary Key) được phép nhận giá trị NULL",
+      "Tất cả các thuộc tính trong bảng đều không được phép chứa giá trị NULL",
+      "Mỗi bảng phải có ít nhất một mối quan hệ liên kết với bảng khác"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Ràng buộc Toàn vẹn Thực thể: Không có thành phần nào của khóa chính (Primary Key) được phép nhận giá trị NULL trong bất kỳ bộ dữ liệu nào, vì khóa chính được dùng để định danh thực thể."
+  },
+  {
+    "id": 22,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Ràng buộc 'Toàn vẹn Tham chiếu' (Referential Integrity Constraint) phát biểu rằng: Giá trị của khóa ngoại FK trong quan hệ R1 tham chiếu đến khóa chính PK của quan hệ R2 phải thỏa mãn:",
+    "options": [
+      "Bắt buộc luôn luôn phải khác NULL trong mọi trường hợp",
+      "Phải bằng giá trị của PK của một bộ nào đó trong R2, hoặc nhận giá trị NULL (nếu không có ràng buộc cấm null)",
+      "Phải có tên thuộc tính giống hệt 100% với tên thuộc tính khóa chính của R2",
+      "Phải được sắp xếp tăng dần theo giá trị khóa chính của R2"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Ràng buộc toàn vẹn tham chiếu quy định: một bộ trong R1 có khóa ngoại FK thì FK đó phải khớp với giá trị PK của một bộ nào đó trong quan hệ được tham chiếu R2, hoặc FK phải là NULL."
+  },
+  {
+    "id": 23,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Cho hai quan hệ: PHONGBAN(<u>MaPB</u>, TenPB) và NHANVIEN(<u>MaNV</u>, HoTen, MaPB). Trong đó MaPB của NHANVIEN là khóa ngoại tham chiếu đến PHONGBAN. Thao tác nào sau đây có nguy cơ vi phạm ràng buộc toàn vẹn tham chiếu?",
+    "options": [
+      "Xóa một nhân viên khỏi bảng NHANVIEN",
+      "Thêm một phòng ban mới vào bảng PHONGBAN",
+      "Thêm một nhân viên mới vào NHANVIEN với mã phòng ban MaPB = 'PB99' (trong khi bảng PHONGBAN chưa có mã 'PB99')",
+      "Sửa tên một nhân viên trong bảng NHANVIEN"
+    ],
+    "correct": [
+      2
+    ],
+    "explanation": "Khi chèn vào bảng chứa khóa ngoại (NHANVIEN), nếu giá trị khóa ngoại 'PB99' không tồn tại bên bảng được tham chiếu (PHONGBAN), thao tác INSERT sẽ vi phạm ràng buộc toàn vẹn tham chiếu."
+  },
+  {
+    "id": 24,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Trong tình huống trên, nếu người dùng muốn XÓA một phòng ban khỏi bảng PHONGBAN, nhưng phòng ban đó hiện đang có các nhân viên trực thuộc trong bảng NHANVIEN. Chiến lược xử lý CASCADE (xóa lan truyền) sẽ thực hiện hành động gì?",
+    "options": [
+      "Từ chối thao tác xóa và báo lỗi",
+      "Xóa phòng ban đó đồng thời tự động xóa tất cả các nhân viên thuộc phòng ban đó trong bảng NHANVIEN",
+      "Xóa phòng ban và tự động cập nhật MaPB của các nhân viên liên quan thành NULL",
+      "Chỉ xóa phòng ban nếu phòng ban đó có dưới 5 nhân viên"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Chiến lược CASCADE (lan truyền): Khi một bộ bên quan hệ cha bị xóa, hệ thống sẽ tự động tìm và xóa tất cả các bộ bên quan hệ con đang tham chiếu tới bộ đó."
+  },
+  {
+    "id": 25,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Chiến lược SET NULL khi xóa một bộ ở bảng cha (được tham chiếu) chỉ có thể thực hiện được khi nào?",
+    "options": [
+      "Khóa ngoại ở bảng con cho phép nhận giá trị NULL (không bị ràng buộc NOT NULL)",
+      "Khóa ngoại ở bảng con đồng thời cũng là thành phần của khóa chính",
+      "Bảng con không có bất kỳ chỉ mục nào",
+      "Bảng cha có ít nhất 100 dòng dữ liệu"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "SET NULL sẽ gán giá trị khóa ngoại ở bảng con thành NULL. Nếu cột khóa ngoại đó được khai báo NOT NULL (hoặc là một phần của khóa chính bảng con), thao tác này sẽ thất bại và bị từ chối."
+  },
+  {
+    "id": 26,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Thao tác cập nhật UPDATE trên một bộ dữ liệu thực chất có thể xem là sự kết hợp tuần tự của hai thao tác nào?",
+    "options": [
+      "Thao tác SELECT và PROJECT",
+      "Thao tác DELETE (xóa bộ cũ) theo sau bởi INSERT (thêm bộ mới)",
+      "Thao tác JOIN và UNION",
+      "Thao tác COMMIT và ROLLBACK"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Trong lý thuyết mô hình quan hệ, việc sửa đổi một bộ dữ liệu (UPDATE) được xem tương đương với việc xóa bộ cũ (DELETE) rồi chèn bộ mới với các giá trị đã sửa đổi (INSERT)."
+  },
+  {
+    "id": 27,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Cho quan hệ HOCVIEN(<u>MaHV</u>, Email, SoCMND, HoTen). Biết rằng mỗi học viên có một MaHV duy nhất, một địa chỉ Email duy nhất và một số SoCMND duy nhất. Số lượng khóa dự tuyển (Candidate Keys) của quan hệ này là:",
+    "options": [
+      "1 khóa dự tuyển",
+      "3 khóa dự tuyển",
+      "4 khóa dự tuyển",
+      "7 khóa dự tuyển"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Mỗi thuộc tính {MaHV}, {Email}, {SoCMND} đều có tính chất xác định duy nhất và tối thiểu, do đó quan hệ có 3 khóa dự tuyển. Người thiết kế sẽ chọn một trong số đó làm khóa chính (ở đây là MaHV)."
+  },
+  {
+    "id": 28,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Một thuộc tính được gọi là 'Thuộc tính khóa' (Prime Attribute) nếu:",
+    "options": [
+      "Nó nhận giá trị số nguyên nguyên tố",
+      "Nó là thành viên của ít nhất một Khóa dự tuyển (Candidate Key) nào đó của quan hệ",
+      "Nó không bao giờ được phép tham gia vào bất kỳ khóa ngoại nào",
+      "Nó bắt buộc phải là khóa chính duy nhất của bảng"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Thuộc tính khóa (Prime Attribute) là thuộc tính là thành viên của ít nhất một khóa ứng viên/khóa dự tuyển (Candidate Key). Thuộc tính không thuộc bất kỳ khóa ứng viên nào được gọi là Non-prime attribute."
+  },
+  {
+    "id": 29,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Giả sử quan hệ R(A, B, C) có khóa chính là (A, B). Thao tác chèn bộ dữ liệu nào sau đây chắc chắn VI PHẠM ràng buộc toàn vẹn thực thể?",
+    "options": [
+      "INSERT INTO R VALUES (1, 2, NULL)",
+      "INSERT INTO R VALUES (NULL, 2, 'Hà Nội')",
+      "INSERT INTO R VALUES (1, 3, 'Đà Nẵng')",
+      "INSERT INTO R VALUES (2, 2, 'TP HCM')"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Ràng buộc toàn vẹn thực thể quy định: không một thuộc tính nào cấu thành khóa chính được phép nhận giá trị NULL. Do (A, B) là khóa chính, việc chèn A = NULL vi phạm trực tiếp toàn vẹn thực thể."
+  },
+  {
+    "id": 30,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Ràng buộc miền (Domain Constraint) xác định điều kiện gì?",
+    "options": [
+      "Mỗi bộ phải có khóa chính",
+      "Giá trị của mỗi thuộc tính A trong mỗi bộ phải là một phần tử nguyên tố thuộc tập hợp miền dom(A)",
+      "Số lượng cột trong bảng không được vượt quá 100",
+      "Tên miền website lưu trong CSDL phải có đuôi .vn hoặc .com"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Ràng buộc miền (Domain Constraint) yêu cầu giá trị của thuộc tính A trong mọi bộ phải là giá trị nguyên tố thuộc miền xác định dom(A) (bao gồm cả kiểu dữ liệu, phạm vi số, định dạng ngày tháng,...)."
+  },
+  {
+    "id": 31,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Thao tác chèn (INSERT) một bộ mới vào quan hệ có thể vi phạm những ràng buộc nào sau đây?",
+    "options": [
+      "Chỉ có thể vi phạm ràng buộc miền",
+      "Có thể vi phạm ràng buộc miền, ràng buộc khóa, toàn vẹn thực thể và toàn vẹn tham chiếu",
+      "Không bao giờ vi phạm ràng buộc toàn vẹn thực thể",
+      "Chỉ có thể vi phạm ràng buộc khóa ngoại"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Khi INSERT, giá trị mới có thể sai kiểu dữ liệu (vi phạm miền), trùng khóa chính (vi phạm khóa), khóa chính là NULL (vi phạm thực thể), hoặc khóa ngoại không tồn tại bên bảng tham chiếu (vi phạm tham chiếu)."
+  },
+  {
+    "id": 32,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "single",
+    "question": "Ràng buộc toàn vẹn tham chiếu có thể xảy ra giữa hai thuộc tính trong CÙNG MỘT bảng hay không?",
+    "options": [
+      "Không bao giờ, khóa ngoại bắt buộc phải trỏ sang một bảng khác",
+      "Có, trường hợp này gọi là quan hệ đệ quy (Recursive / Self-referencing), ví dụ thuộc tính MaNQL (Mã người quản lý) trỏ đến MaNV (Mã nhân viên) trong cùng bảng NHANVIEN",
+      "Chỉ xảy ra khi bảng đó không có khóa chính",
+      "Chỉ xảy ra trong mô hình mạng, không có trong mô hình quan hệ"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Khóa ngoại hoàn toàn có thể tham chiếu đến chính khóa chính của cùng một quan hệ (Self-referencing relationship), thường gặp trong quan hệ quản lý đệ quy giữa nhân viên và cấp trên."
+  },
+  {
+    "id": 33,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Những phát biểu nào sau đây là ĐÚNG khi nói về Khóa chính (Primary Key)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Khóa chính được chọn ra từ một trong số các Khóa dự tuyển (Candidate Keys)",
+      "Một quan hệ có thể có nhiều hơn một Khóa chính cùng lúc",
+      "Khóa chính có thể bao gồm sự kết hợp của nhiều thuộc tính (Khóa phức hợp - Composite Key)",
+      "Không có bất kỳ thành phần nào của khóa chính được phép nhận giá trị NULL"
+    ],
+    "correct": [
+      0,
+      2,
+      3
+    ],
+    "explanation": "A, C, D đều đúng. B sai vì mỗi quan hệ chỉ được chỉ định duy nhất MỘT khóa chính (Primary Key), dù quan hệ đó có thể có nhiều khóa dự tuyển."
+  },
+  {
+    "id": 34,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Những thao tác nào sau đây KHÔNG BAO GIỜ làm vi phạm ràng buộc Toàn vẹn Thực thể (Entity Integrity Constraint)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Xóa một bộ dữ liệu bất kỳ khỏi quan hệ (DELETE)",
+      "Chèn một bộ dữ liệu mới có khóa chính mang giá trị hợp lệ khác NULL (INSERT)",
+      "Cập nhật thuộc tính không khóa (non-prime attribute) thành giá trị NULL (UPDATE)",
+      "Cập nhật thuộc tính khóa chính thành giá trị NULL (UPDATE)"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Toàn vẹn thực thể chỉ cấm khóa chính bị NULL. DELETE không thể làm khóa chính thành NULL (A đúng). INSERT khóa chính khác NULL không vi phạm thực thể (B đúng). UPDATE thuộc tính không khóa thành NULL không ảnh hưởng khóa chính (C đúng). D vi phạm trực tiếp toàn vẹn thực thể."
+  },
+  {
+    "id": 35,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Khi thao tác DELETE một bộ trên quan hệ cha bị vi phạm ràng buộc toàn vẹn tham chiếu (do có các bộ ở quan hệ con đang trỏ tới), hệ quản trị CSDL có thể cung cấp những chiến lược xử lý nào? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "RESTRICT / REJECT: Từ chối thao tác xóa và giữ nguyên dữ liệu",
+      "CASCADE: Tự động xóa lan truyền các bộ tương ứng ở bảng con",
+      "SET NULL: Giữ lại các bộ ở bảng con và đặt giá trị khóa ngoại của chúng thành NULL (nếu cho phép)",
+      "RANDOMIZE: Tự động gán khóa ngoại ở bảng con thành một mã ngẫu nhiên bất kỳ"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Các tùy chọn chuẩn trong SQL và lý thuyết CSDL gồm: RESTRICT/NO ACTION, CASCADE, SET NULL, SET DEFAULT. RANDOMIZE là phương án bịa đặt."
+  },
+  {
+    "id": 36,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Giả sử tập thuộc tính K là một Khóa dự tuyển của quan hệ R. Những khẳng định nào sau đây là ĐÚNG? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "K chắc chắn là một Siêu khóa (Superkey) của R",
+      "Nếu thêm bất kỳ thuộc tính nào vào K, tập mới tạo thành vẫn là một Siêu khóa của R",
+      "Nếu thêm bất kỳ thuộc tính nào vào K, tập mới tạo thành vẫn là một Khóa dự tuyển của R",
+      "Nếu loại bỏ bất kỳ một thuộc tính nào khỏi K, tập còn lại sẽ không còn là Siêu khóa của R"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Khóa dự tuyển là siêu khóa tối thiểu. Mọi khóa dự tuyển đều là siêu khóa (A đúng). Siêu khóa cộng thêm thuộc tính vẫn là siêu khóa (B đúng). Nhưng cộng thêm thuộc tính thì mất tính tối thiểu nên không còn là khóa dự tuyển (C sai). Bớt thuộc tính thì mất tính siêu khóa (D đúng)."
+  },
+  {
+    "id": 37,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Trong các ràng buộc sau, những ràng buộc nào thuộc nhóm 'Ràng buộc nội tại của mô hình dữ liệu quan hệ' (Model-based / Inherent / Schema constraints)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Ràng buộc miền (Domain Constraints)",
+      "Ràng buộc khóa (Key Constraints)",
+      "Ràng buộc toàn vẹn thực thể (Entity Integrity)",
+      "Ràng buộc quy tắc nghiệp vụ ứng dụng (như: Lương nhân viên không được vượt quá lương trưởng phòng)"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "A, B, C cùng với Toàn vẹn tham chiếu là các ràng buộc cấu trúc cốt lõi của mô hình quan hệ (Schema-based constraints). D là ràng buộc ngữ nghĩa nghiệp vụ ứng dụng (Semantic / Application-based constraint, thường cài đặt qua Trigger/Assertion)."
+  },
+  {
+    "id": 38,
+    "topic": "Ràng buộc Toàn vẹn & Cập nhật",
+    "type": "multiple",
+    "question": "Những nhận định nào sau đây là SAI về Khóa ngoại (Foreign Key)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Tên của thuộc tính khóa ngoại bắt buộc phải hoàn toàn trùng khớp với tên của thuộc tính khóa chính mà nó tham chiếu",
+      "Khóa ngoại không bao giờ được phép nhận giá trị NULL trong bất kỳ tình huống nào",
+      "Miền giá trị của khóa ngoại phải tương thích với miền giá trị của khóa chính được tham chiếu",
+      "Khóa ngoại chỉ có thể tham chiếu tới một quan hệ nằm trong một CSDL vật lý khác"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Đề bài yêu cầu tìm nhận định SAI: A sai (tên cột có thể khác nhau, miễn cùng miền dữ liệu). B sai (khóa ngoại hoàn toàn có thể nhận NULL nếu không có ràng buộc NOT NULL). D sai (khóa ngoại thường tham chiếu trong cùng một CSDL). C là nhận định đúng. Do đó đáp án sai cần chọn là A, B, D."
+  },
+  {
+    "id": 39,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép toán Chọn (σ_condition(R)) trong đại số quan hệ thực hiện thao tác nào?",
+    "options": [
+      "Chọn ra một tập con các cột (thuộc tính) từ bảng R",
+      "Chọn ra một tập con các hàng (bộ dữ liệu) từ bảng R thỏa mãn điều kiện logic xác định",
+      "Sắp xếp các dòng trong bảng theo thứ tự tăng dần",
+      "Đổi tên quan hệ R thành một tên mới"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép chọn (σ - Select) là phép toán một ngôi lọc các bộ (hàng) của quan hệ thỏa mãn một biểu thức điều kiện logic cho trước."
+  },
+  {
+    "id": 40,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép toán Chiếu (π_attribute_list(R)) trong đại số quan hệ có đặc điểm quan trọng nào đối với kết quả trả về?",
+    "options": [
+      "Luôn giữ nguyên số lượng cột và chỉ thay đổi số lượng hàng",
+      "Chọn ra các cột được chỉ định và tự động loại bỏ các bộ trùng lặp trong kết quả",
+      "Cho phép giữ lại các bộ trùng lặp giống như mệnh đề SELECT trong SQL",
+      "Bắt buộc danh sách thuộc tính chiếu phải chứa khóa chính của R"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép chiếu (π - Project) lọc lấy các cột theo danh sách thuộc tính. Vì kết quả của một phép toán đại số quan hệ là một quan hệ toán học (tập hợp), nên mọi bộ trùng lặp sau khi chiếu sẽ tự động bị loại bỏ."
+  },
+  {
+    "id": 41,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Điều kiện để hai quan hệ R và S có thể thực hiện được các phép toán tập hợp: Hợp (R ∪ S), Giao (R ∩ S), Trừ (R - S) là gì?",
+    "options": [
+      "Hai quan hệ phải có cùng số lượng dòng (lực lượng bằng nhau)",
+      "Hai quan hệ phải có cùng khóa chính",
+      "Hai quan hệ phải khả hợp (Union-compatible): cùng bậc (số thuộc tính) và các miền giá trị tương ứng của các thuộc tính phải tương thích",
+      "Hai quan hệ phải có ít nhất một khóa ngoại trỏ sang nhau"
+    ],
+    "correct": [
+      2
+    ],
+    "explanation": "Điều kiện khả hợp (Union-compatible / Type-compatible): R và S phải có cùng bậc n, và với mọi i ∈ [1, n], miền giá trị dom(Ai) = dom(Bi)."
+  },
+  {
+    "id": 42,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Nếu quan hệ R có bậc 3, lực lượng 10; quan hệ S có bậc 4, lực lượng 5. Kết quả của phép Tích Đề-các (R × S) sẽ có bậc và lực lượng lần lượt là:",
+    "options": [
+      "Bậc là 7, lực lượng là 15",
+      "Bậc là 12, lực lượng là 50",
+      "Bậc là 7, lực lượng là 50",
+      "Bậc là 12, lực lượng là 15"
+    ],
+    "correct": [
+      2
+    ],
+    "explanation": "Bậc của R × S bằng tổng bậc hai quan hệ: 3 + 4 = 7. Lực lượng của R × S bằng tích lực lượng hai quan hệ: 10 × 5 = 50."
+  },
+  {
+    "id": 43,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép Nối tự nhiên (R ⋈ S) khác biệt như thế nào so với Phép Nối bằng (Equijoin)?",
+    "options": [
+      "Phép nối tự nhiên không yêu cầu điều kiện bằng nhau trên các thuộc tính trùng tên",
+      "Phép nối tự nhiên tự động thực hiện phép nối bằng trên tất cả các thuộc tính có cùng tên giữa hai quan hệ, và loại bỏ một trong hai cột trùng tên đó trong kết quả",
+      "Phép nối tự nhiên giữ lại cả hai cột trùng tên trong kết quả đầu ra",
+      "Phép nối tự nhiên chỉ có thể áp dụng cho các bảng có khóa chính đơn"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép nối tự nhiên (Natural Join ⋈) tự động so sánh bằng trên tất cả các thuộc tính cùng tên của 2 quan hệ, sau đó loại bỏ các cột trùng lặp để chỉ giữ lại 1 cột duy nhất cho mỗi tên thuộc tính chung."
+  },
+  {
+    "id": 44,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Tập các phép toán nào sau đây được coi là 'Đầy đủ về mặt quan hệ' (Relationally Complete) trong đại số quan hệ cơ bản?",
+    "options": [
+      "{σ, π, ∪, -, ×}",
+      "{σ, π, ⋈, ∩, ÷}",
+      "{∪, ∩, -, ×, ⋈}",
+      "{σ, π, ρ, ℑ, ⋈}"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Tập 5 phép toán cơ sở đầy đủ của đại số quan hệ là: Chọn (σ), Chiếu (π), Hợp (∪), Trừ (-), và Tích Đề-các (×). Mọi phép toán khác như Giao, Nối, Chia đều có thể biểu diễn qua 5 phép toán này."
+  },
+  {
+    "id": 45,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép Giao (R ∩ S) có thể được biểu diễn tương đương qua phép toán cơ sở nào sau đây?",
+    "options": [
+      "R ∪ (R - S)",
+      "R - (R - S)",
+      "(R - S) ∪ (S - R)",
+      "σ_(R = S)(R × S)"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Theo lý thuyết tập hợp: R ∩ S = R - (R - S). Phần tử thuộc cả R và S chính là phần tử thuộc R sau khi đã loại bỏ đi những phần tử chỉ thuộc R mà không thuộc S."
+  },
+  {
+    "id": 46,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép toán Chia (R ÷ S) trong đại số quan hệ thường được sử dụng để giải quyết loại truy vấn nào trong thực tế?",
+    "options": [
+      "Truy vấn tìm kiếm giá trị lớn nhất hoặc nhỏ nhất",
+      "Truy vấn mang ý nghĩa 'Tất cả' / 'Mọi' (for all), ví dụ: 'Tìm sinh viên đã học TẤT CẢ các môn học của khoa CNTT'",
+      "Truy vấn phân trang dữ liệu theo từng nhóm 10 dòng",
+      "Truy vấn tính toán số học chia lấy phần nguyên và phần dư"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép chia (R ÷ S) ứng dụng trực tiếp cho các câu truy vấn có lượng từ phổ dụng ∀ ('cho mọi', 'tất cả'): tìm các thực thể trong R có liên kết với TẤT CẢ các phần tử trong S."
+  },
+  {
+    "id": 47,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép Nối ngoài trái (Left Outer Join R ⟕ S) trả về kết quả bao gồm:",
+    "options": [
+      "Chỉ các bộ thỏa mãn điều kiện nối giữa R và S",
+      "Tất cả các bộ của R; những bộ của R không tìm thấy bộ tương ứng trong S thì các thuộc tính của S sẽ được điền giá trị NULL",
+      "Tất cả các bộ của S; những bộ không khớp sẽ bị loại bỏ",
+      "Tất cả các bộ của cả R và S, không có giá trị NULL nào"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Left Outer Join giữ lại tất cả các bộ của quan hệ bên trái (R). Bộ nào không ghép cặp được với bộ nào của S thì các thuộc tính của S sẽ được gán giá trị NULL."
+  },
+  {
+    "id": 48,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Ký hiệu phép Đổi tên ρ_(S(B1, B2, ..., Bn))(R) có ý nghĩa gì?",
+    "options": [
+      "Xóa quan hệ R và tạo quan hệ mới tên S",
+      "Đổi tên quan hệ R thành S và đổi tên các thuộc tính tương ứng thành B1, B2, ..., Bn",
+      "Tính giá trị trung bình của các cột B1, ..., Bn trong bảng S",
+      "Sao chép bảng R sang một ổ đĩa khác mang tên S"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép đổi tên (ρ - Rename) cho phép đổi tên quan hệ (thành S) hoặc đổi tên danh sách các thuộc tính (thành B1, ..., Bn) hoặc cả hai."
+  },
+  {
+    "id": 49,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Cho quan hệ SINHVIEN(MaSV, HoTen, DiemTB, MaKhoa). Biểu thức đại số quan hệ nào sau đây biểu diễn câu truy vấn: 'Lấy Mã sinh viên và Họ tên của các sinh viên thuộc khoa CNTT có ĐiểmTB >= 8.0'?",
+    "options": [
+      "σ_(MaSV, HoTen)(π_(MaKhoa='CNTT' ∧ DiemTB >= 8.0)(SINHVIEN))",
+      "π_(MaSV, HoTen)(σ_(MaKhoa='CNTT' ∧ DiemTB >= 8.0)(SINHVIEN))",
+      "π_(MaKhoa='CNTT' ∧ DiemTB >= 8.0)(σ_(MaSV, HoTen)(SINHVIEN))",
+      "π_SINHVIEN(σ_(MaSV, HoTen)(MaKhoa='CNTT'))"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Lọc các hàng thỏa mãn điều kiện trước bằng phép Chọn (σ_(MaKhoa='CNTT' ∧ DiemTB >= 8.0)), sau đó lọc lấy các cột cần hiển thị bằng phép Chiếu (π_(MaSV, HoTen))."
+  },
+  {
+    "id": 50,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Phép Gom nhóm và Tính toán hàm kết hợp được ký hiệu trong đại số quan hệ mở rộng là:",
+    "options": [
+      "σ (Sigma)",
+      "ℑ hoặc γ (Script F hoặc Gamma)",
+      "π (Pi)",
+      "ρ (Rho)"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép toán gom nhóm và hàm kết hợp (Aggregate functions) được ký hiệu là ℑ (hoặc γ), có dạng _(Grouping_Attributes)ℑ_(Function_List)(R)."
+  },
+  {
+    "id": 51,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Biểu thức _(MaKhoa)ℑ_(COUNT(MaSV), AVG(DiemTB))(SINHVIEN) thực hiện thao tác tương đương với câu lệnh SQL nào?",
+    "options": [
+      "SELECT MaKhoa, COUNT(MaSV), AVG(DiemTB) FROM SINHVIEN WHERE MaKhoa IS NOT NULL",
+      "SELECT MaKhoa, COUNT(MaSV), AVG(DiemTB) FROM SINHVIEN GROUP BY MaKhoa",
+      "SELECT COUNT(MaSV), AVG(DiemTB) FROM SINHVIEN ORDER BY MaKhoa",
+      "SELECT MaKhoa FROM SINHVIEN HAVING AVG(DiemTB) > 5"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Các thuộc tính ở bên trái ℑ đóng vai trò là thuộc tính gom nhóm (tương đương GROUP BY MaKhoa trong SQL), danh sách bên phải là các hàm kết hợp (COUNT, AVG)."
+  },
+  {
+    "id": 52,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Tính chất kết hợp của phép Nối tự nhiên khẳng định rằng với ba quan hệ R, S, T:",
+    "options": [
+      "(R ⋈ S) ⋈ T ≡ R ⋈ (S ⋈ T)",
+      "(R ⋈ S) ⋈ T ≡ (R × S) × T",
+      "(R ⋈ S) ≡ (R - S) ⋈ T",
+      "Phép nối tự nhiên không có tính chất kết hợp"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Phép nối tự nhiên có cả tính chất giao hoán (R ⋈ S ≡ S ⋈ R) và tính chất kết hợp: (R ⋈ S) ⋈ T ≡ R ⋈ (S ⋈ T)."
+  },
+  {
+    "id": 53,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Trong phép toán Chọn σ_C(R), điều kiện C có thể được tạo nên từ các phép toán logic nào?",
+    "options": [
+      "Chỉ có phép gán dấu =",
+      "Các phép toán so sánh {<, <=, =, !=, >=, >} kết hợp với các toán tử logic {∧ (AND), ∨ (OR), ¬ (NOT)}",
+      "Chỉ có phép kiểm tra NULL",
+      "Các phép toán đạo hàm và tích phân số học"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Điều kiện chọn C là một biểu thức Boolean gồm các mệnh đề so sánh thuộc tính với hằng số hoặc giữa các thuộc tính, kết hợp bằng AND (∧), OR (∨), NOT (¬)."
+  },
+  {
+    "id": 54,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Cho quan hệ R(A, B) có các bộ {(1, 2), (1, 3), (2, 3)}. Kết quả của phép chiếu π_A(R) là:",
+    "options": [
+      "Tập các bộ {(1), (1), (2)} gồm 3 bộ",
+      "Tập các bộ {(1), (2)} gồm 2 bộ",
+      "Tập các bộ {(2), (3)} gồm 2 bộ",
+      "Tập rỗng ∅"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Phép chiếu trích xuất cột A. Cột A có các giá trị: 1, 1, 2. Vì kết quả quan hệ là một tập hợp nên giá trị 1 bị trùng lặp sẽ tự động bị loại bỏ, còn lại {(1), (2)}."
+  },
+  {
+    "id": 55,
+    "topic": "Đại số Quan hệ",
+    "type": "single",
+    "question": "Cho hai quan hệ R(A) có các bộ {1, 2, 3, 4} và S(A) có các bộ {3, 4, 5, 6}. Kết quả của phép trừ quan hệ R - S là:",
+    "options": [
+      "{1, 2}",
+      "{5, 6}",
+      "{3, 4}",
+      "{1, 2, 5, 6}"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Phép trừ R - S lấy các phần tử thuộc R nhưng không thuộc S. Các phần tử của R là {1, 2, 3, 4}, trừ đi {3, 4} (thuộc S) thì còn lại {1, 2}."
+  },
+  {
+    "id": 56,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Những phép toán nào sau đây trong đại số quan hệ là phép toán HAI NGÔI (Binary operations - tác động trên 2 quan hệ)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Phép Chọn (σ)",
+      "Phép Hợp (∪)",
+      "Phép Chiếu (π)",
+      "Phép Tích Đề-các (×)"
+    ],
+    "correct": [
+      1,
+      3
+    ],
+    "explanation": "Phép Chọn (σ), Chiếu (π), Đổi tên (ρ) là phép toán một ngôi (Unary). Phép Hợp (∪), Giao (∩), Trừ (-), Tích Đề-các (×), Nối (⋈), Chia (÷) là phép toán hai ngôi (Binary)."
+  },
+  {
+    "id": 57,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Những phát biểu nào sau đây là ĐÚNG về phép Chiếu (π_L(R))? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Số lượng bộ (lực lượng) của kết quả luôn nhỏ hơn hoặc bằng số lượng bộ của quan hệ ban đầu: |π_L(R)| <= |R|",
+      "Nếu danh sách thuộc tính chiếu L chứa một Khóa dự tuyển (Candidate Key) của R thì kết quả chắc chắn có số bộ bằng đúng số bộ ban đầu: |π_L(R)| = |R|",
+      "Bậc của kết quả chiếu luôn bằng đúng số thuộc tính có trong danh sách L",
+      "Phép chiếu có thể tạo ra các bộ mới không hề tồn tại trong quan hệ ban đầu"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "A, B, C đều đúng. Nếu L chứa khóa thì không bao giờ có 2 bộ trùng lặp trên L, do đó không có bộ nào bị loại bỏ. D sai vì phép chiếu chỉ trích xuất dữ liệu có sẵn, không sinh dữ liệu mới."
+  },
+  {
+    "id": 58,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Trong các phép toán sau, những phép toán nào có tính chất GIAO HOÁN (Commutative)? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Phép Hợp: R ∪ S ≡ S ∪ R",
+      "Phép Trừ: R - S ≡ S - R",
+      "Phép Giao: R ∩ S ≡ S ∩ R",
+      "Phép Nối tự nhiên: R ⋈ S ≡ S ⋈ R"
+    ],
+    "correct": [
+      0,
+      2,
+      3
+    ],
+    "explanation": "Phép Hợp, Giao, Tích Đề-các và Nối tự nhiên đều có tính giao hoán. Phép Trừ KHÔNG có tính giao hoán (R - S != S - R nói chung). Phép Chia cũng không có tính giao hoán."
+  },
+  {
+    "id": 59,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Những biến thể nào sau đây thuộc nhóm 'Phép nối ngoài' (Outer Join) trong đại số quan hệ mở rộng? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Nối ngoài trái (Left Outer Join ⟕)",
+      "Nối ngoài phải (Right Outer Join ⟖)",
+      "Nối ngoài toàn phần (Full Outer Join ⟗)",
+      "Nối bán quan hệ (Semi-Join ⋉)"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Ba phép nối ngoài chuẩn là: Left Outer Join, Right Outer Join, và Full Outer Join. Semi-join là phép bán nối, không thuộc nhóm outer join."
+  },
+  {
+    "id": 60,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Xét hai quan hệ R(A, B) và S(B, C). Những nhận định nào sau đây là ĐÚNG về phép nối? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Phép Nối Theta (R ⋈_(R.B = S.B) S) giữ lại cả hai thuộc tính R.B và S.B trong kết quả",
+      "Phép Nối tự nhiên (R ⋈ S) chỉ giữ lại một thuộc tính B duy nhất trong kết quả",
+      "Phép Nối Theta tổng quát có điều kiện dạng R.A θ S.C với θ ∈ {<, <=, =, !=, >, >=}",
+      "Phép Nối tự nhiên chỉ thực hiện được khi hai quan hệ không có bất kỳ thuộc tính nào trùng tên"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "A, B, C đúng. D sai vì phép nối tự nhiên ĐÒI HỎI hai quan hệ phải có ít nhất một thuộc tính cùng tên; nếu không có thuộc tính nào cùng tên thì nối tự nhiên trở thành tích Đề-các."
+  },
+  {
+    "id": 61,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Những biểu thức đại số quan hệ nào sau đây là TƯƠNG ĐƯƠNG nhau về mặt ngữ nghĩa và kết quả? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "σ_(C1 ∧ C2)(R) ≡ σ_C1(σ_C2(R))",
+      "σ_C1(σ_C2(R)) ≡ σ_C2(σ_C1(R))",
+      "π_L1(π_L2(R)) ≡ π_L1(R) (với điều kiện L1 ⊆ L2)",
+      "σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S)"
+    ],
+    "correct": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Cả 4 biến đổi trên đều là các quy tắc biến đổi tương đương chuẩn (Equivalence Rules) trong đại số quan hệ, là cơ sở cho các bộ tối ưu hóa truy vấn (Query Optimizer)."
+  },
+  {
+    "id": 62,
+    "topic": "Đại số Quan hệ",
+    "type": "multiple",
+    "question": "Các hàm nào sau đây là các hàm kết hợp (Aggregate Functions) thường dùng với toán tử ℑ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "COUNT: Đếm số lượng giá trị hoặc số bộ",
+      "SUM: Tính tổng giá trị số",
+      "AVG: Tính giá trị trung bình",
+      "PROJECT: Chiếu các thuộc tính khóa"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Các hàm kết hợp tiêu chuẩn gồm: COUNT, SUM, AVG, MIN, MAX. PROJECT là phép toán chiếu độc lập, không phải hàm kết hợp."
+  },
+  {
+    "id": 63,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một 'Thực thể thông thường / Thực thể mạnh' (Regular Entity Type) từ lược đồ ER sang mô hình quan hệ (Bước 1), quy tắc thực hiện là gì?",
+    "options": [
+      "Tạo một quan hệ mới gồm tất cả các thuộc tính đơn, khóa chính của quan hệ là khóa của kiểu thực thể đó",
+      "Gộp thực thể đó vào thực thể có mối liên kết gần nhất",
+      "Tạo hai quan hệ riêng biệt: một quan hệ chứa khóa, một quan hệ chứa các thuộc tính còn lại",
+      "Chỉ tạo quan hệ nếu thực thể đó có ít nhất một mối liên kết nhiều-nhiều (M:N)"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Bước 1: Với mỗi kiểu thực thể mạnh E, tạo một quan hệ R chứa tất cả các thuộc tính đơn (simple attributes). Với thuộc tính phức hợp, chỉ đưa các thành phần đơn vào. Khóa chính của R chính là thuộc tính khóa của E."
+  },
+  {
+    "id": 64,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một 'Thực thể yếu' (Weak Entity Type) sang lược đồ quan hệ (Bước 2), Khóa chính của quan hệ mới được xác định như thế nào?",
+    "options": [
+      "Chính là khóa bộ phận (partial key) của thực thể yếu",
+      "Là sự kết hợp giữa Khóa chính của thực thể chủ (Owner Entity) và Khóa bộ phận của thực thể yếu",
+      "Là một số nguyên tự tăng ngẫu nhiên do hệ thống tự sinh",
+      "Thực thể yếu không thể có khóa chính trong mô hình quan hệ"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Bước 2: Tạo quan hệ R cho thực thể yếu. Khóa chính của R là tổ hợp gồm: (1) Khóa chính của thực thể xác định/thực thể chủ (được đưa sang làm khóa ngoại) và (2) Khóa bộ phận (partial key/discriminator) của chính thực thể yếu đó."
+  },
+  {
+    "id": 65,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Đối với một mối liên kết 1:1 (Một - Một) giữa hai thực thể S và T, phương pháp 'Khóa ngoại' (Foreign Key Approach - Bước 3) khuyến nghị nên đặt khóa ngoại ở bảng nào để giảm thiểu giá trị NULL?",
+    "options": [
+      "Luôn đặt ở bảng S bất kể ràng buộc tham gia",
+      "Đặt khóa ngoại ở bảng có sự tham gia toàn phần (Total Participation / Khóa ngoại tham chiếu sang bảng kia)",
+      "Bắt buộc phải gộp hai bảng thành một quan hệ duy nhất",
+      "Tạo một bảng thứ ba trung gian chứa khóa chính của cả S và T"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Trong liên kết 1:1, nếu một bên tham gia toàn phần (Total participation - mọi thực thể đều phải tham gia liên kết), việc đặt khóa ngoại ở bên toàn phần sẽ đảm bảo thuộc tính khóa ngoại đó hầu như không bị nhận giá trị NULL."
+  },
+  {
+    "id": 66,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một mối liên kết 1:N (Một - Nhiều) nhị phân giữa hai thực thể A (bên 1) và B (bên N) sang mô hình quan hệ (Bước 4), cách làm chuẩn là:",
+    "options": [
+      "Đưa khóa chính của bên A sang làm khóa ngoại trong quan hệ B",
+      "Đưa khóa chính của bên B sang làm khóa ngoại trong quan hệ A",
+      "Tạo một quan hệ mới trung gian và đưa khóa chính của A làm khóa chính của bảng trung gian",
+      "Bắt buộc phải nhân bản tất cả các thuộc tính của A sang B"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Quy tắc chuyển đổi liên kết 1:N: Luôn đưa khóa chính của bên 1 (quan hệ A) sang làm khóa ngoại (Foreign Key) ở bảng bên N (quan hệ B). Nếu liên kết có thuộc tính riêng, thuộc tính đó cũng được đưa vào bảng B."
+  },
+  {
+    "id": 67,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một mối liên kết M:N (Nhiều - Nhiều) giữa hai thực thể A và B sang lược đồ quan hệ (Bước 5), quy tắc bắt buộc là gì?",
+    "options": [
+      "Đặt khóa ngoại của A vào bảng B",
+      "Đặt khóa ngoại của B vào bảng A",
+      "Tạo một quan hệ mới (bảng liên kết/trung gian), chứa các khóa ngoại tham chiếu đến A và B; khóa chính của quan hệ này là tập hợp các khóa ngoại đó",
+      "Gộp bảng A và bảng B thành một bảng duy nhất"
+    ],
+    "correct": [
+      2
+    ],
+    "explanation": "Bước 5: Với mối liên kết M:N, bắt buộc phải tạo một quan hệ mới R. Khóa chính của R là tập hợp các khóa ngoại tham chiếu đến các quan hệ tham gia liên kết. Các thuộc tính riêng của mối liên kết M:N cũng được đưa vào quan hệ mới này."
+  },
+  {
+    "id": 68,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Một thực thể NHANVIEN có một thuộc tính đa trị là BangCap (một nhân viên có thể có nhiều bằng cấp). Theo quy tắc Bước 6 (Thuộc tính đa trị), thuộc tính này được chuyển đổi như thế nào?",
+    "options": [
+      "Tạo một chuỗi ký tự dài chứa tất cả các bằng cấp ngăn cách bởi dấu phẩy trong bảng NHANVIEN",
+      "Tạo một quan hệ mới NHANVIEN_BANGCAP gồm: Khóa chính của NHANVIEN (làm khóa ngoại) và thuộc tính BangCap; khóa chính của quan hệ mới là tổ hợp cả hai thuộc tính này",
+      "Tạo 10 cột trong bảng NHANVIEN: BangCap1, BangCap2, ..., BangCap10",
+      "Xóa bỏ thuộc tính này vì mô hình quan hệ không hỗ trợ"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Bước 6: Với mỗi thuộc tính đa trị A, tạo một quan hệ mới R. R chứa thuộc tính A cùng khóa ngoại tham chiếu đến thực thể gốc. Khóa chính của R là tổ hợp khóa ngoại và thuộc tính A."
+  },
+  {
+    "id": 69,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một mối liên kết bậc 3 (Ternary Relationship) hoặc đa ngôi (n > 2) sang mô hình quan hệ (Bước 7), quy tắc thực hiện là:",
+    "options": [
+      "Tạo một quan hệ mới chứa các khóa ngoại tham chiếu đến tất cả các thực thể tham gia liên kết",
+      "Chia nhỏ liên kết bậc 3 thành 3 liên kết 1:1",
+      "Chỉ cần đưa khóa ngoại vào một trong 3 bảng thực thể",
+      "Mối liên kết bậc 3 không thể chuyển đổi sang mô hình quan hệ"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Bước 7: Với liên kết n-ngôi (n > 2), tạo một quan hệ mới chứa khóa ngoại của tất cả n thực thể tham gia. Khóa chính thường là tổ hợp của các khóa ngoại này (tùy thuộc vào ràng buộc tỷ số lực lượng)."
+  },
+  {
+    "id": 70,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Trong mở rộng EER, khi chuyển đổi Chuyên biệt hóa (Specialization) theo Tùy chọn 8A (Option 8A - Multiple Relations: Superclass and Subclasses), cấu trúc các bảng được tạo ra như thế nào?",
+    "options": [
+      "Chỉ tạo một bảng duy nhất cho lớp cha và không tạo bảng cho các lớp con",
+      "Tạo một quan hệ cho lớp cha (chứa các thuộc tính chung và khóa chính); đồng thời tạo mỗi quan hệ riêng cho từng lớp con (chứa khóa chính của lớp cha làm khóa chính/khóa ngoại + các thuộc tính riêng của lớp con)",
+      "Chỉ tạo các bảng lớp con mà xóa hoàn toàn bảng lớp cha",
+      "Tạo một bảng duy nhất chứa tất cả thuộc tính kèm theo 20 cột cờ kiểu Boolean"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Option 8A (Áp dụng tổng quát cho mọi chuyên biệt hóa): Tạo bảng cho Superclass C với khóa chính k. Với mỗi Subclass Si, tạo một bảng chứa khóa chính k (vừa là khóa chính vừa là khóa ngoại trỏ về C) cùng các thuộc tính riêng của Si."
+  },
+  {
+    "id": 71,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Tùy chọn 8B (Option 8B - Subclass Relations Only) chỉ có thể áp dụng hợp lý và không làm mất thông tin khi chuyên biệt hóa thỏa mãn điều kiện nào?",
+    "options": [
+      "Chuyên biệt hóa là Chồng chập (Overlap) và Tham gia một phần (Partial)",
+      "Chuyên biệt hóa là Rời rạc (Disjoint) và Tham gia toàn phần (Total Specialization)",
+      "Lớp cha phải có ít nhất 1000 bản ghi",
+      "Các lớp con không có bất kỳ thuộc tính riêng nào"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Option 8B (chỉ tạo các bảng con, mỗi bảng chứa cả thuộc tính chung lẫn thuộc tính riêng) chỉ dùng khi Total (mọi thực thể cha đều phải thuộc ít nhất một con) và Disjoint (không thực thể nào thuộc nhiều hơn 1 con). Nếu không Disjoint sẽ bị trùng dữ liệu, nếu không Total thì các thực thể cha không thuộc con nào sẽ bị mất."
+  },
+  {
+    "id": 72,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Tùy chọn 8C (Option 8C - Single Relation with One Type Attribute) tạo ra DUY NHẤT MỘT quan hệ cho cả lớp cha và các lớp con. Tùy chọn này sử dụng cơ chế nào để phân biệt thực thể thuộc lớp con nào?",
+    "options": [
+      "Sử dụng một thuộc tính phân loại kiểu (Type / Discriminator Attribute)",
+      "Sử dụng thuật toán băm trên khóa chính",
+      "Tạo các khóa ngoại tự tham chiếu đệ quy",
+      "Sử dụng nhiều bảng con tạm thời trên bộ nhớ RAM"
+    ],
+    "correct": [
+      0
+    ],
+    "explanation": "Option 8C gộp tất cả thuộc tính cha và con vào 1 bảng duy nhất, và thêm 1 cột thuộc tính phân loại kiểu (Type/JobType,...). Áp dụng tốt khi các lớp con là Rời rạc (Disjoint)."
+  },
+  {
+    "id": 73,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Tùy chọn 8D (Option 8D - Single Relation with Multiple Flag Attributes) thường được áp dụng khi chuyên biệt hóa có đặc trưng nào?",
+    "options": [
+      "Chuyên biệt hóa là Rời rạc (Disjoint)",
+      "Chuyên biệt hóa là Chồng chập (Overlap) - một thực thể có thể đồng thời thuộc nhiều lớp con",
+      "Chuyên biệt hóa chỉ có duy nhất 1 lớp con",
+      "Khi lớp cha không có khóa chính"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Option 8D dùng 1 bảng duy nhất cho cả cha và các con, nhưng dùng nhiều thuộc tính cờ Boolean (Flag1, Flag2, ..., mỗi cờ nhận giá trị Yes/No hoặc True/False cho từng lớp con). Thích hợp nhất khi chuyên biệt hóa Overlapping."
+  },
+  {
+    "id": 74,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Khi chuyển đổi một Kiểu hợp / Danh mục (Union Type / Category) đại diện cho tập hợp các thực thể có khóa chính khác nhau (ví dụ: CHUSOHUU có thể là NGUOI, NGANHANG, hoặc CONGTY), giải pháp thiết kế chuẩn là gì?",
+    "options": [
+      "Gộp cả ba bảng NGUOI, NGANHANG, CONGTY thành một bảng duy nhất",
+      "Tạo một Khóa đại diện / Khóa thay thế (Surrogate Key) làm khóa chính chung cho quan hệ danh mục, và đưa khóa này vào các bảng lớp con tương ứng",
+      "Không thể chuyển đổi Union Type sang CSDL quan hệ",
+      "Bắt buộc cả 3 thực thể phải đổi lại số CMND làm khóa chính"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Quy tắc chuyển đổi Category / Union Type (Bước 9): Do các superclass của Category thường có các khóa chính khác nhau, giải pháp là tạo một khóa nhân tạo thay thế (Surrogate Key) làm khóa chính cho Category, và dùng nó làm khóa ngoại liên kết với các bảng thành viên."
+  },
+  {
+    "id": 75,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Cho mối liên kết 1:1 giữa NHANVIEN và XE_CONG_VU, trong đó cả hai thực thể đều tham gia toàn phần (Total Participation). Phương pháp chuyển đổi tối ưu nhất là:",
+    "options": [
+      "Tạo quan hệ riêng cho NHANVIEN, quan hệ riêng cho XE_CONG_VU và tạo thêm bảng thứ ba",
+      "Gộp cả hai thực thể và mối liên kết thành một quan hệ duy nhất (Merged Relation)",
+      "Bỏ qua không lưu thông tin xe công vụ",
+      "Chuyển liên kết 1:1 thành liên kết M:N"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Khi mối liên kết 1:1 có sự tham gia toàn phần ở cả hai phía (Total-Total), phương án tối ưu nhất là gộp cả 2 thực thể thành 1 bảng quan hệ duy nhất (Merged Relation), tránh hoàn toàn giá trị NULL và không cần thực hiện phép nối khi truy vấn."
+  },
+  {
+    "id": 76,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "single",
+    "question": "Nếu một mối liên kết 1:N có thuộc tính riêng (Relationship Attribute), ví dụ liên kết LAM_VIEC giữa NHANVIEN và PHONGBAN có thuộc tính NgayBatDau. Thuộc tính này sẽ được đặt ở đâu trong lược đồ quan hệ?",
+    "options": [
+      "Đặt trong bảng bên 1 (PHONGBAN)",
+      "Đặt trong bảng bên N (NHANVIEN - cùng bảng nhận khóa ngoại)",
+      "Bắt buộc phải tạo một bảng riêng cho thuộc tính NgayBatDau",
+      "Đặt ở cả hai bảng NHANVIEN và PHONGBAN"
+    ],
+    "correct": [
+      1
+    ],
+    "explanation": "Trong liên kết 1:N, mọi thuộc tính riêng của mối liên kết sẽ được chuyển vào bảng bên N (quan hệ chứa khóa ngoại tham chiếu)."
+  },
+  {
+    "id": 77,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Khi chuyển đổi một thuộc tính phức hợp (Composite Attribute) như HoTen (gồm Ho, TenDem, Ten) sang mô hình quan hệ, những cách làm nào sau đây là ĐÚNG chuẩn? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Chỉ đưa các thuộc tính thành phần đơn (Ho, TenDem, Ten) vào lược đồ quan hệ làm các cột riêng biệt",
+      "Bỏ qua thuộc tính phức hợp gốc HoTen không tạo thành cột riêng",
+      "Giữ nguyên cả cột HoTen và tạo thêm 3 cột thành phần để lưu dữ liệu hai lần",
+      "Không thể chuyển đổi thuộc tính phức hợp sang mô hình quan hệ"
+    ],
+    "correct": [
+      0,
+      1
+    ],
+    "explanation": "Quy tắc Bước 1: Thuộc tính phức hợp được làm phẳng bằng cách chỉ đưa các thuộc tính thành phần đơn giản của nó vào quan hệ. Bản thân thuộc tính phức hợp cha (HoTen) không được tạo thành cột riêng."
+  },
+  {
+    "id": 78,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Những mối liên kết nào sau đây BẮT BUỘC phải tạo thêm một bảng quan hệ mới trung gian khi chuyển đổi sang mô hình quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Mối liên kết nhiều - nhiều (M:N) nhị phân",
+      "Mối liên kết đa ngôi (n > 2) như liên kết bậc 3 (Ternary)",
+      "Mối liên kết 1:N có tham gia một phần",
+      "Thuộc tính đa trị (Multivalued Attribute)"
+    ],
+    "correct": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Liên kết M:N (A), liên kết đa ngôi n > 2 (B), và thuộc tính đa trị (D) bắt buộc phải tạo bảng mới. Liên kết 1:N (C) chỉ cần đưa khóa ngoại vào bảng bên N, không cần tạo bảng mới."
+  },
+  {
+    "id": 79,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Những phương pháp nào sau đây có thể dùng để chuyển đổi mối liên kết 1:1 nhị phân sang lược đồ quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Phương pháp Khóa ngoại (Foreign Key approach): Đưa khóa chính của một quan hệ sang làm khóa ngoại ở quan hệ kia",
+      "Phương pháp Gộp quan hệ (Merged Relation approach): Gộp cả 2 thực thể thành 1 bảng duy nhất",
+      "Phương pháp Bảng liên kết chéo (Cross-reference / Relationship relation approach): Tạo bảng thứ 3 lưu khóa chính của cả hai",
+      "Phương pháp Loại bỏ: Xóa một trong hai thực thể khỏi hệ thống"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Có 3 cách tiếp cận chuẩn cho liên kết 1:1: (1) Foreign key approach, (2) Merged relation approach, (3) Cross-reference / Relationship relation approach. D là vô lý."
+  },
+  {
+    "id": 80,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Xét quá trình chuyển đổi chuyên biệt hóa trong EER, những nhận định nào sau đây là ĐÚNG? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Tùy chọn 8A luôn luôn áp dụng được cho mọi loại chuyên biệt hóa (dù Disjoint hay Overlap, Total hay Partial)",
+      "Tùy chọn 8B có thể gây ra việc mất dữ liệu nếu chuyên biệt hóa là Tham gia một phần (Partial)",
+      "Tùy chọn 8C dẫn đến việc xuất hiện nhiều giá trị NULL nếu các lớp con có nhiều thuộc tính riêng biệt",
+      "Tùy chọn 8D không bao giờ có thể áp dụng cho chuyên biệt hóa chồng chập"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "A đúng (8A là tổng quát nhất). B đúng (nếu Partial, thực thể cha không thuộc con nào sẽ bị mất khi xóa bảng cha). C đúng (gộp hết vào 1 bảng nên bộ của con này sẽ bị NULL ở các cột của con khác). D sai vì 8D (dùng cờ Boolean) sinh ra chính là để xử lý chuyên biệt hóa chồng chập (Overlap)."
+  },
+  {
+    "id": 81,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Cho thực thể yếu THANNHAN liên kết với thực thể mạnh NHANVIEN qua mối liên kết xác định CO_THANNHAN. Những nhận định nào sau đây là ĐÚNG khi chuyển đổi sang mô hình quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Quan hệ THANNHAN sẽ chứa khóa chính của NHANVIEN đóng vai trò là một khóa ngoại",
+      "Khóa chính của quan hệ THANNHAN gồm: {MaNV, TenThanNhan} (với TenThanNhan là khóa bộ phận)",
+      "Ràng buộc khóa ngoại từ THANNHAN tham chiếu đến NHANVIEN thường đi kèm quy tắc ON DELETE CASCADE",
+      "Không cần lưu trữ mối liên kết xác định CO_THANNHAN thành một bảng riêng biệt"
+    ],
+    "correct": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Cả 4 nhận định đều chính xác theo lý thuyết Bước 2 chuyển đổi ER sang quan hệ. Khi xóa một nhân viên thì thân nhân của họ cũng tự động bị xóa (CASCADE), và mối liên kết xác định được phản ánh trực tiếp qua khóa ngoại trong bảng thực thể yếu."
+  },
+  {
+    "id": 82,
+    "topic": "Chuyển đổi ER & EER",
+    "type": "multiple",
+    "question": "Những nhận định nào sau đây là SAI về việc chuyển đổi từ lược đồ ER/EER sang lược đồ quan hệ? (Chọn nhiều đáp án - chọn sai trừ điểm)",
+    "options": [
+      "Mọi mối liên kết trong sơ đồ ER đều bắt buộc phải chuyển thành một bảng quan hệ riêng biệt",
+      "Mô hình quan hệ cho phép trực tiếp lưu trữ thuộc tính đa trị mà không cần tạo bảng phụ",
+      "Khóa bộ phận của thực thể yếu có thể tự mình đảm bảo tính duy nhất trên toàn bộ CSDL",
+      "Các ràng buộc ngữ nghĩa phức tạp không thể biểu diễn trực tiếp bằng khóa chính/khóa ngoại sẽ phải cài đặt bằng Trigger hoặc Assertion"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanation": "Đề bài yêu cầu tìm nhận định SAI: A sai (liên kết 1:1, 1:N không cần bảng riêng). B sai (1NF cấm đa trị, phải tách bảng). C sai (khóa bộ phận chỉ duy nhất trong phạm vi cùng 1 thực thể cha). D là nhận định đúng. Do đó A, B, C là các nhận định sai cần chọn."
+  }
+];
+
+    // 2. STATE VARIABLES
+    let examState = {
+      active: false,
+      seedId: 1,
+      questions: [], // 15 questions (10 single, 5 multiple)
+      userAnswers: {}, // { qId: [optIndices] }
+      flagged: {}, // { qId: true/false }
+      currentIndex: 0,
+      timeRemaining: 45 * 60, // 45 minutes in seconds
+      timerInterval: null,
+      submitted: false,
+      timeSpentSeconds: 0
+    };
+
+    let starredQuestionIds = new Set();
+    try {
+      const savedStars = localStorage.getItem('csdl_c3_starred');
+      if (savedStars) starredQuestionIds = new Set(JSON.parse(savedStars));
+    } catch (e) {
+      console.warn('LocalStorage unavailable');
+    }
+
+    // Practice mode state
+    let practiceAnswers = {}; // { qId: [selectedOpts] }
+    let practiceChecked = {}; // { qId: true }
+
+    // 3. TAB SWITCHING
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-300');
+      });
+
+      const targetView = document.getElementById(`view-${tabName}`);
+      const targetBtn = document.getElementById(`tab-${tabName}-btn`);
+      if (targetView) targetView.classList.remove('hidden');
+      if (targetBtn) {
+        targetBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+        targetBtn.classList.remove('text-slate-300');
+      }
+
+      if (tabName === 'practice') {
+        renderPracticeBank();
+      }
+    }
+
+    // 4. THEME TOGGLE
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      document.getElementById('theme-icon').textContent = isDark ? '🌙' : '☀️';
+    }
+
+    // 5. EXAM ENGINE
+    function startNewExam() {
+      // Pick 10 single-choice and 5 multiple-choice questions
+      const singles = QUESTIONS_BANK.filter(q => q.type === 'single');
+      const multiples = QUESTIONS_BANK.filter(q => q.type === 'multiple');
+
+      // Shuffle helper
+      const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+      const pickedSingles = shuffle(singles).slice(0, 10);
+      const pickedMultiples = shuffle(multiples).slice(0, 5);
+
+      // Combine and shuffle order of questions
+      const examQuestions = shuffle([...pickedSingles, ...pickedMultiples]);
+
+      // Initialize state
+      examState.active = true;
+      examState.seedId = Math.floor(100 + Math.random() * 900);
+      examState.questions = examQuestions;
+      examState.userAnswers = {};
+      examState.flagged = {};
+      examState.currentIndex = 0;
+      examState.timeRemaining = 45 * 60;
+      examState.submitted = false;
+      examState.timeSpentSeconds = 0;
+
+      // Update UI
+      document.getElementById('exam-seed-id').textContent = examState.seedId;
+      document.getElementById('exam-intro-card').classList.add('hidden');
+      document.getElementById('exam-result-view').classList.add('hidden');
+      document.getElementById('exam-live-interface').classList.remove('hidden');
+
+      // Render Question Navigator Palette
+      renderExamPalette();
+      renderCurrentExamQuestion();
+
+      // Start Countdown Timer
+      clearInterval(examState.timerInterval);
+      examState.timerInterval = setInterval(updateExamTimer, 1000);
+      updateTimerDisplay();
+    }
+
+    function updateExamTimer() {
+      if (!examState.active || examState.submitted) return;
+      examState.timeRemaining--;
+      examState.timeSpentSeconds++;
+      updateTimerDisplay();
+
+      if (examState.timeRemaining <= 0) {
+        clearInterval(examState.timerInterval);
+        alert('Hết thời gian 45 phút! Hệ thống đang tự động nộp bài của bạn.');
+        finalizeExamSubmission();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(examState.timeRemaining / 60);
+      const s = examState.timeRemaining % 60;
+      const formatted = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      const timerEl = document.getElementById('exam-timer-text');
+      const boxEl = document.getElementById('exam-timer-box');
+      if (timerEl) timerEl.textContent = formatted;
+
+      if (boxEl) {
+        if (examState.timeRemaining <= 180) { // under 3 mins
+          boxEl.className = 'px-4 py-1.5 rounded-xl bg-rose-950/80 border border-rose-500 text-rose-300 font-mono font-bold text-lg flex items-center gap-2 animate-pulse';
+        } else if (examState.timeRemaining <= 600) { // under 10 mins
+          boxEl.className = 'px-4 py-1.5 rounded-xl bg-amber-950/80 border border-amber-500 text-amber-300 font-mono font-bold text-lg flex items-center gap-2';
+        } else {
+          boxEl.className = 'px-4 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 font-mono font-bold text-lg flex items-center gap-2';
+        }
+      }
+    }
+
+    function renderExamPalette() {
+      const container = document.getElementById('exam-palette-grid');
+      container.innerHTML = '';
+
+      examState.questions.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `palette-btn-${idx}`;
+        btn.onclick = () => jumpToQuestion(idx);
+
+        const hasAnswered = examState.userAnswers[q.id] && examState.userAnswers[q.id].length > 0;
+        const isFlagged = examState.flagged[q.id];
+        const isCurrent = idx === examState.currentIndex;
+
+        let baseClass = 'w-full aspect-square rounded-xl text-xs font-bold transition flex items-center justify-center relative ';
+        if (isCurrent) {
+          baseClass += 'bg-indigo-600 text-white ring-2 ring-indigo-400 ring-offset-2 ring-offset-slate-900 shadow-lg';
+        } else if (hasAnswered) {
+          baseClass += 'bg-emerald-700/80 text-emerald-100 border border-emerald-500/40 hover:bg-emerald-600';
+        } else {
+          baseClass += 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
+        }
+
+        if (isFlagged) {
+          baseClass += ' border-amber-400 ring-1 ring-amber-400';
+        }
+
+        btn.className = baseClass;
+        btn.innerHTML = `${idx + 1}${isFlagged ? '<span class="absolute top-0.5 right-0.5 text-[10px]">🚩</span>' : ''}`;
+        container.appendChild(btn);
+      });
+
+      // Update progress count
+      const answeredCount = Object.values(examState.userAnswers).filter(a => a && a.length > 0).length;
+      document.getElementById('exam-progress-count').textContent = answeredCount;
+    }
+
+    function renderCurrentExamQuestion() {
+      const q = examState.questions[examState.currentIndex];
+      if (!q) return;
+
+      document.getElementById('q-index-badge').textContent = `Câu ${examState.currentIndex + 1}/15`;
+      document.getElementById('q-topic-badge').textContent = q.topic;
+
+      // Type Badge
+      const typeBadge = document.getElementById('q-type-badge');
+      if (q.type === 'single') {
+        typeBadge.textContent = '● Chọn 1 đáp án';
+        typeBadge.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30';
+      } else {
+        typeBadge.textContent = '■ Chọn nhiều đáp án (Chọn sai trừ điểm!)';
+        typeBadge.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold';
+      }
+
+      // Flag button
+      const isFlagged = examState.flagged[q.id];
+      const flagBtn = document.getElementById('q-flag-btn');
+      const flagText = document.getElementById('q-flag-text');
+      if (isFlagged) {
+        flagBtn.className = 'px-2.5 py-1 rounded-md border text-xs font-medium transition flex items-center gap-1 border-amber-500 bg-amber-500/20 text-amber-300';
+        flagText.textContent = 'Đã cờ';
+      } else {
+        flagBtn.className = 'px-2.5 py-1 rounded-md border text-xs font-medium transition flex items-center gap-1 border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/40';
+        flagText.textContent = 'Đặt cờ';
+      }
+
+      // Title
+      document.getElementById('q-title-text').innerHTML = q.question;
+
+      // Options
+      const optionsContainer = document.getElementById('q-options-container');
+      optionsContainer.innerHTML = '';
+
+      const userSelected = examState.userAnswers[q.id] || [];
+
+      q.options.forEach((optText, optIdx) => {
+        const isChecked = userSelected.includes(optIdx);
+        const optCard = document.createElement('div');
+        optCard.onclick = () => selectExamOption(q.id, optIdx, q.type);
+
+        let cardClass = 'p-4 rounded-xl border text-sm font-medium transition cursor-pointer flex items-start gap-3 select-none ';
+        if (isChecked) {
+          cardClass += 'bg-indigo-600/15 border-indigo-500 text-white ring-1 ring-indigo-500/50';
+        } else {
+          cardClass += 'bg-slate-800/70 border-slate-700/80 text-slate-300 hover:bg-slate-800 hover:border-slate-600';
+        }
+
+        const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
+        const marker = q.type === 'single'
+          ? `<div class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 ${isChecked ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300'}">${letter}</div>`
+          : `<div class="w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 ${isChecked ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300'}">${isChecked ? '✓' : letter}</div>`;
+
+        optCard.className = cardClass;
+        optCard.innerHTML = `
+          ${marker}
+          <div class="leading-relaxed flex-1">${optText}</div>
+        `;
+        optionsContainer.appendChild(optCard);
+      });
+
+      // Prev / Next button state
+      document.getElementById('q-prev-btn').disabled = (examState.currentIndex === 0);
+      const nextBtn = document.getElementById('q-next-btn');
+      if (examState.currentIndex === examState.questions.length - 1) {
+        nextBtn.textContent = 'Xem Lại / Nộp Bài →';
+        nextBtn.className = 'px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium transition';
+      } else {
+        nextBtn.textContent = 'Câu Tiếp →';
+        nextBtn.className = 'px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition';
+      }
+
+      renderExamPalette();
+    }
+
+    function selectExamOption(qId, optIdx, qType) {
+      if (!examState.userAnswers[qId]) {
+        examState.userAnswers[qId] = [];
+      }
+
+      if (qType === 'single') {
+        examState.userAnswers[qId] = [optIdx];
+      } else {
+        // Multiple: toggle selection
+        const idx = examState.userAnswers[qId].indexOf(optIdx);
+        if (idx > -1) {
+          examState.userAnswers[qId].splice(idx, 1);
+        } else {
+          examState.userAnswers[qId].push(optIdx);
+        }
+      }
+
+      renderCurrentExamQuestion();
+    }
+
+    function toggleFlagCurrentQuestion() {
+      const q = examState.questions[examState.currentIndex];
+      if (!q) return;
+      examState.flagged[q.id] = !examState.flagged[q.id];
+      renderCurrentExamQuestion();
+    }
+
+    function jumpToQuestion(idx) {
+      examState.currentIndex = idx;
+      renderCurrentExamQuestion();
+    }
+
+    function navigateQuestion(delta) {
+      const target = examState.currentIndex + delta;
+      if (target >= 0 && target < examState.questions.length) {
+        examState.currentIndex = target;
+        renderCurrentExamQuestion();
+      } else if (target >= examState.questions.length) {
+        confirmSubmitExam();
+      }
+    }
+
+    function confirmSubmitExam() {
+      const total = examState.questions.length;
+      const answered = Object.values(examState.userAnswers).filter(a => a && a.length > 0).length;
+      const unanswered = total - answered;
+
+      const modalMsg = document.getElementById('submit-modal-msg');
+      if (unanswered > 0) {
+        modalMsg.innerHTML = `Bạn hiện còn <strong class="text-rose-400 font-bold">${unanswered} câu chưa trả lời</strong>.<br>Hệ thống sẽ tính 0 điểm cho các câu bỏ trống.<br>Bạn có chắc chắn muốn nộp bài?`;
+      } else {
+        modalMsg.innerHTML = `Bạn đã hoàn thành đủ <strong class="text-emerald-400 font-bold">15/15 câu hỏi</strong>.<br>Bạn có muốn gửi bài để chấm điểm ngay bây giờ không?`;
+      }
+
+      document.getElementById('submit-modal').classList.remove('hidden');
+    }
+
+    function closeSubmitModal() {
+      document.getElementById('submit-modal').classList.add('hidden');
+    }
+
+    // KEYBOARD NAVIGATION
+    window.addEventListener('keydown', (e) => {
+      if (!examState.active || examState.submitted) return;
+      const key = e.key.toUpperCase();
+      if (['A', 'B', 'C', 'D'].includes(key)) {
+        const optIdx = key.charCodeAt(0) - 65;
+        const q = examState.questions[examState.currentIndex];
+        if (q && optIdx < q.options.length) {
+          selectExamOption(q.id, optIdx, q.type);
+        }
+      } else if (e.key === 'ArrowRight') {
+        navigateQuestion(1);
+      } else if (e.key === 'ArrowLeft') {
+        navigateQuestion(-1);
+      }
+    });
+
+    // 6. SCORE CALCULATION & SUBMISSION
+    function finalizeExamSubmission() {
+      closeSubmitModal();
+      clearInterval(examState.timerInterval);
+      examState.submitted = true;
+      examState.active = false;
+
+      // Scoring formulas:
+      // Total 15 questions = 10.0 points maximum
+      // Each question is worth: 10 / 15 points
+      const pointsPerQuestion = 10.0 / 15.0;
+
+      let totalScore = 0;
+      let fullCorrect = 0;
+      let partialCorrect = 0;
+      let wrong = 0;
+      let totalPenaltyPoints = 0;
+
+      const reviewData = [];
+
+      examState.questions.forEach((q, idx) => {
+        const chosen = examState.userAnswers[q.id] || [];
+        const correct = q.correct; // array of indices
+        let qScore = 0;
+        let penaltyIncurred = 0;
+        let status = 'wrong'; // 'full', 'partial', 'wrong'
+
+        if (q.type === 'single') {
+          if (chosen.length === 1 && chosen[0] === correct[0]) {
+            qScore = pointsPerQuestion;
+            status = 'full';
+            fullCorrect++;
+          } else {
+            wrong++;
+          }
+        } else {
+          // Multiple-choice with penalty ("chọn sai trừ điểm")
+          const C = correct.length;
+          const W = q.options.length - C;
+
+          let correctChosen = 0;
+          let wrongChosen = 0;
+
+          chosen.forEach(opt => {
+            if (correct.includes(opt)) correctChosen++;
+            else wrongChosen++;
+          });
+
+          // Formula: max(0, correctChosen / C - wrongChosen / W) * pointsPerQuestion
+          const rawRatio = (correctChosen / C) - (wrongChosen / W);
+          const finalRatio = Math.max(0, rawRatio);
+
+          qScore = finalRatio * pointsPerQuestion;
+
+          if (wrongChosen > 0) {
+            penaltyIncurred = (wrongChosen / W) * pointsPerQuestion;
+            totalPenaltyPoints += penaltyIncurred;
+          }
+
+          if (finalRatio === 1.0) {
+            status = 'full';
+            fullCorrect++;
+          } else if (finalRatio > 0) {
+            status = 'partial';
+            partialCorrect++;
+          } else {
+            wrong++;
+          }
+        }
+
+        totalScore += qScore;
+        reviewData.push({
+          q: q,
+          index: idx + 1,
+          chosen: chosen,
+          correct: correct,
+          score: qScore,
+          maxScore: pointsPerQuestion,
+          penalty: penaltyIncurred,
+          status: status
+        });
+      });
+
+      // Cap score to 10
+      totalScore = Math.min(10.0, Math.max(0, totalScore));
+
+      // Display scorecard
+      displayScorecard({
+        score: totalScore,
+        fullCorrect: fullCorrect,
+        partialCorrect: partialCorrect,
+        wrong: wrong,
+        penalty: totalPenaltyPoints,
+        timeSpent: examState.timeSpentSeconds,
+        reviews: reviewData
+      });
+    }
+
+    function displayScorecard(results) {
+      document.getElementById('exam-live-interface').classList.add('hidden');
+      document.getElementById('exam-result-view').classList.remove('hidden');
+
+      // Score rounded
+      const scoreStr = results.score.toFixed(2);
+      document.getElementById('result-score-val').textContent = scoreStr;
+
+      // Status badge
+      const badge = document.getElementById('result-status-badge');
+      if (results.score >= 9.0) {
+        badge.textContent = 'Xuất sắc · Nắm vững toàn diện Chương 3';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      } else if (results.score >= 8.0) {
+        badge.textContent = 'Giỏi · Đạt chuẩn kỳ thi';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+      } else if (results.score >= 6.5) {
+        badge.textContent = 'Khá · Cần củng cố thêm một số dạng bẫy';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30';
+      } else {
+        badge.textContent = 'Cần ôn luyện kỹ lại lý thuyết & quy tắc chuyển đổi';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30';
+      }
+
+      // Time spent
+      const m = Math.floor(results.timeSpent / 60);
+      const s = results.timeSpent % 60;
+      document.getElementById('result-time-spent').textContent = `${m} phút ${s} giây`;
+
+      // Metrics
+      document.getElementById('result-full-correct-count').textContent = results.fullCorrect;
+      document.getElementById('result-partial-correct-count').textContent = results.partialCorrect;
+      document.getElementById('result-wrong-count').textContent = results.wrong;
+      document.getElementById('result-penalty-points').textContent = `-${results.penalty.toFixed(2)}`;
+
+      // Render review cards
+      window.currentExamReviews = results.reviews;
+      renderReviewCards(results.reviews);
+    }
+
+    function filterResultReviews(mode) {
+      document.querySelectorAll('#res-filter-all, #res-filter-missed, #res-filter-correct').forEach(b => {
+        b.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white';
+      });
+      document.getElementById(`res-filter-${mode}`).className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-600 text-white';
+
+      if (!window.currentExamReviews) return;
+      let filtered = window.currentExamReviews;
+      if (mode === 'missed') {
+        filtered = window.currentExamReviews.filter(r => r.status !== 'full');
+      } else if (mode === 'correct') {
+        filtered = window.currentExamReviews.filter(r => r.status === 'full');
+      }
+      renderReviewCards(filtered);
+    }
+
+    function renderReviewCards(reviews) {
+      const container = document.getElementById('result-review-list');
+      container.innerHTML = '';
+
+      if (reviews.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-900 rounded-2xl border border-slate-800">Không có câu hỏi nào trong bộ lọc này.</div>`;
+        return;
+      }
+
+      reviews.forEach(item => {
+        const q = item.q;
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-md transition';
+
+        let statusBadge = '';
+        if (item.status === 'full') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Đúng (+${item.score.toFixed(2)}đ)</span>`;
+        } else if (item.status === 'partial') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Đúng một phần (+${item.score.toFixed(2)}đ)</span>`;
+        } else {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">Sai (0đ)</span>`;
+        }
+
+        let penaltyBadge = item.penalty > 0
+          ? `<span class="px-2 py-0.5 rounded-md text-xs font-bold bg-rose-950 text-rose-400 border border-rose-800">Phạt: -${item.penalty.toFixed(2)}đ</span>`
+          : '';
+
+        let optionsHtml = '';
+        q.options.forEach((optText, optIdx) => {
+          const isUserChosen = item.chosen.includes(optIdx);
+          const isCorrect = item.correct.includes(optIdx);
+
+          let optStyle = 'p-3 rounded-xl border text-sm flex items-start gap-2.5 ';
+          let marker = '';
+
+          if (isCorrect && isUserChosen) {
+            optStyle += 'bg-emerald-950/40 border-emerald-500/80 text-emerald-100 font-medium';
+            marker = '<span class="text-emerald-400 font-bold">✓ (Bạn chọn đúng)</span>';
+          } else if (isCorrect && !isUserChosen) {
+            optStyle += 'bg-emerald-950/20 border-emerald-600/50 text-emerald-200';
+            marker = '<span class="text-emerald-400 font-bold">✓ (Đáp án đúng bị bỏ sót)</span>';
+          } else if (!isCorrect && isUserChosen) {
+            optStyle += 'bg-rose-950/40 border-rose-500/80 text-rose-200';
+            marker = '<span class="text-rose-400 font-bold">✗ (Bạn chọn sai - bị trừ điểm)</span>';
+          } else {
+            optStyle += 'bg-slate-800/40 border-slate-700/60 text-slate-400';
+          }
+
+          const letter = String.fromCharCode(65 + optIdx);
+          optionsHtml += `
+            <div class="${optStyle}">
+              <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">${letter}</span>
+              <div class="flex-1">${optText}</div>
+              ${marker}
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold text-xs">Câu ${item.index}</span>
+              <span class="text-xs text-slate-400 font-medium">${q.topic}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              ${statusBadge}
+              ${penaltyBadge}
+            </div>
+          </div>
+          <h4 class="text-base font-semibold text-white mb-4 leading-relaxed">${q.question}</h4>
+          <div class="space-y-2 mb-4">${optionsHtml}</div>
+          <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs text-slate-300 leading-relaxed">
+            <strong class="text-indigo-300">💡 Giải thích chi tiết:</strong> ${q.explanation}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 7. QUESTION BANK PRACTICE MODE
+    function renderPracticeBank() {
+      const topicVal = document.getElementById('bank-topic-select').value;
+      const typeVal = document.getElementById('bank-type-select').value;
+      const searchVal = document.getElementById('bank-search-input').value.toLowerCase().trim();
+
+      const filtered = QUESTIONS_BANK.filter(q => {
+        if (topicVal !== 'all' && q.topic !== topicVal) return false;
+        if (typeVal === 'single' && q.type !== 'single') return false;
+        if (typeVal === 'multiple' && q.type !== 'multiple') return false;
+        if (typeVal === 'starred' && !starredQuestionIds.has(q.id)) return false;
+
+        if (searchVal) {
+          const qText = q.question.toLowerCase();
+          const optText = q.options.join(' ').toLowerCase();
+          const expText = q.explanation.toLowerCase();
+          if (!qText.includes(searchVal) && !optText.includes(searchVal) && !expText.includes(searchVal)) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      document.getElementById('bank-filtered-count').textContent = filtered.length;
+      const container = document.getElementById('bank-cards-container');
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="p-12 text-center text-slate-400 bg-slate-900 rounded-2xl border border-slate-800">Không tìm thấy câu hỏi phù hợp với điều kiện lọc.</div>`;
+        return;
+      }
+
+      filtered.forEach(q => {
+        const card = document.createElement('div');
+        card.id = `practice-card-${q.id}`;
+        card.className = 'bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-md transition';
+
+        const isStarred = starredQuestionIds.has(q.id);
+        const isChecked = practiceChecked[q.id];
+        const userSelected = practiceAnswers[q.id] || [];
+
+        const typeBadge = q.type === 'single'
+          ? `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">Chọn 1 đáp án</span>`
+          : `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30">Chọn nhiều (sai trừ điểm)</span>`;
+
+        let optionsHtml = '';
+        q.options.forEach((optText, optIdx) => {
+          const letter = String.fromCharCode(65 + optIdx);
+          const isSelected = userSelected.includes(optIdx);
+          const isCorrect = q.correct.includes(optIdx);
+
+          let optClass = 'p-3.5 rounded-xl border text-sm font-medium transition cursor-pointer flex items-start gap-3 ';
+
+          if (isChecked) {
+            if (isCorrect && isSelected) {
+              optClass += 'bg-emerald-950/40 border-emerald-500 text-emerald-100 ring-1 ring-emerald-500/40';
+            } else if (isCorrect && !isSelected) {
+              optClass += 'bg-emerald-950/20 border-emerald-600/50 text-emerald-200';
+            } else if (!isCorrect && isSelected) {
+              optClass += 'bg-rose-950/40 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
+            } else {
+              optClass += 'bg-slate-800/40 border-slate-700/60 text-slate-400';
+            }
+          } else {
+            if (isSelected) {
+              optClass += 'bg-indigo-600/20 border-indigo-500 text-white';
+            } else {
+              optClass += 'bg-slate-800/70 border-slate-700/80 text-slate-300 hover:bg-slate-800';
+            }
+          }
+
+          optionsHtml += `
+            <div onclick="selectPracticeOption(${q.id}, ${optIdx}, '${q.type}')" class="${optClass}">
+              <span class="w-5 h-5 rounded-md bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">${letter}</span>
+              <div class="flex-1">${optText}</div>
+              ${isChecked && isCorrect ? '<span class="text-emerald-400 font-bold text-xs">✓ ĐÚNG</span>' : ''}
+              ${isChecked && !isCorrect && isSelected ? '<span class="text-rose-400 font-bold text-xs">✗ SAI</span>' : ''}
+            </div>
+          `;
+        });
+
+        let explanationBox = '';
+        if (isChecked) {
+          explanationBox = `
+            <div class="mt-4 p-4 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 leading-relaxed">
+              <strong class="text-indigo-400 font-bold">💡 Giải thích chi tiết:</strong> ${q.explanation}
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-indigo-600 text-white font-bold text-xs">Q${q.id}</span>
+              <span class="text-xs text-slate-400 font-medium">${q.topic}</span>
+              ${typeBadge}
+            </div>
+            <button onclick="toggleStarQuestion(${q.id})" class="text-sm p-1 rounded hover:bg-slate-800 transition" title="Đánh dấu câu hỏi">
+              ${isStarred ? '⭐' : '☆'}
+            </button>
+          </div>
+          <h4 class="text-base font-semibold text-white mb-4 leading-relaxed">${q.question}</h4>
+          <div class="space-y-2 mb-4">${optionsHtml}</div>
+          ${explanationBox}
+          <div class="flex items-center justify-between pt-3 border-t border-slate-800 mt-4">
+            <button onclick="resetPracticeQuestion(${q.id})" class="text-xs text-slate-400 hover:text-white transition">
+              Làm lại
+            </button>
+            <button onclick="checkPracticeQuestion(${q.id})" class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow transition">
+              ${isChecked ? 'Ẩn Giải Thích' : 'Kiểm Tra Đáp Án & Giải Thích'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectPracticeOption(qId, optIdx, qType) {
+      if (practiceChecked[qId]) return; // locked once checked until reset
+      if (!practiceAnswers[qId]) practiceAnswers[qId] = [];
+
+      if (qType === 'single') {
+        practiceAnswers[qId] = [optIdx];
+      } else {
+        const idx = practiceAnswers[qId].indexOf(optIdx);
+        if (idx > -1) practiceAnswers[qId].splice(idx, 1);
+        else practiceAnswers[qId].push(optIdx);
+      }
+
+      renderPracticeBank();
+    }
+
+    function checkPracticeQuestion(qId) {
+      practiceChecked[qId] = !practiceChecked[qId];
+      renderPracticeBank();
+    }
+
+    function resetPracticeQuestion(qId) {
+      practiceAnswers[qId] = [];
+      practiceChecked[qId] = false;
+      renderPracticeBank();
+    }
+
+    function toggleStarQuestion(qId) {
+      if (starredQuestionIds.has(qId)) {
+        starredQuestionIds.delete(qId);
+      } else {
+        starredQuestionIds.add(qId);
+      }
+      try {
+        localStorage.setItem('csdl_c3_starred', JSON.stringify([...starredQuestionIds]));
+      } catch(e) {}
+      renderPracticeBank();
+    }
+
+    function applyBankFilters() {
+      renderPracticeBank();
+    }
+
+    function resetBankFilters() {
+      document.getElementById('bank-search-input').value = '';
+      document.getElementById('bank-topic-select').value = 'all';
+      document.getElementById('bank-type-select').value = 'all';
+      renderPracticeBank();
+    }
+
+    // INITIALIZATION ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      // Auto-render practice tab ready
+      renderPracticeBank();
+    });
+  </script>
+</body>
+</html>
