@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Ôn Tập - 51 Câu (Có Giải Thích Chi Tiết)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .stats-bar {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 25px;
+            background: #e8f0fe;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-item span {
+            font-weight: 700;
+        }
+        .stat-correct { color: #1a7f37; }
+        .stat-incorrect { color: #cf222e; }
+        .question-card {
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: box-shadow 0.2s;
+        }
+        .question-card:hover {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .question-title {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: 600;
+            border-bottom: 1px solid #e1e4e8;
+            color: #24292e;
+            font-size: 1.04rem;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .option-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .option-item:hover {
+            background-color: #f6f8fa;
+        }
+        .option-item:last-child {
+            border-bottom: none;
+        }
+        .option-item::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .correct {
+            background-color: #e6ffed !important;
+            color: #1a7f37;
+            font-weight: 600;
+        }
+        .correct::before {
+            border-color: #1a7f37;
+            background-color: #1a7f37;
+            box-shadow: inset 0 0 0 3px #e6ffed;
+        }
+        .incorrect {
+            background-color: #ffebe9 !important;
+            color: #cf222e;
+        }
+        .incorrect::before {
+            border-color: #cf222e;
+            background-color: #cf222e;
+            box-shadow: inset 0 0 0 3px #ffebe9;
+        }
+        .disabled {
+            pointer-events: none;
+        }
+        .unselected-disabled {
+            opacity: 0.65;
+        }
+        .explanation-box {
+            display: none;
+            padding: 16px 20px;
+            background-color: #f8fafc;
+            border-top: 1px dashed #cbd5e1;
+            border-left: 4px solid #0366d6;
+            color: #1e293b;
+            font-size: 0.96rem;
+            line-height: 1.65;
+        }
+        .explanation-box.show {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        .explanation-box.exp-correct {
+            border-left-color: #1a7f37;
+            background-color: #f4fbf7;
+        }
+        .explanation-box.exp-incorrect {
+            border-left-color: #cf222e;
+            background-color: #fff8f7;
+        }
+        .exp-header {
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .exp-header.text-correct { color: #1a7f37; }
+        .exp-header.text-incorrect { color: #cf222e; }
+        .btn-retry {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #0366d6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.2s;
+        }
+        .btn-retry:hover {
+            background-color: #005cc5;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bài Tập Trắc Nghiệm - 51 Câu (Có Giải Thích Chi Tiết)</h1>
+        <div class="stats-bar">
+            <div class="stat-item">Tổng số câu: <span id="total-q">0</span></div>
+            <div class="stat-item">Đã làm: <span id="answered-q">0</span></div>
+            <div class="stat-item stat-correct">Đúng: <span id="correct-q">0</span></div>
+            <div class="stat-item stat-incorrect">Sai: <span id="incorrect-q">0</span></div>
+        </div>
+        <div id="quiz-container"></div>
+        <button class="btn-retry" onclick="initQuiz()">🔄 Bấm vào đây để làm lại (Xóa kết quả & Đổi chỗ đáp án)</button>
+    </div>
+
+    <script>
+        const quizData = [
+    {
+        "question": "Theo phần 'Nội dung buổi học' mở đầu, Bài 1 gồm ba nội dung chính nào?",
+        "options": [
+            "Bài toán dữ liệu lớn; Phân tích thuật toán; Nội dung và cách học",
+            "MapReduce; PageRank; MinHash",
+            "Bài toán dữ liệu lớn; Phân tán dữ liệu; Nén dữ liệu",
+            "Xác suất; Kỳ vọng; Nguyên lý Bonferroni"
+        ],
+        "answer": "Bài toán dữ liệu lớn; Phân tích thuật toán; Nội dung và cách học",
+        "explanation": "Bài mở đầu môn học giới thiệu tổng quan về Bài toán dữ liệu lớn (Big Data problems), các tiêu chí và công cụ toán học để Phân tích thuật toán (xác suất, kỳ vọng, các thước đo tài nguyên), cùng Nội dung chương trình và cách học."
+    },
+    {
+        "question": "Trong ví dụ đếm số lần xuất hiện của mỗi từ trên kho tài liệu chia trên nhiều máy, vì sao gom toàn bộ kho về một máy để đếm là cách không tốt?",
+        "options": [
+            "Vì tốn đường truyền và dồn việc vào một máy; khi chạy lại tác vụ bị lỗi còn phải tránh đếm trùng",
+            "Vì thuật toán đếm từ cho kết quả không chính xác khi chạy trên một máy",
+            "Vì quy định bảo mật không cho phép một máy đọc dữ liệu của máy khác",
+            "Vì làm mất dữ liệu khi truyền qua mạng"
+        ],
+        "answer": "Vì tốn đường truyền và dồn việc vào một máy; khi chạy lại tác vụ bị lỗi còn phải tránh đếm trùng",
+        "explanation": "Trong xử lý dữ liệu lớn, băng thông mạng là nút thắt cổ chai và một máy đơn lẻ không đủ năng lực tính toán/lưu trữ. Nguyên lý cốt lõi là 'đưa tính toán đến gần dữ liệu' thay vì gom toàn bộ dữ liệu thô về một máy, đồng thời phải quản lý cơ chế chịu lỗi (fault tolerance) để tránh tính trùng khi chạy lại tác vụ."
+    },
+    {
+        "question": "Theo nội dung về tính điểm quan trọng của trang web (PageRank), điểm của một trang phụ thuộc chủ yếu vào yếu tố nào?",
+        "options": [
+            "Các trang khác trỏ liên kết đến nó",
+            "Độ dài nội dung văn bản của trang",
+            "Thời điểm trang được tạo ra",
+            "Số lượt truy cập trực tiếp vào trang đó"
+        ],
+        "answer": "Các trang khác trỏ liên kết đến nó",
+        "explanation": "Thuật toán PageRank đánh giá độ quan trọng của một trang web dựa trên cấu trúc đồ thị liên kết: một trang càng quan trọng nếu được nhiều trang khác (đặc biệt là các trang có điểm PageRank cao) trỏ liên kết (in-links) tới nó."
+    },
+    {
+        "question": "Cho hai tập đoạn ký tự S, T có 3 phần tử chung và tổng cộng 8 phần tử trong hợp (S U T). Độ tương đồng Jaccard J(S,T) bằng bao nhiêu?",
+        "options": [
+            "3/8",
+            "3/5",
+            "8/3",
+            "5/8"
+        ],
+        "answer": "3/8",
+        "explanation": "Theo công thức độ tương đồng Jaccard: J(S, T) = |S ∩ T| / |S ∪ T|. Với số phần tử giao |S ∩ T| = 3 và số phần tử hợp |S ∪ T| = 8, ta có J(S, T) = 3/8."
+    },
+    {
+        "question": "Trong đặc tả bài toán tìm cặp tài liệu gần trùng, R = {(i,j) : 1 ≤ i < j ≤ N, J(C_i,C_j) ≥ τ}. Điều kiện 'i < j' có ý nghĩa gì?",
+        "options": [
+            "Loại cặp tự so sánh (một tài liệu với chính nó) và cặp bị đảo thứ tự, tránh đếm trùng",
+            "Đảm bảo chỉ xét các tài liệu có độ dài tăng dần theo chỉ số",
+            "Giới hạn số lượng tài liệu tối đa N được xử lý",
+            "Đảm bảo ngưỡng τ luôn nhỏ hơn 1"
+        ],
+        "answer": "Loại cặp tự so sánh (một tài liệu với chính nó) và cặp bị đảo thứ tự, tránh đếm trùng",
+        "explanation": "Vì độ tương đồng Jaccard có tính đối xứng J(C_i, C_j) = J(C_j, C_i) và J(C_i, C_i) = 1, điều kiện 1 ≤ i < j ≤ N giúp loại bỏ trường hợp tự so sánh (i = j) và tránh xét lặp lại cặp đảo thứ tự (j, i)."
+    },
+    {
+        "question": "Với thuật toán xét mọi cặp trong kho N tài liệu, số lần so sánh cần thực hiện là bao nhiêu, và với N = 10^6 con số này xấp xỉ bao nhiêu?",
+        "options": [
+            "N(N-1)/2; khoảng 500 tỷ",
+            "N log N; khoảng 20 triệu",
+            "N²; khoảng 1000 tỷ",
+            "N; khoảng 1 triệu"
+        ],
+        "answer": "N(N-1)/2; khoảng 500 tỷ",
+        "explanation": "Số cặp phân biệt cần so sánh trong N tài liệu là tổ hợp chập 2 của N: C(N, 2) = N(N - 1)/2. Khi N = 10^6, số phép so sánh là 10^6 × (10^6 - 1) / 2 ≈ 5 × 10^11 (tức khoảng 500 tỷ lần)."
+    },
+    {
+        "question": "Theo phần 'Các tiêu chí đánh giá' thuật toán xử lý dữ liệu lớn, ngoài tính đúng của kết quả, những khía cạnh nào khác cần được xem xét?",
+        "options": [
+            "Khối lượng tính toán, bộ nhớ, đọc ghi/lướt quét, dữ liệu truyền qua mạng, dung lượng lưu trữ, độ trễ truy vấn, chi phí xây dựng và chi phí cập nhật",
+            "Chỉ cần đếm số dòng mã nguồn của thuật toán",
+            "Chỉ cần đo khối lượng tính toán và bộ nhớ làm việc",
+            "Chỉ cần đo độ trễ truy vấn và chi phí xây dựng chỉ mục"
+        ],
+        "answer": "Khối lượng tính toán, bộ nhớ, đọc ghi/lướt quét, dữ liệu truyền qua mạng, dung lượng lưu trữ, độ trễ truy vấn, chi phí xây dựng và chi phí cập nhật",
+        "explanation": "Với dữ liệu lớn, đánh giá thuật toán không chỉ dừng ở CPU và RAM mà phải xét toàn diện: số lần đọc/ghi đĩa (I/O passes), băng thông truyền mạng (communication cost), dung lượng lưu trữ cấu trúc chỉ mục, độ trễ truy vấn (query latency), cùng chi phí xây dựng và cập nhật khi dữ liệu thay đổi."
+    },
+    {
+        "question": "Với bài toán tìm k hàng xóm gần nhất, nếu có 5 hàng xóm thật sự đúng nhưng thuật toán chỉ trả lại đúng 3 trong số đó (trong 5 kết quả trả về), thì recall@5 bằng bao nhiêu?",
+        "options": [
+            "3/5",
+            "5/3",
+            "1",
+            "3/8"
+        ],
+        "answer": "3/5",
+        "explanation": "Chỉ số Recall@k đo tỷ lệ phần tử đúng thực sự được tìm thấy trong tập k kết quả trả về so với tổng số k hàng xóm thật sự đúng (ground truth). Ở đây tìm đúng 3 trên 5 hàng xóm thực sự, nên Recall@5 = 3/5."
+    },
+    {
+        "question": "Trong ví dụ mô hình lưu trú không phối hợp (nguyên lý Bonferroni)... Kết luận đúng rút ra từ con số này là gì?",
+        "options": [
+            "Đây là số lượng trùng khớp ngẫu nhiên kỳ vọng xảy ra ngay cả khi mọi người chọn độc lập, nên riêng con số này chưa đủ căn cứ kết luận có phối hợp",
+            "Con số 249.750 là số cặp người chắc chắn đã gặp nhau trực tiếp",
+            "Kỳ vọng này chứng tỏ mô hình xác suất đã tính sai và cần thu thập thêm dữ liệu",
+            "Đây là bằng chứng chắc chắn cho thấy có hoạt động phối hợp giữa những người này"
+        ],
+        "answer": "Đây là số lượng trùng khớp ngẫu nhiên kỳ vọng xảy ra ngay cả khi mọi người chọn độc lập, nên riêng con số này chưa đủ căn cứ kết luận có phối hợp",
+        "explanation": "Nguyên lý Bonferroni cảnh báo rằng khi tìm kiếm một mẫu hiếm trên không gian dữ liệu cực lớn (rất nhiều cặp người và nhiều ngày), số lần trùng khớp ngẫu nhiên kỳ vọng (False Positives) sẽ rất lớn (ví dụ ~249.750 cặp) ngay cả khi mọi người hành động hoàn toàn độc lập."
+    },
+    {
+        "question": "Học phần chia nội dung thành năm nhóm bài... Nhóm bài nào phụ trách chủ đề 'Tương đồng và tìm gần'?",
+        "options": [
+            "Bài 05-07; MinHash, LSH, HNSW và Lượng tử hóa tích (PQ)",
+            "Bài 08-09; Flajolet-Martin và Count-Min",
+            "Bài 10-11; Huffman và LZ77",
+            "Bài 02-04; MapReduce và PageRank"
+        ],
+        "answer": "Bài 05-07; MinHash, LSH, HNSW và Lượng tử hóa tích (PQ)",
+        "explanation": "Chủ đề 'Tương đồng và tìm gần' (Similarity & Nearest Neighbor Search) nằm ở nhóm Bài 05-07, bao gồm các thuật toán tìm cặp tài liệu tương đồng (Shingling, MinHash, LSH) và tìm hàng xóm gần nhất trên không gian vector (HNSW, Product Quantization - PQ)."
+    },
+    {
+        "question": "Điều nào sau đây đúng về chức năng partitioner trong MapReduce?",
+        "options": [
+            "Nó được sử dụng để chia đầu ra của pha map thành các phân vùng (partition).",
+            "Nó được sử dụng để chia nhóm đầu ra của giai đoạn map theo key.",
+            "Nó được sử dụng để sắp xếp đầu ra của giai đoạn map.",
+            "Nó được sử dụng để kết hợp đầu ra của giai đoạn map."
+        ],
+        "answer": "Nó được sử dụng để chia đầu ra của pha map thành các phân vùng (partition).",
+        "explanation": "Partitioner chịu trách nhiệm phân chia (partition) các cặp (key, value) trung gian từ đầu ra của Map thành các phân vùng tương ứng với số lượng Reducer, đảm bảo mọi bản ghi có cùng key luôn được gửi về cùng một Reducer."
+    },
+    {
+        "question": "Điều nào sau đây là bất lợi khi sử dụng MapReduce?",
+        "options": [
+            "Nó có độ trễ cao (high latency).",
+            "Nó đòi hỏi phần cứng chuyên dụng.",
+            "Khó sử dụng.",
+            "Nó chỉ có thể xử lý một lượng nhỏ dữ liệu."
+        ],
+        "answer": "Nó có độ trễ cao (high latency).",
+        "explanation": "MapReduce là mô hình xử lý theo lô (batch processing) và thường xuyên phải ghi/đọc dữ liệu trung gian xuống đĩa cứng giữa các pha Map và Reduce, dẫn đến độ trễ cao (high latency), không phù hợp cho các tác vụ thời gian thực hoặc lặp nhiều vòng."
+    },
+    {
+        "question": "Điều nào sau đây đúng về Spark?",
+        "options": [
+            "Đây là một framework xử lý dữ liệu phân tán.",
+            "Nó chỉ có thể xử lý dữ liệu có cấu trúc.",
+            "Nó được xây dựng trên nền tảng Hadoop.",
+            "Nó là một hệ thống xử lý thời gian thực."
+        ],
+        "answer": "Đây là một framework xử lý dữ liệu phân tán.",
+        "explanation": "Apache Spark là một framework tính toán và xử lý dữ liệu phân tán mã nguồn mở, nổi bật với khả năng xử lý trên bộ nhớ (in-memory) cho cả dữ liệu có cấu trúc, bán cấu trúc và phi cấu trúc, và có thể chạy độc lập (standalone) chứ không bắt buộc phụ thuộc vào Hadoop."
+    },
+    {
+        "question": "Số lượng maps thường phụ thuộc vào tổng kích thước của ______",
+        "options": [
+            "dữ liệu đầu vào",
+            "dữ liệu đầu ra",
+            "Không có đáp án nào đúng",
+            "tasks"
+        ],
+        "answer": "dữ liệu đầu vào",
+        "explanation": "Trong MapReduce, số lượng tác vụ Map (map tasks) được quyết định trực tiếp bởi tổng kích thước của dữ liệu đầu vào (input data), cụ thể là số lượng khối dữ liệu (input splits / HDFS blocks) mà tệp đầu vào được chia ra."
+    },
+    {
+        "question": "Điều nào sau đây đúng về giai đoạn shuffle trong MapReduce?",
+        "options": [
+            "Nó sắp xếp dữ liệu đầu ra của giai đoạn map.",
+            "Nó sắp xếp dữ liệu đầu ra của giai đoạn reduce.",
+            "Nó kết hợp dữ liệu đầu ra của giai đoạn reduce.",
+            "Nó kết hợp dữ liệu đầu ra của giai đoạn map."
+        ],
+        "answer": "Nó sắp xếp dữ liệu đầu ra của giai đoạn map.",
+        "explanation": "Giai đoạn Shuffle & Sort đứng giữa Map và Reduce có nhiệm vụ truyền các phân vùng dữ liệu qua mạng về các Reducer tương ứng, đồng thời sắp xếp (sort) và gom nhóm các dữ liệu đầu ra của giai đoạn Map theo khóa (key) trước khi đưa vào hàm Reduce."
+    },
+    {
+        "question": "Điều nào sau đây đúng về MapReduce?",
+        "options": [
+            "Đây là một hệ thống xử lý theo lô (batch processing).",
+            "Nó chỉ có thể xử lý dữ liệu được lưu trữ trong Hệ thống tệp phân tán Hadoop (HDFS).",
+            "Nó là một hệ thống xử lý thời gian thực (real-time processing).",
+            "Nó chỉ có thể xử lý dữ liệu có cấu trúc."
+        ],
+        "answer": "Đây là một hệ thống xử lý theo lô (batch processing).",
+        "explanation": "MapReduce được thiết kế theo mô hình xử lý theo lô (batch processing): đọc toàn bộ tập dữ liệu lớn từ đầu vào, xử lý tuần tự qua các pha Map - Shuffle - Reduce và xuất kết quả cuối cùng, thay vì xử lý luồng thời gian thực."
+    },
+    {
+        "question": "Điều nào sau đây đúng về các job trong MapReduce?",
+        "options": [
+            "Chúng có thể có nhiều map task và nhiều reduce tasks.",
+            "Chúng chỉ có thể có một reduce task.",
+            "Chúng chỉ bao gồm một map task và một reduce task.",
+            "Chúng chỉ có thể có một map task."
+        ],
+        "answer": "Chúng có thể có nhiều map task và nhiều reduce tasks.",
+        "explanation": "Một công việc (job) trong MapReduce được chia nhỏ để thực thi song song trên cụm máy tính, do đó nó thường bao gồm nhiều tác vụ Map (xử lý các khối đầu vào song song) và nhiều tác vụ Reduce (xử lý các phân vùng khóa song song)."
+    },
+    {
+        "question": "Điều nào sau đây đúng về YARN?",
+        "options": [
+            "Nó là một hệ thống quản lý tài nguyên (resource management system).",
+            "Nó là một hệ thống tập tin phân tán (distributed file system).",
+            "Nó là một hệ thống xử lý thời gian thực (real-time processing system).",
+            "Nó là một hệ thống quản lý cơ sở dữ liệu (database management system)."
+        ],
+        "answer": "Nó là một hệ thống quản lý tài nguyên (resource management system).",
+        "explanation": "YARN (Yet Another Resource Negotiator) là tầng quản lý tài nguyên và lập lịch tác vụ của hệ sinh thái Hadoop, chịu trách nhiệm cấp phát CPU, bộ nhớ cho các ứng dụng chạy trên cụm (như MapReduce, Spark)."
+    },
+    {
+        "question": "Điều nào sau đây là tính năng chính của Spark?",
+        "options": [
+            "Xử lý theo thời gian thực (real-time processing)",
+            "Khả năng chịu lỗi (fault tolerance)",
+            "Khả năng mở rộng hạn chế (limited scalability)",
+            "Độ trễ cao (high latency)"
+        ],
+        "answer": "Xử lý theo thời gian thực (real-time processing)",
+        "explanation": "So với Hadoop MapReduce chỉ hỗ trợ xử lý theo lô có độ trễ cao, một trong những tính năng nổi bật nhất của Apache Spark là khả năng hỗ trợ xử lý dữ liệu luồng gần thời gian thực (real-time / near real-time stream processing thông qua Spark Streaming) nhờ tốc độ tính toán trên bộ nhớ."
+    },
+    {
+        "question": "Điều nào sau đây đúng về hàm combiner trong MapReduce?",
+        "options": [
+            "Nó được chạy trước hàm reduce.",
+            "Nó được chạy sau hàm reduce.",
+            "Nó được chạy sau hàm map.",
+            "Nó giống như hàm reduce."
+        ],
+        "answer": "Nó được chạy trước hàm reduce.",
+        "explanation": "Combiner (thường gọi là 'mini-reducer') chạy cục bộ ngay trên máy thực hiện Map (sau khi Map phát sinh dữ liệu và trước khi dữ liệu được truyền qua mạng đến hàm Reduce) nhằm gom nhóm sơ bộ và giảm lượng dữ liệu truyền qua mạng."
+    },
+    {
+        "question": "PageRank chủ yếu sử dụng thông tin nào để đánh giá tầm quan trọng của một trang web?",
+        "options": [
+            "Cấu trúc liên kết giữa các trang và điểm quan trọng được truyền qua các liên kết.",
+            "Thời gian người dùng ở lại trên trang.",
+            "Dung lượng và tốc độ tải của trang.",
+            "Số lần từ khóa truy vấn xuất hiện trên trang."
+        ],
+        "answer": "Cấu trúc liên kết giữa các trang và điểm quan trọng được truyền qua các liên kết.",
+        "explanation": "PageRank mô hình hóa hành vi người lướt web ngẫu nhiên trên đồ thị web, trong đó điểm quan trọng của mỗi trang được quyết định bởi cấu trúc liên kết (cạnh có hướng) và lượng điểm quan trọng truyền từ các trang nguồn sang trang đích."
+    },
+    {
+        "question": "Trong ma trận liên kết M của tài liệu, cột j biểu diễn điều gì?",
+        "options": [
+            "Trang nguồn j: nếu j → i thì phần tử (i,j) bằng 1/d_j.",
+            "Trang đích j và các liên kết đi vào trang đó.",
+            "Số liên kết vào của trang j.",
+            "Điểm PageRank mới của trang j."
+        ],
+        "answer": "Trang nguồn j: nếu j → i thì phần tử (i,j) bằng 1/d_j.",
+        "explanation": "Trong ma trận chuyển trạng thái M của PageRank, cột j đại diện cho phân phối xác suất đi ra từ trang nguồn j: nếu trang j có d_j liên kết ra và có cạnh nối từ j tới i (j → i), thì phần tử M_{i,j} = 1/d_j; ngược lại bằng 0."
+    },
+    {
+        "question": "Vì sao nút cụt (dangling node) cần được xử lý trong PageRank?",
+        "options": [
+            "Vì cột tương ứng toàn 0 làm điểm của nút không được phân phối, khiến tổng điểm bị mất trong phép lặp thô.",
+            "Vì nút cụt luôn nhận PageRank bằng 0.",
+            "Vì nút cụt làm tăng số cạnh của đồ thị.",
+            "Vì nút cụt có quá nhiều liên kết ra."
+        ],
+        "answer": "Vì cột tương ứng toàn 0 làm điểm của nút không được phân phối, khiến tổng điểm bị mất trong phép lặp thô.",
+        "explanation": "Nút cụt (dead end / dangling node) là trang không có liên kết đi ra, nên cột tương ứng trong ma trận M chứa toàn số 0. Khi nhân lặp r = M·r, lượng điểm PageRank đi vào nút cụt không được truyền đi đâu và bị 'rò rỉ' dần, làm tổng điểm toàn đồ thị giảm dần về 0."
+    },
+    {
+        "question": "Với hệ số beta trong mô hình PageRank đầy đủ, phát biểu nào đúng?",
+        "options": [
+            "beta là xác suất đi theo một liên kết ra; 1 - beta là xác suất nhảy tới một trang bất kỳ.",
+            "beta là xác suất người lướt luôn nhảy ngẫu nhiên.",
+            "beta chỉ được dùng khi đồ thị có nút cụt.",
+            "beta phải lớn hơn hoặc bằng 1 để đảm bảo hội tụ."
+        ],
+        "answer": "beta là xác suất đi theo một liên kết ra; 1 - beta là xác suất nhảy tới một trang bất kỳ.",
+        "explanation": "Trong công thức PageRank có dịch chuyển ngẫu nhiên (teleportation): r = β·M·r + (1 - β)·e/N, hệ số dập tắt β (thường chọn 0.8 đến 0.85) là xác suất người lướt web nhấp vào một liên kết đi ra trên trang hiện tại, còn (1 - β) là xác suất người đó nhảy ngẫu nhiên tới một trang bất kỳ."
+    },
+    {
+        "question": "Trong cách tính PageRank theo MapReduce, Combine có vai trò chính nào?",
+        "options": [
+            "Cộng các đóng góp cùng khóa ngay tại tác vụ Map nhằm giảm dữ liệu phải truyền.",
+            "Quyết định điều kiện dừng thay cho Reduce.",
+            "Tính lại bậc ra của mỗi trang trong từng khối.",
+            "Thay đổi công thức PageRank để tăng tốc hội tụ."
+        ],
+        "answer": "Cộng các đóng góp cùng khóa ngay tại tác vụ Map nhằm giảm dữ liệu phải truyền.",
+        "explanation": "Khi tính phép nhân ma trận-vector của PageRank trên MapReduce, mỗi Mapper sinh ra nhiều cặp (trang_đích_i, điểm_đóng_góp). Bước Combine giúp cộng gộp trước các giá trị đóng góp có cùng khóa i ngay tại máy Map, giúp giảm đáng kể lưu lượng mạng trong pha Shuffle."
+    },
+    {
+        "question": "Cho hai tập A = {1, 2, 3, 4} và B = {3, 4, 5, 6, 7, 8}. Độ tương đồng Jaccard của A và B là bao nhiêu?",
+        "options": [
+            "1/4",
+            "1/2",
+            "3/4",
+            "1/3"
+        ],
+        "answer": "1/4",
+        "explanation": "Ta có tập giao A ∩ B = {3, 4} gồm 2 phần tử, và tập hợp A ∪ B = {1, 2, 3, 4, 5, 6, 7, 8} gồm 8 phần tử. Do đó độ tương đồng Jaccard J(A, B) = |A ∩ B| / |A ∪ B| = 2/8 = 1/4."
+    },
+    {
+        "question": "Với tài liệu 'abcde' và k = 3 (shingle theo ký tự), tập shingle là gì?",
+        "options": [
+            "{abc, bcd, cde}",
+            "{abc, def}",
+            "{a, b, c, d, e}",
+            "{ab, bc, cd, de}"
+        ],
+        "answer": "{abc, bcd, cde}",
+        "explanation": "k-shingle là tập hợp tất cả các chuỗi con liên tiếp có độ dài k ký tự trong văn bản. Với chuỗi 'abcde' (độ dài 5) và k = 3, cửa sổ trượt độ dài 3 lần lượt tạo ra 5 - 3 + 1 = 3 shingle là: 'abc', 'bcd', 'cde'."
+    },
+    {
+        "question": "Với một hoán vị ngẫu nhiên của các hàng, xác suất hai cột C1, C2 có cùng giá trị min-hash bằng gì?",
+        "options": [
+            "Độ tương đồng Jaccard của C1 và C2",
+            "Tích số phần tử của hai cột",
+            "Khoảng cách Jaccard của C1 và C2",
+            "Luôn bằng 1/2"
+        ],
+        "answer": "Độ tương đồng Jaccard của C1 và C2",
+        "explanation": "Định lý cơ bản của Min-Hashing phát biểu rằng: với một phép hoán vị ngẫu nhiên các hàng của ma trận đặc trưng, xác suất để hai cột C1 và C2 có cùng giá trị Min-Hash (tức hàng đầu tiên có số 1 thuộc loại cả hai cột đều bằng 1) chính bằng độ tương đồng Jaccard J(C1, C2)."
+    },
+    {
+        "question": "Ma trận chữ ký chia thành b = 10 băng, mỗi băng r = 4 hàng. Hai tài liệu có độ tương đồng t = 0,5. Xác suất chúng trở thành cặp ứng viên xấp xỉ bao nhiêu?",
+        "options": [
+            "0,48",
+            "0,94",
+            "0,25",
+            "0,06"
+        ],
+        "answer": "0,48",
+        "explanation": "Áp dụng công thức LSH: xác suất hai tài liệu trở thành cặp ứng viên là P = 1 - (1 - t^r)^b. Thay t = 0,5, r = 4, b = 10: ta có t^r = 0,5^4 = 0,0625; suy ra P = 1 - (1 - 0,0625)^10 = 1 - (0,9375)^10 ≈ 1 - 0,5245 = 0,4755 ≈ 0,48."
+    },
+    {
+        "question": "Giữ nguyên số băng b nhưng tăng số hàng r mỗi băng. Điều gì xảy ra nói chung?",
+        "options": [
+            "Dương tính giả giảm, âm tính giả tăng",
+            "Cả dương tính giả và âm tính giả đều giảm",
+            "Không có gì thay đổi",
+            "Dương tính giả tăng, âm tính giả giảm"
+        ],
+        "answer": "Dương tính giả giảm, âm tính giả tăng",
+        "explanation": "Khi tăng số hàng r trong mỗi băng (giữ nguyên b), điều kiện để hai cột trùng khớp hoàn toàn cả r hàng trong một băng trở nên khắt khe hơn (t^r nhỏ đi). Hệ quả là các cặp ít giống nhau khó lọt qua hơn (giảm Dương tính giả - False Positives), nhưng các cặp thực sự giống nhau cũng dễ bị bỏ sót hơn (tăng Âm tính giả - False Negatives)."
+    },
+    {
+        "question": "Cho hai tập hợp được mã hóa dưới dạng vector bit C1 = 10111 và C2 = 10011. Độ tương tự Jaccard sim(C1, C2) bằng bao nhiêu?",
+        "options": [
+            "3/4",
+            "1/4",
+            "3/5",
+            "4/5"
+        ],
+        "answer": "3/4",
+        "explanation": "So sánh từng vị trí bit của C1 = 10111 và C2 = 10011: số vị trí cả hai cùng bằng 1 (giao) là 3 (ở vị trí 1, 4, 5); số vị trí có ít nhất một bit bằng 1 (hợp) là 4 (ở vị trí 1, 3, 4, 5; vị trí 2 cả hai cùng bằng 0). Vậy sim(C1, C2) = 3/4."
+    },
+    {
+        "question": "Thứ tự đúng của ba bước thiết kế để tìm các tài liệu tương tự là gì?",
+        "options": [
+            "Shingling -> Min-Hashing -> LSH",
+            "LSH -> Shingling -> Min-Hashing",
+            "Shingling -> LSH -> Min-Hashing",
+            "Min-Hashing -> Shingling -> LSH"
+        ],
+        "answer": "Shingling -> Min-Hashing -> LSH",
+        "explanation": "Quy trình chuẩn gồm 3 bước tuần tự: (1) Shingling: chuyển văn bản thành tập hợp các đoạn ký tự (k-shingles); (2) Min-Hashing: nén các tập hợp lớn thành các vector chữ ký ngắn bảo toàn độ tương đồng Jaccard; (3) LSH (Locality-Sensitive Hashing): băm chữ ký theo dải để lọc nhanh các cặp ứng viên."
+    },
+    {
+        "question": "Với k = 2 và token là ký tự, tập các 2-shingle S(D1) của tài liệu D1 = 'abcab' là:",
+        "options": [
+            "{ab, bc, ca}",
+            "{abc, bca, cab}",
+            "{ab, bc, ca, ab}",
+            "{a, b, c}"
+        ],
+        "answer": "{ab, bc, ca}",
+        "explanation": "Các chuỗi con độ dài 2 liên tiếp trong 'abcab' lần lượt là 'ab', 'bc', 'ca', 'ab'. Vì tập hợp (set) không chứa phần tử trùng lặp nên khi loại bỏ phần tử 'ab' lặp lại, ta thu được tập 2-shingle là {ab, bc, ca}."
+    },
+    {
+        "question": "Theo tính chất Min-Hash, với một hoán vị ngẫu nhiên pi, xác suất Pr[h_pi(C1) = h_pi(C2)] bằng:",
+        "options": [
+            "Độ tương tự Jaccard sim(C1, C2)",
+            "Độ tương tự cosin của C1 và C2",
+            "1 / |C1 U C2|",
+            "Khoảng cách Jaccard d(C1, C2)"
+        ],
+        "answer": "Độ tương tự Jaccard sim(C1, C2)",
+        "explanation": "Xác suất để hai tập hợp C1, C2 cho cùng giá trị băm nhỏ nhất dưới một phép hoán vị ngẫu nhiên π chính bằng tỷ số giữa số hàng loại X (cả hai cùng có bit 1) trên tổng số hàng loại X và Y (ít nhất một bên có bit 1), tức bằng đúng sim(C1, C2) = |C1 ∩ C2| / |C1 ∪ C2|."
+    },
+    {
+        "question": "Vì sao khi shingling phải chọn k đủ lớn (ví dụ k = 10 cho tài liệu dài)?",
+        "options": [
+            "Nếu k quá nhỏ, hầu hết tài liệu sẽ chứa hầu hết các shingle, khiến mọi tài liệu trông giống nhau",
+            "Để chữ ký Min-Hash ngắn hơn",
+            "Để giảm số dải b cần dùng trong LSH",
+            "Để có thể so sánh mọi cặp tài liệu trong O(N)"
+        ],
+        "answer": "Nếu k quá nhỏ, hầu hết tài liệu sẽ chứa hầu hết các shingle, khiến mọi tài liệu trông giống nhau",
+        "explanation": "Nếu chọn k quá nhỏ (ví dụ k = 1 hoặc k = 2), tổng số shingle khả dĩ rất ít nên bất kỳ văn bản đủ dài nào cũng sẽ chứa gần hết bảng chữ cái/cặp chữ cái, dẫn đến độ tương đồng Jaccard cao giả tạo dù nội dung hoàn toàn khác nhau."
+    },
+    {
+        "question": "Trong cài đặt thực tế của Min-Hashing, vì sao người ta dùng K hàm băm hàng thay vì K hoán vị ngẫu nhiên thật sự?",
+        "options": [
+            "Vì hoán vị các hàng của ma trận rất lớn, dù chỉ một lần, cũng quá tốn kém",
+            "Vì hàm băm giúp loại bỏ hoàn toàn dương tính giả",
+            "Vì hàm băm cho kết quả chính xác hơn hoán vị",
+            "Vì hoán vị không bảo toàn độ tương tự Jaccard"
+        ],
+        "answer": "Vì hoán vị các hàng của ma trận rất lớn, dù chỉ một lần, cũng quá tốn kém",
+        "explanation": "Số lượng shingle (số hàng của ma trận đặc trưng) trong thực tế lên tới hàng triệu hoặc hàng tỷ. Việc sinh và lưu trữ K phép hoán vị ngẫu nhiên thật sự cũng như xáo trộn vật lý các hàng tốn rất nhiều bộ nhớ và thời gian, nên người ta dùng K hàm băm h(r) để mô phỏng việc ánh xạ chỉ số hàng."
+    },
+    {
+        "question": "Dùng LSH với b = 20 dải, r = 5 hàng/dải. Hai tài liệu có độ tương tự 0.8. Xác suất chúng KHÔNG trở thành cặp ứng viên (âm tính giả) xấp xỉ bằng:",
+        "options": [
+            "0.00035",
+            "0.328",
+            "0.672",
+            "0.0474"
+        ],
+        "answer": "0.00035",
+        "explanation": "Với t = 0.8, r = 5, b = 20: xác suất trùng khớp hoàn toàn trong 1 dải là t^r = 0.8^5 = 0.32768. Xác suất khác nhau ở ít nhất 1 hàng trong 1 dải là 1 - 0.32768 = 0.67232. Xác suất KHÔNG trùng ở cả 20 dải (âm tính giả) là (1 - t^r)^b = (0.67232)^20 ≈ 0.00035."
+    },
+    {
+        "question": "Hai cột có độ tương tự t, ma trận chữ ký chia thành b dải, mỗi dải r hàng. Xác suất hai cột trở thành cặp ứng viên (giống hệt nhau trong ít nhất một dải) là:",
+        "options": [
+            "1 - (1 - t^r)^b",
+            "(1 - t^r)^b",
+            "1 - (1 - t^b)^r",
+            "t^(r*b)"
+        ],
+        "answer": "1 - (1 - t^r)^b",
+        "explanation": "Xác suất giống hệt nhau cả r hàng trong 1 dải là t^r. Xác suất không trùng ở 1 dải là (1 - t^r), và không trùng ở tất cả b dải là (1 - t^r)^b. Do đó xác suất trùng ở ít nhất 1 dải là 1 - (1 - t^r)^b."
+    },
+    {
+        "question": "Ngưỡng tương tự mà tại đó đường cong chữ S dốc lên nhanh nhất xấp xỉ s ~ (1/b)^(1/r). Với b = 20, r = 5, ngưỡng này gần với giá trị nào nhất?",
+        "options": [
+            "0.55",
+            "0.33",
+            "0.80",
+            "0.20"
+        ],
+        "answer": "0.55",
+        "explanation": "Thay b = 20 và r = 5 vào công thức xấp xỉ ngưỡng s ≈ (1/b)^(1/r), ta có: s ≈ (1/20)^(1/5) = (0.05)^0.2 ≈ 0.5493, gần nhất với giá trị 0.55."
+    },
+    {
+        "question": "Giữ r = 5 nhưng giảm số dải từ 20 xuống 15. Điều gì xảy ra?",
+        "options": [
+            "Dương tính giả giảm, âm tính giả tăng",
+            "Không có gì thay đổi vì r giữ nguyên",
+            "Dương tính giả tăng, âm tính giả giảm",
+            "Cả dương tính giả và âm tính giả đều giảm"
+        ],
+        "answer": "Dương tính giả giảm, âm tính giả tăng",
+        "explanation": "Khi giảm số dải b (từ 20 xuống 15) và giữ nguyên r, số cơ hội để hai tài liệu băm trùng vào cùng một thùng giảm đi. Do đó ít cặp không giống nhau bị bắt nhầm hơn (giảm Dương tính giả), nhưng đồng thời các cặp giống nhau cũng có nguy cơ bị bỏ sót cao hơn (tăng Âm tính giả)."
+    },
+    {
+        "question": "Trên dòng 1,5,2,7,4, thuật toán trả trung bình của bốn số gần nhất. Sau bốn số đầu, bộ đệm chứa [1,5,2,7] và tổng bằng 15. Khi số 4 đến, phép cập nhật nào đúng mà không đọc lại lịch sử?",
+        "options": [
+            "Trừ số cũ nhất 1, cộng 4, ghi đè ô chứa 1 và trả 18/4.",
+            "Giữ nguyên tổng 15, thay số 7 bằng 4 và trả 15/4.",
+            "Cộng 4 vào tổng và trả 19/5.",
+            "Bỏ toàn bộ bộ đệm và dùng riêng số mới 4 làm trung bình."
+        ],
+        "answer": "Trừ số cũ nhất 1, cộng 4, ghi đè ô chứa 1 và trả 18/4.",
+        "explanation": "Thuật toán cửa sổ trượt (sliding window) duy trì mảng vòng kích thước N = 4 và biến tổng S = 15. Khi phần tử mới 4 đến, ta lấy tổng hiện tại trừ đi phần tử cũ nhất vừa rời cửa sổ (1) rồi cộng phần tử mới (4): S_mới = 15 - 1 + 4 = 18, ghi đè 4 vào vị trí của 1 và trả trung bình 18/4."
+    },
+    {
+        "question": "Để lấy mẫu người dùng, chọn một hàm băm h trước dòng rồi giữ cố định. Với mỗi người dùng, giá trị băm đều trên tập... Muốn giữ mỗi người dùng với xác suất 20%, phát biểu nào đúng?",
+        "options": [
+            "Giữ khi h(người dùng) < 20; mọi bộ cùng người nhận cùng quyết định, nhưng tỷ lệ số bộ thực tế có thể khác 20%.",
+            "Giữ khi h(người dùng) <= 20; mọi bộ của một người cùng được giữ hoặc cùng bị bỏ.",
+            "Giữ khi h(người dùng) < 20, nhưng rút lại h cho mỗi bộ để duy trì tính nhất quán.",
+            "Giữ khi h(người dùng) < 20; mỗi lần chạy có đúng 20% tổng số bộ trong mẫu."
+        ],
+        "answer": "Giữ khi h(người dùng) < 20; mọi bộ cùng người nhận cùng quyết định, nhưng tỷ lệ số bộ thực tế có thể khác 20%.",
+        "explanation": "Giả sử hàm băm ánh xạ đều vào 100 thùng {0, 1, ..., 99}, điều kiện h(user) < 20 chọn đúng 20/100 = 20% số thùng. Vì hàm băm cố định theo khóa người dùng nên mọi bản ghi của cùng một người đều được giữ hoặc bỏ nhất quán; tuy nhiên do mỗi người phát sinh số lượng bản ghi khác nhau nên tỷ lệ bản ghi thực tế thu được có thể dao động quanh 20%."
+    },
+    {
+        "question": "Lấy mẫu hồ chứa (reservoir sampling) có s = 2 ô trên dòng a, x, c, y, z. Hai phần tử đầu đặt vào hai ô. Với vị trí r > s, rút j đều trong... Trong một lần chạy, j = 2, 4, 1 lần lượt tại r = 3, 4, 5. Mảng hồ chứa cuối cùng là gì?",
+        "options": [
+            "[z, c].",
+            "[a, x].",
+            "[z, y].",
+            "[c, z]."
+        ],
+        "answer": "[z, c].",
+        "explanation": "Ban đầu sau 2 phần tử đầu (r=1,2), hồ chứa là [a, x] (chỉ số 1 và 2). Tại r = 3 (phần tử 'c'), j = 2 ≤ 2 nên thay ô 2 bằng 'c' → [a, c]. Tại r = 4 (phần tử 'y'), j = 4 > 2 nên bỏ qua → [a, c]. Tại r = 5 (phần tử 'z'), j = 1 ≤ 2 nên thay ô 1 bằng 'z' → [z, c]."
+    },
+    {
+        "question": "Một hồ chứa có s = 50 ô, đã đọc r = 1000 phần tử. Các số rút ở mỗi bước đều và độc lập với các lần rút trước. Xác suất phần tử ở vị trí thứ 7 và phần tử ở vị trí thứ 999 có mặt trong hồ hiện tại lần lượt là bao nhiêu?",
+        "options": [
+            "0,05 và 0,05.",
+            "1 và 0.",
+            "50/7 và 50/999.",
+            "0,05 và 50/999."
+        ],
+        "answer": "0,05 và 0,05.",
+        "explanation": "Tính chất cốt lõi của thuật toán lấy mẫu hồ chứa (Reservoir Sampling) là tại mọi thời điểm r ≥ s, mọi phần tử đã đọc từ vị trí 1 đến r đều có xác suất nằm trong hồ chứa bằng nhau và bằng s / r. Với s = 50 và r = 1000, xác suất của cả phần tử thứ 7 lẫn thứ 999 đều bằng 50 / 1000 = 0,05."
+    },
+    {
+        "question": "Bộ lọc Bloom (Bloom filter) có 11 bit, chỉ số 0 đến 10, đã thêm dùng ba khóa S = 585... Các bit bằng 1 nằm ở vị trí 9. Hai hàm băm dùng khi xây và khi kiểm tra cho: h(118)=(3,5), h(29)=(7,2). Bộ lọc trả lời gì cho hai khóa này?",
+        "options": [
+            "118: 'chắc chắn không thuộc'; 29: 'có thể thuộc'.",
+            "Cả hai đều 'chắc chắn không thuộc'.",
+            "118: 'có thể thuộc'; 29: 'chắc chắn không thuộc'.",
+            "Cả hai đều 'có thể thuộc'."
+        ],
+        "answer": "118: 'chắc chắn không thuộc'; 29: 'có thể thuộc'.",
+        "explanation": "Khi kiểm tra một khóa trong Bloom Filter, nếu tất cả các vị trí bit băm của khóa đều bằng 1 (như trường hợp khóa 29 tại vị trí 7 và 2 đều đã được bật lên 1 bởi các khóa trước), bộ lọc trả lời 'có thể thuộc'. Nếu có ít nhất một vị trí bit bằng 0 (như khóa 118 tại vị trí 3, 5), bộ lọc kết luận 'chắc chắn không thuộc'."
+    },
+    {
+        "question": "Một bộ lọc có n = 8 * 10^7 bit cho tập gồm m = 10^7 địa chỉ... Lựa chọn nào cho số hàm băm nguyên tối ưu theo công thức trên và diễn giải đúng sai số?",
+        "options": [
+            "k = 6; một địa chỉ cố định ngoài tập qua bộ lọc với xác suất xấp xỉ 2,16%.",
+            "k = 1; khoảng 11,75% địa chỉ đã qua bộ lọc thuộc tập.",
+            "k = 5; khoảng 2,17% địa chỉ thuộc tập bị loại nhầm.",
+            "k = 10; thêm hàm băm luôn làm xác suất nhận nhầm giảm."
+        ],
+        "answer": "k = 6; một địa chỉ cố định ngoài tập qua bộ lọc với xác suất xấp xỉ 2,16%.",
+        "explanation": "Tỷ lệ số bit trên mỗi phần tử là n/m = 8. Số hàm băm tối ưu là k = (n/m)·ln(2) = 8 × 0,6931 ≈ 5,545 → làm tròn thành số nguyên gần nhất là k = 6. Khi đó xác suất dương tính giả (một phần tử ngoài tập lọt qua bộ lọc) là (1 - e^(-k·m/n))^k = (1 - e^(-6/8))^6 ≈ (1 - 0,4724)^6 ≈ 0,0216 (tức 2,16%)."
+    },
+    {
+        "question": "Trên đồ thị G4 (A->B,C,D; B->A,D; C->A; D->B,C) với beta = 4/5, tập chủ đề S = {B, D} và r^0 = (0, 1/2, 0, 1/2)^T, điểm của trang A sau vòng lặp thứ nhất r^1_A bằng bao nhiêu?",
+        "options": [
+            "1/5",
+            "3/10",
+            "1/10",
+            "1/4"
+        ],
+        "answer": "1/5",
+        "explanation": "Các cạnh đi vào A là từ B (bậc ra d_B = 2) và C (bậc ra d_C = 1). Vì A ∉ S = {B, D} nên thành phần nhảy ngẫu nhiên vào A bằng 0. Do đó r^1_A = β · (r^0_B / d_B + r^0_C / d_C) + 0 = (4/5) · ((1/2)/2 + 0/1) = (4/5) · (1/4) = 1/5."
+    },
+    {
+        "question": "Vì sao có thể chỉ tiến tính và lưu k vector PageRank theo chủ đề r^(j), rồi mỗi người dùng chỉ cần lưu bộ trọng số wj?",
+        "options": [
+            "Vì phương trình PageRank tuyến tính theo phân phối dịch chuyển v và nghiệm cố định là duy nhất, nên nếu v = sum wj v^(j) thì r* = sum wj r^(j)",
+            "Vì các vector chủ đề luôn trực giao với nhau nên không cần lặp lại phép tính",
+            "Vì PageRank theo chủ đề không phụ thuộc vào hệ số beta",
+            "Vì mỗi người dùng có đồ thị liên kết riêng nhỏ hơn nhiều so với đồ thị toàn web"
+        ],
+        "answer": "Vì phương trình PageRank tuyến tính theo phân phối dịch chuyển v và nghiệm cố định là duy nhất, nên nếu v = sum wj v^(j) thì r* = sum wj r^(j)",
+        "explanation": "Nghiệm hội tụ của phương trình PageRank r* = (I - βM)^(-1) · (1 - β)v là một ánh xạ tuyến tính theo vector phân phối nhảy ngẫu nhiên v. Nhờ tính chất tuyến tính này, nếu vector sở thích cá nhân v là tổ hợp tuyến tính v = ∑ w_j·v^(j) của k chủ đề cơ sở, thì vector PageRank cá nhân hóa cũng chính là r* = ∑ w_j·r^(j)."
+    },
+    {
+        "question": "Trong cụm thao túng liên kết (đích trỏ tới m trang hỗ trợ, mỗi hỗ trợ chỉ trỏ lại đích) với beta = 0,85... Đóng góp từ ngoài x được cụm khuếch đại khoảng bao nhiêu lần?",
+        "options": [
+            "Khoảng 3,6 lần",
+            "Khoảng 0,46 lần",
+            "Khoảng 6,7 lần",
+            "Khoảng 1,85 lần"
+        ],
+        "answer": "Khoảng 3,6 lần",
+        "explanation": "Trong mô hình Link Farm (1 trang đích trao đổi liên kết 2 chiều với m trang hỗ trợ), phương trình cân bằng tại trang đích là y = x + β²·y + ... dẫn đến hệ số khuếch đại đóng góp từ ngoài x là 1 / (1 - β²) = 1 / (1 - 0,85²) = 1 / (1 - 0,7225) = 1 / 0,2775 ≈ 3,604 (khoảng 3,6 lần)."
+    },
+    {
+        "question": "Trên G4 với beta = 4/5: PageRank r_A = 9/28, TrustRank (T = {B, D}) p_A = 9/35. Chỉ số Spam Mass s_i = (r_i - p_i)/r_i của trang A bằng bao nhiêu, và cách đọc phù hợp là gì?",
+        "options": [
+            "s_A = 1/5; giá trị dương nhỏ, khá xa 1 nên chưa có dấu hiệu rõ là rác",
+            "s_A = 4/5; giá trị lớn nên A là trang rác",
+            "s_A = -23/95; giá trị âm nên A là trang rác",
+            "s_A = 1/5; giá trị gần 1 nên chắc chắn A là trang rác"
+        ],
+        "answer": "s_A = 1/5; giá trị dương nhỏ, khá xa 1 nên chưa có dấu hiệu rõ là rác",
+        "explanation": "Thay số vào công thức Spam Mass: s_A = (r_A - p_A) / r_A = 1 - p_A / r_A = 1 - (9/35) / (9/28) = 1 - 28/35 = 1 - 4/5 = 1/5. Chỉ số Spam Mass đo tỷ lệ PageRank có được nhờ spam; một trang chỉ bị nghi ngờ là trang rác khi s_i dương lớn (tiệm cận 1), nên s_A = 1/5 (0,2) khá nhỏ, chưa có dấu hiệu rõ là rác."
+    },
+    {
+        "question": "Trên đồ thị G5 của HITS, trang E không có cạnh ra (E là nút cụt) nhưng vẫn có điểm uy tín dương. Giải thích nào đúng?",
+        "options": [
+            "Vì điểm uy tín của một trang bằng tổng điểm trung tâm của các trang trỏ tới nó (ở đây C -> E), không phụ thuộc cạnh ra của chính nó",
+            "Vì HITS bù đều điểm của nút cụt cho mọi trang, giống như PageRank",
+            "Vì HITS dùng phân phối dịch chuyển đều tới mọi trang",
+            "Vì E được chọn làm hạt giống trong tập tin cậy"
+        ],
+        "answer": "Vì điểm uy tín của một trang bằng tổng điểm trung tâm của các trang trỏ tới nó (ở đây C -> E), không phụ thuộc cạnh ra của chính nó",
+        "explanation": "Trong thuật toán HITS, mỗi trang có 2 điểm số: Điểm trung tâm (Hub - h) tính bằng tổng điểm uy tín của các trang mà nó trỏ tới (cạnh ra), còn Điểm uy tín (Authority - a) tính bằng tổng điểm trung tâm của các trang trỏ tới nó (cạnh vào). Vì E không có cạnh ra nên h_E = 0, nhưng do có cạnh C → E đi vào nên a_E ∝ h_C > 0."
+    }
+];
+
+        let answeredCount = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function updateStats() {
+            document.getElementById('answered-q').innerText = answeredCount;
+            document.getElementById('correct-q').innerText = correctCount;
+            document.getElementById('incorrect-q').innerText = incorrectCount;
+        }
+
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            answeredCount = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            document.getElementById('total-q').innerText = quizData.length;
+            updateStats();
+
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                const title = document.createElement('div');
+                title.className = 'question-title';
+                title.innerText = `Câu ${index + 1}: ${item.question}`;
+                card.appendChild(title);
+
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options-list';
+
+                const expBox = document.createElement('div');
+                expBox.className = 'explanation-box';
+
+                const shuffledOptions = shuffleArray([...item.options]);
+
+                shuffledOptions.forEach(optionText => {
+                    const li = document.createElement('li');
+                    li.className = 'option-item';
+                    li.innerText = optionText;
+
+                    li.onclick = function() {
+                        checkAnswer(this, optionText, item.answer, item.explanation, optionsList, expBox);
+                    };
+
+                    optionsList.appendChild(li);
+                });
+
+                card.appendChild(optionsList);
+                card.appendChild(expBox);
+                container.appendChild(card);
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkAnswer(selectedLi, selectedText, correctText, explanationText, ulElement, expBox) {
+            const allOptions = ulElement.querySelectorAll('li');
+            allOptions.forEach(li => {
+                li.classList.add('disabled'); 
+                if (li.innerText === correctText) {
+                    li.classList.add('correct');
+                } else {
+                    li.classList.add('unselected-disabled');
+                }
+            });
+
+            answeredCount++;
+            const isCorrect = (selectedText === correctText);
+
+            if (isCorrect) {
+                correctCount++;
+                expBox.classList.add('exp-correct');
+                expBox.innerHTML = `
+                    <div class="exp-header text-correct">✔ Chính xác!</div>
+                    <div><strong>Đáp án đúng:</strong> ${correctText}</div>
+                    <div style="margin-top: 6px;"><strong>Giải thích chi tiết:</strong> ${explanationText}</div>
+                `;
+            } else {
+                incorrectCount++;
+                selectedLi.classList.remove('unselected-disabled');
+                selectedLi.classList.add('incorrect');
+                expBox.classList.add('exp-incorrect');
+                expBox.innerHTML = `
+                    <div class="exp-header text-incorrect">✘ Chưa chính xác!</div>
+                    <div><strong>Đáp án đúng:</strong> ${correctText}</div>
+                    <div style="margin-top: 6px;"><strong>Giải thích chi tiết:</strong> ${explanationText}</div>
+                `;
+            }
+
+            expBox.classList.add('show');
+            updateStats();
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
