@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân hàng 90 câu hỏi luyện tập - Bài 11</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax cho LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        pre, code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">Ngân hàng 90 câu hỏi Bài 11</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">LLM, Dữ liệu phi cấu trúc & Xử lý hàng loạt</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Nút thống kê nhanh -->
+                <button onclick="openStatsModal()" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-xs font-medium transition-colors">
+                    <i class="fa-solid fa-chart-pie text-blue-500"></i>
+                    <span>Tiến độ</span>
+                </button>
+                <!-- Nút Đổi Theme -->
+                <button id="themeToggle" onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col gap-6">
+        
+        <!-- Dashboard / Thanh công cụ lọc & tìm kiếm -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <!-- Thanh tìm kiếm -->
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="filterQuestions()" placeholder="Tìm kiếm theo mã câu (vd: TN-001, TL-005) hoặc nội dung từ khóa..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all">
+                </div>
+                
+                <!-- Nút Reset & Thống kê di động -->
+                <div class="flex items-center gap-2">
+                    <button onclick="resetProgress()" class="px-4 py-2.5 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-xl text-xs font-medium transition-colors flex items-center gap-2 border border-rose-200 dark:border-rose-800">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Làm lại từ đầu</span>
+                    </button>
+                    <button onclick="openStatsModal()" class="sm:hidden px-4 py-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl text-xs font-medium flex items-center gap-2 border border-blue-200 dark:border-blue-800">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Tiến độ</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bộ lọc Đợt & Dạng câu hỏi -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                <!-- Bộ lọc Đợt -->
+                <div class="flex flex-wrap items-center gap-1.5" id="batchFilters">
+                    <button onclick="setBatch('all')" data-batch="all" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-blue-600 text-white shadow-sm">Tất cả đợt</button>
+                    <button onclick="setBatch('1')" data-batch="1" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 1</button>
+                    <button onclick="setBatch('2')" data-batch="2" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 2</button>
+                    <button onclick="setBatch('3')" data-batch="3" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 3</button>
+                    <button onclick="setBatch('4')" data-batch="4" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 4</button>
+                    <button onclick="setBatch('5')" data-batch="5" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 5</button>
+                    <button onclick="setBatch('6')" data-batch="6" class="batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Đợt 6</button>
+                </div>
+
+                <!-- Bộ lọc Dạng câu hỏi -->
+                <div class="flex items-center gap-1.5" id="typeFilters">
+                    <button onclick="setType('all')" data-type="all" class="type-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 shadow-sm">Mọi dạng</button>
+                    <button onclick="setType('tn')" data-type="tn" class="type-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Trắc nghiệm (60)</button>
+                    <button onclick="setType('tl')" data-type="tl" class="type-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600">Tự luận (30)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin số lượng & Thanh tiến độ -->
+        <div class="flex flex-col sm:flex-row items-center justify-between px-2 text-xs text-slate-500 dark:text-slate-400 gap-2">
+            <div id="resultsCount" class="font-medium">Hiển thị toàn bộ 90 câu hỏi</div>
+            <div class="flex items-center w-full sm:w-64 gap-3">
+                <div class="flex-grow bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-blue-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+                <span id="progressText" class="whitespace-nowrap font-medium">0/90 đã làm</span>
+            </div>
+        </div>
+
+        <!-- Danh sách Câu hỏi -->
+        <div id="questionsContainer" class="flex flex-col gap-6">
+            <!-- Được render bằng JavaScript -->
+        </div>
+
+        <!-- Trạng thái không tìm thấy -->
+        <div id="noResults" class="hidden flex flex-col items-center justify-center py-16 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl mb-4">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-semibold text-slate-700 dark:text-slate-200">Không tìm thấy câu hỏi phù hợp</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Vui lòng thử lại với từ khóa khác hoặc thay đổi bộ lọc đợt/dạng.</p>
+        </div>
+
+    </main>
+
+    <!-- Modal Thống Kê / Tiến Độ -->
+    <div id="statsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col gap-5 transform transition-all">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-blue-500"></i>
+                    <span>Thống kê tiến độ ôn tập</span>
+                </h3>
+                <button onclick="closeStatsModal()" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl border border-blue-100 dark:border-blue-800">
+                    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400" id="statCompleted">0/90</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Đã tương tác</div>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-800">
+                    <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="statCorrect">0%</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Độ chính xác (Trắc nghiệm)</div>
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <div class="text-xs font-semibold text-slate-700 dark:text-slate-300">Tiến độ theo đợt:</div>
+                <div id="batchStatsList" class="space-y-2 text-xs">
+                    <!-- Dynamic details -->
+                </div>
+            </div>
+
+            <button onclick="closeStatsModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm transition-colors shadow-lg shadow-blue-500/20 mt-2">
+                Tiếp tục ôn tập
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-8 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>Ngân hàng 90 câu luyện kiểm tra giấy — Bài 11: LLM, Dữ liệu phi cấu trúc & Xử lý hàng loạt.</p>
+        <p class="mt-1">Ứng dụng web HTML đơn lẻ chạy hoàn toàn độc lập với đầy đủ hướng dẫn giải chi tiết.</p>
+    </footer>
+
+    <!-- JavaScript Data and App Logic -->
+    <script>
+        // Dữ liệu nhúng toàn bộ 90 câu hỏi và đáp án đầy đủ
+        const rawData = [
+            // Đợt 1
+            { id: 1, code: "B11-TN-001", batch: 1, type: "tn", question: "Bảng có <code>review_id</code>, <code>khu_vuc</code> và <code>comments</code>, ví dụ “Phòng sạch nhưng ồn”; chưa có cột nhãn nào. Cần đếm khía cạnh bị chê theo khu vực. Bước nào tạo ra dữ liệu còn thiếu để tổng hợp?", options: ["Trích xuất danh sách khía cạnh bị chê cho từng review rồi ghép vào bảng.", "Đếm số chuỗi comments khác nhau rồi coi mỗi chuỗi là một khía cạnh.", "Sắp xếp comments theo bảng chữ cái rồi lấy chuỗi xuất hiện đầu tiên.", "Đổi tên comments thành aspects_negative rồi dùng value_counts()."], answer: 0, explanation: "Cần đi từ văn bản qua trích xuất đến bảng nhãn; cột văn bản chưa phải cột khía cạnh.", skill: "A1, A2", difficulty: "Cơ bản" },
+            { id: 2, code: "B11-TN-002", batch: 1, type: "tn", question: "Đoạn code dưới in ra gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>import re\ntext = \"not clean but quiet\"\npos = len(re.findall(r\"clean|quiet\", text, flags=re.I))\nneg = len(re.findall(r\"not |loud\", text, flags=re.I))\nprint(\"positive\" if pos > neg else \"negative\" if neg > pos else \"mixed\")</code></pre>", options: ["positive", "und", "negative", "mixed"], answer: 0, explanation: "Regex khớp 2 từ tích cực và 1 từ tiêu cực; 2 > 1. Đây là kết quả code, không phải kết luận ngữ nghĩa.", skill: "B2, B4", difficulty: "Vận dụng" },
+            { id: 3, code: "B11-TN-003", batch: 1, type: "tn", question: "Dùng ngưỡng 5 ký tự trong ví dụ nhỏ này. Những ID nào còn lại?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>rv = pd.DataFrame({\"id\":[1,2,3,4],\n                   \"comments\":[None,\"a<br/>b\",\"abcde\",\"abcd\"]})\nrv = rv.dropna(subset=[\"comments\"])\nrv[\"comments\"] = rv[\"comments\"].str.replace(\"<br/>\", \" \", regex=False)\ndu_dai = rv[rv[\"comments\"].str.len() >= 5]</code></pre>", options: ["ID 2 và 3.", "Chỉ ID 3.", "ID 1 và 3.", "ID 3 và 4."], answer: 1, explanation: "Sau thay thẻ, ID 2 là “a b” dài 3; ID 3 dài 5; ID 4 dài 4; ID 1 đã bị bỏ.", skill: "C1, C2, C6", difficulty: "Vận dụng" },
+            { id: 4, code: "B11-TN-004", batch: 1, type: "tn", question: "Dùng schema sau, không có validator bổ sung:<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>from pydantic import BaseModel\nfrom typing import Literal\nAspect = Literal[\"location\", \"cleanliness\", \"host\", \"value\", \"noise\", \"amenities\"]\nclass ReviewInfo(BaseModel):\n    sentiment: Literal[\"positive\", \"mixed\", \"negative\"]\n    aspects_positive: list[Aspect]\n    aspects_negative: list[Aspect]\n    language: str  # yêu cầu nghiệp vụ: mã ISO, hoặc \"und\"</code></pre>JSON nào bị từ chối vì nhãn cảm xúc ngoài enum? Các trường còn lại đều có kiểu như đã khai báo.<br>1. <code>{\"sentiment\":\"happy\",\"aspects_positive\":[],\"aspects_negative\":[],\"language\":\"en\"}</code><br>2. <code>{\"sentiment\":\"mixed\",\"aspects_positive\":[],\"aspects_negative\":[],\"language\":\"English\"}</code><br>3. <code>{\"sentiment\":\"positive\",\"aspects_positive\":[],\"aspects_negative\":[],\"language\":\"und\"}</code>", options: ["JSON 1 và 2.", "Chỉ JSON 2.", "Không JSON nào.", "Chỉ JSON 1."], answer: 3, explanation: "happy không thuộc Literal. English vẫn là str nên không bị schema này chặn.", skill: "D4, D6, D7, D9", difficulty: "Vận dụng" },
+            { id: 5, code: "B11-TN-005", batch: 1, type: "tn", question: "Giả sử mọi output trong cache đều hợp schema. Dòng cuối in gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>cache = {\"7\": {\"output\": \"JSON hợp lệ\"}}\nHAS_KEY = False\ndef f(rid):\n    key = str(rid)\n    if key not in cache:\n        if not HAS_KEY:\n            return None\n    return cache[key][\"output\"]\nprint(f(7) is None, f(8) is None)</code></pre>", options: ["False True", "True True", "True False", "False False"], answer: 0, explanation: "ID 7 tìm được khóa chuỗi; ID 8 thiếu cache và không có key nên trả None.", skill: "E2, E3, E9", difficulty: "Cơ bản" },
+            { id: 6, code: "B11-TN-006", batch: 1, type: "tn", question: "Cho dict nhãn hợp lệ. Trong labels, tên cột là gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>d = {12:{\"sentiment\":\"negative\",\"language\":\"en\"},\n     4:{\"sentiment\":\"positive\",\"language\":\"es\"}}\nlabels = pd.DataFrame(d).T\nlabels.index.name = \"review_id\"</code></pre>", options: ["negative và positive.", "12 và 4.", "sentiment và language.", "review_id và comments."], answer: 2, explanation: "Trước .T, ID là cột; sau .T, ID là hàng và trường nhãn là cột.", skill: "F2", difficulty: "Cơ bản" },
+            { id: 7, code: "B11-TN-007", batch: 1, type: "tn", question: "Hai người gán nhãn độc lập cho “Vị trí tốt nhưng đêm ồn”. Hướng dẫn chung quy định có cả khen và chê thì mixed. Người thứ nhất chọn positive, người thứ hai chọn mixed. Cách chốt gold nào phù hợp?", options: ["Chọn positive vì lời khen xuất hiện trước lời chê trong câu.", "Giữ cả hai nhãn làm hai bản ghi để tránh phải thống nhất.", "Đối chiếu hướng dẫn, thảo luận bất đồng và thống nhất nhãn mixed.", "Chạy LLM rồi lấy đầu ra của nó thay cho ý kiến của hai người."], answer: 2, explanation: "Gold dựa trên hướng dẫn nhất quán; hai lượt gán độc lập giúp tìm chỗ cần thảo luận.", skill: "G1, G2, G3, G7", difficulty: "Vận dụng" },
+            { id: 8, code: "B11-TN-008", batch: 1, type: "tn", question: "Một lần chạy có 10 đầu vào, 8 đầu ra hợp schema; trong 8 đầu ra đó có 5 nhãn cảm xúc đúng gold. Accuracy cảm xúc chỉ trên đầu ra hợp lệ bằng bao nhiêu?", options: ["80%.", "50%.", "100%.", "62,5%."], answer: 3, explanation: "Accuracy trên tập hợp lệ = 5/8. Tỷ lệ hợp lệ là 8/10, còn vừa hợp lệ vừa đúng trên toàn đầu vào là 5/10.", skill: "H1, H2, H3", difficulty: "Cơ bản" },
+            { id: 9, code: "B11-TN-009", batch: 1, type: "tn", question: "Bộ từ khóa cleanliness chỉ có r\"clean|dirty\". Văn bản “Muy limpio” được cung cấp bản dịch là “Rất sạch”. Đầu ra gán cleanliness được hậu kiểm gắn cờ vì không khớp regex. Kết luận nào có căn cứ?", options: ["Phải xóa ngay review vì đã vi phạm bất kỳ quy tắc hậu kiểm nào.", "Đây có thể là cảnh báo nhầm do từ khóa chưa bao phủ tiếng Tây Ban Nha.", "Gold không còn cần thiết vì regex đã quyết định được độ đúng.", "Khía cạnh chắc chắn bị bịa vì không có từ clean trong văn bản."], answer: 1, explanation: "Bản dịch cho thấy có bằng chứng; regex tiếng Anh hẹp gây cảnh báo nhầm.", skill: "B5, I3, I5, I6, I7, I8", difficulty: "Phân tích" },
+            { id: 10, code: "B11-TN-010", batch: 1, type: "tn", question: "Giả định đề: tổng input 2.000 token, output 400 token; giá input 0,25 USD/triệu token, output 1,50 USD/triệu token. Chi phí là bao nhiêu USD?", options: ["0,0006 USD.", "1,1 USD.", "0,0011 USD.", "0,0036 USD."], answer: 2, explanation: "(2.000×0,25 + 400×1,50)/1.000.000 = 0,0011 USD. Giá chỉ là giả định trong đề.", skill: "J3", difficulty: "Vận dụng" },
+            { id: 11, code: "B11-TL-001", batch: 1, type: "tl", question: "Điền đúng hai dòng TODO theo yêu cầu của lab: lọc comments dài ít nhất 50 ký tự rồi lấy ngẫu nhiên 100 dòng tái lập được. Giả sử rv đã bỏ comments thiếu, thay &lt;br/&gt; và còn ít nhất 100 dòng đủ dài.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>du_dai = ...\nmau = ...</code></pre>", answer: "du_dai = rv[rv[\"comments\"].str.len() >= 50]\nmau = du_dai.sample(n=100, random_state=42)", explanation: "Phải lọc trước và lấy mẫu từ du_dai; không lấy 100 dòng đầu.", skill: "C1, C2", difficulty: "Vận dụng" },
+            { id: 12, code: "B11-TL-002", batch: 1, type: "tl", question: "Dùng schema không có validator ngoài khai báo sau:<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>from pydantic import BaseModel\nfrom typing import Literal\nAspect = Literal[\"location\", \"cleanliness\", \"host\", \"value\", \"noise\", \"amenities\"]\nclass ReviewInfo(BaseModel):\n    sentiment: Literal[\"positive\", \"mixed\", \"negative\"]\n    aspects_positive: list[Aspect]\n    aspects_negative: list[Aspect]\n    language: str  # yêu cầu nghiệp vụ: mã ISO, hoặc \"und\"</code></pre>JSON cố định dưới đây bị từ chối vì sao? Trả lời một câu.<br><code>{\"sentiment\":\"negative\",\"aspects_positive\":[],\"aspects_negative\":[\"noise\"]}</code>", answer: "Thiếu trường bắt buộc language.", explanation: "language: str không có giá trị mặc định nên bắt buộc; danh sách noise và sentiment negative đều hợp enum.", skill: "D4, D6, D7", difficulty: "Cơ bản" },
+            { id: 13, code: "B11-TL-003", batch: 1, type: "tl", question: "Ba review được xử lý theo thứ tự 1, 2, 3. Cache lúc đầu có khóa \"1\", \"3\", đều hợp lệ. Có API key. Hàm kiểm tra cache trước; chỉ gọi API khi thiếu; lời gọi cho ID 2 thành công ngay và được lưu. Chạy toàn bộ ba review hai lần liên tiếp, giữ nguyên cache. Tổng số lời gọi API mới là bao nhiêu? Chỉ ghi một số.", answer: "1", explanation: "Chỉ ID 2 thiếu ở lượt đầu; lượt sau cả ba đều có cache.", skill: "E1, E4", difficulty: "Vận dụng" },
+            { id: 14, code: "B11-TL-004", batch: 1, type: "tl", question: "Tính micro-F1 nhận diện khía cạnh cho ba review dưới đây. Các ô là tập nhãn; cộng TP, FP, FN toàn bộ rồi dùng 2TP/(2TP+FP+FN). Chỉ ghi một số thập phân, chấp nhận phân số.<br>ID 1: Gold {location, noise}, Pred {location}<br>ID 2: Gold {host}, Pred {host, value}<br>ID 3: Gold {}, Pred {amenities}", answer: "4/7 (hoặc ~0.57)", explanation: "TP=2, FP=2, FN=1; F1=4/(4+2+1)=4/7.", skill: "H5, H6, H7", difficulty: "Vận dụng" },
+            { id: 15, code: "B11-TL-005", batch: 1, type: "tl", question: "Quy tắc gắn cờ nếu sentiment=\"positive\" và aspects_negative không rỗng, hoặc sentiment=\"negative\" và aspects_positive không rỗng. Với ba đầu ra hợp lệ dưới đây, có bao nhiêu ID bị gắn cờ?<br>ID 1: positive, positive=[location], negative=[noise]<br>ID 2: mixed, positive=[host], negative=[value]<br>ID 3: negative, positive=[location], negative=[amenities]", answer: "2", explanation: "ID 1 và 3 vi phạm; mixed có cả khen/chê không vi phạm quy tắc này.", skill: "I4, I5", difficulty: "Vận dụng" },
+
+            // Đợt 2
+            { id: 16, code: "B11-TN-011", batch: 2, type: "tn", question: "Bảng nhãn đã được kiểm tra nội dung:<br>ID 1: mixed, positive=[location], negative=[noise]<br>ID 2: positive, positive=[noise, host], negative=[]<br>ID 3: negative, positive=[], negative=[noise, amenities]<br>Có bao nhiêu review nhắc noise và bao nhiêu review chê noise, theo đúng thứ tự?", options: ["1 và 2.", "2 và 2.", "3 và 3.", "3 and 2 (3 và 2)."], answer: 3, explanation: "Noise có trong hợp hai danh sách của cả ba review; chỉ có trong danh sách chê ở ID 1, 3.", skill: "A3, A4, A5", difficulty: "Cơ bản" },
+            { id: 17, code: "B11-TN-012", batch: 2, type: "tn", question: "Dự đoán danh sách in ra. Bộ dấu hiệu chỉ gồm hai ngôn ngữ dưới đây.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>import re\nH = {\"en\":r\"\\b(the|was)\\b\", \"es\":r\"\\b(el|muy)\\b\"}\ndef lang(t):\n    c = {k:len(re.findall(p,t,re.I)) for k,p in H.items()}\n    b = max(c, key=c.get)\n    return b if c[b] > 0 else \"und\"\nprint([lang(t) for t in [\"Muy limpio\", \"👍\", \"\"]])</code></pre>", options: ["['es', 'en', 'en']", "['en', 'und', 'und']", "['es', 'positive', 'mixed']", "['es', 'und', 'und']"], answer: 3, explanation: "Muy khớp es một lần; emoji và chuỗi rỗng không khớp dấu hiệu nào.", skill: "B3, B5", difficulty: "Vận dụng" },
+            { id: 18, code: "B11-TN-013", batch: 2, type: "tn", question: "Nhóm lọc comments dài ≥ 50 ký tự rồi chạy sample(n=100, random_state=42). Nhóm chạy lại với cùng dữ liệu, cùng thứ tự hàng và cùng môi trường. Nhận định nào được bảo đảm bởi random_state trong tình huống này?", options: ["Lấy lại cùng mẫu; chưa bảo đảm mẫu đại diện cho toàn bộ review.", "Lấy mẫu khác và loại hẳn sai lệch do đã lọc review ngắn trước đó.", "Lấy lại cùng mẫu và giữ đúng mọi tỷ lệ ngôn ngữ của dữ liệu gốc.", "Lấy lại cùng mẫu và chứng minh mọi review ngắn đều không có ích."], answer: 0, explanation: "Cố định nguồn ngẫu nhiên giúp tái lập trên dữ liệu không đổi; lọc độ dài đã thay đổi tập được phép xuất hiện.", skill: "C3, C4, H10", difficulty: "Phân tích" },
+            { id: 19, code: "B11-TN-014", batch: 2, type: "tn", question: "Cho ReviewInfo là model Pydantic đã khai báo đủ trường. raw là chuỗi JSON hợp schema. Chuỗi thao tác nào lần lượt tạo schema gửi API, validate raw thành đối tượng, rồi lấy dict để lập bảng?", options: ["json.loads(raw) → pd.DataFrame(raw) → ReviewInfo.model_json_schema().", "ReviewInfo.model_json_schema() → ReviewInfo.model_validate_json(raw) → info.model_dump().", "ReviewInfo.model_dump() → ReviewInfo.model_json_schema(raw) → info.model_validate_json().", "ReviewInfo.model_validate_json(raw) → info.model_dump() → ReviewInfo.model_json_schema()."], answer: 1, explanation: "model_json_schema mô tả cấu trúc; model_validate_json kiểm tra và tạo info; model_dump xuất dict.", skill: "D3, D5", difficulty: "Cơ bản" },
+            { id: 20, code: "B11-TN-015", batch: 2, type: "tn", question: "Đây là thân hàm extract (các tên đã được định nghĩa):<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>key = str(rid)\nif key not in cache:\n    if not HAS_KEY:\n        return None\n    for attempt in range(2):\n        try:\n            out, tin, tout = call_llm_raw(text)\n            cache[key] = {\"output\":out, \"in_tok\":tin, \"out_tok\":tout}\n            time.sleep(4)\n            break\n        except Exception:\n            if attempt == 0:\n                time.sleep(20)\n    else:\n        return None\ntry:\n    return ReviewInfo.model_validate_json(cache[key][\"output\"])\nexcept Exception:\n    return None</code></pre>Cache miss, HAS_KEY=True. call_llm_raw lỗi tạm thời lần đầu, thành công lần hai và trả JSON hợp schema. Bỏ qua thời gian bản thân API/validation. Số lời gọi API và tổng thời gian sleep là gì?", options: ["1 lời gọi, 4 giây.", "2 lời gọi, 24 giây.", "2 lời gọi, 20 giây.", "2 lời gọi, 8 giây."], answer: 1, explanation: "Lượt lỗi đầu chờ 20; lượt thành công lưu cache rồi chờ 4. Validation chỉ chạy sau vòng lặp.", skill: "E1, E6, E7", difficulty: "Phân tích" },
+            { id: 21, code: "B11-TN-016", batch: 2, type: "tn", question: "Dòng cuối in ra gì? value_counts() mặc định bỏ giá trị thiếu.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>full = pd.DataFrame({\"aspects_negative\":[[\"noise\",\"host\"],[],[\"noise\"]}],\n                    index=[1,2,3])\nex = full.explode(\"aspects_negative\")\nprint(len(full), len(ex), ex[\"aspects_negative\"].value_counts().sum())</code></pre>", options: ["3 3 3", "3 4 4", "4 4 3", "3 4 3"], answer: 3, explanation: "ID 1 tạo 2 hàng; ID 2 giữ 1 hàng với NaN; ID 3 tạo 1 hàng. Có 3 lượt khía cạnh không thiếu.", skill: "F5, F6", difficulty: "Vận dụng" },
+            { id: 22, code: "B11-TN-017", batch: 2, type: "tn", question: "Quy ước gold: có khen và chê → mixed; “not a bad place” được coi là khen nhẹ. Review: “Location was great, wifi was spotty. But overall not a bad place.” Gold sentiment=mixed. Đầu ra hợp schema có sentiment=negative, khen=[location], chê=[amenities], language=en. Lỗi cần phân tích là gì?", options: ["Không có lỗi vì language và mọi nhãn đều hợp schema.", "Lỗi JSON vì negative không thuộc nhãn cảm xúc được phép.", "Sai cảm xúc; cần xem cách mô hình xử lý lời khen và phủ định.", "Lỗi schema vì review có cả location và amenities."], answer: 2, explanation: "Theo gold đã cung cấp, negative sai; đây là kiểu lỗi phủ định được lab phân tích, không phải lỗi schema.", skill: "G4, G5, D8", difficulty: "Phân tích" },
+            { id: 23, code: "B11-TN-018", batch: 2, type: "tn", question: "Cho gold T={location, host, noise}, dự đoán P={location, value}. Bộ (TP, FP, FN) nào đúng? Dùng TP=|P∩T|, FP=|P−T|, FN=|T−P|.", options: ["(1, 2, 1).", "(1, 1, 2).", "(2, 1, 1).", "(1, 2, 3)."], answer: 1, explanation: "Giao={location}; thêm sai={value}; thiếu={host,noise}.", skill: "H5", difficulty: "Vận dụng" },
+            { id: 24, code: "B11-TN-019", batch: 2, type: "tn", question: "Đoạn hậu kiểm này thêm bao nhiêu phần tử vào flags?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>rows = [(1,\"\", \"positive\",0),\n        (2,\"Nice room\", \"positive\",2),\n        (3,\"\", \"mixed\",0)]\nflags = []\nfor rid,text,sent,n in rows:\n    if len(text.strip()) == 0 and (n > 0 or sent != \"mixed\"):\n        flags.append(rid)\n    if len(text.split()) <= 4 and n >= 2:\n        flags.append(rid)\nprint(len(flags))</code></pre>", options: ["2", "3", "1", "0"], answer: 0, explanation: "ID 1 bị quy tắc rỗng; ID 2 bị quy tắc <=4 từ và >=2 khía cạnh; ID 3 không vi phạm.", skill: "I1, I2", difficulty: "Vận dụng" },
+            { id: 25, code: "B11-TN-020", batch: 2, type: "tn", question: "Ba comments có độ dài lần lượt 7, 7, 7 ký tự. Theo đúng code lab, tong_token = sum(length // 4 cho từng comment). Giá trị nào đúng và có thể kết luận gì?", options: ["3 token ước lượng dữ liệu; chưa bao gồm prompt.", "5 token ước lượng dữ liệu; chưa bao gồm prompt.", "21 token chính xác của toàn bộ lời gọi API.", "3 token chính xác của toàn bộ lời gọi API."], answer: 0, explanation: "7//4=1 ở mỗi comment, tổng 3; quy tắc ký tự/4 chỉ gần đúng.", skill: "J1, J2", difficulty: "Vận dụng" },
+            { id: 26, code: "B11-TL-006", batch: 2, type: "tl", question: "Nhóm lưu API_KEY=\"khóa-thật\" trực tiếp trong notebook để người chấm chạy lại. Nêu một cách sửa phù hợp bài học, vẫn cho phép chạy phần đã cache khi không có key. Trả lời một câu.", answer: "Đọc key từ biến môi trường (như os.environ) hoặc Secrets, và cho phép chế độ không có key đọc cache có sẵn.", explanation: "Key dùng để xác thực lời gọi thật, không cần cho việc đọc kết quả cục bộ đã cache.", skill: "D2, E3, E9", difficulty: "Cơ bản" },
+            { id: 27, code: "B11-TL-007", batch: 2, type: "tl", question: "df chỉ có cột comments, index review_id theo thứ tự [3,1,2]; labels chỉ có các cột nhãn, index review_id theo thứ tự [1,3], mỗi ID duy nhất. Viết một dòng tạo full để giữ mọi review và ghép nhãn đúng ID.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>full = ...</code></pre>", answer: "full = df.join(labels, how=\"left\")", explanation: "join theo index ghép ID dù thứ tự khác; ID 2 có nhãn thiếu. Không gán bằng vị trí.", skill: "F3, F4", difficulty: "Vận dụng" },
+            { id: 28, code: "B11-TL-008", batch: 2, type: "tl", question: "Bốn đầu ra dưới đây đều hợp schema. Tính accuracy ngôn ngữ trên cả bốn, chỉ ghi một số trong [0,1].<br>ID 1: en / en<br>ID 2: es / pt<br>ID 3: und / und<br>ID 4: fr / fr", answer: "0.75 (hoặc 3/4)", explanation: "Ba ID 1, 3, 4 đúng; 3/4=0,75. und đúng gold vẫn tính là đúng.", skill: "H1, H2, G4", difficulty: "Cơ bản" },
+            { id: 29, code: "B11-TL-009", batch: 2, type: "tl", question: "Dùng schema với 6 khía cạnh enum. Hai review chỉ khen vị trí, không nhắc độ sạch. Cả hai JSON đủ trường. A gán aspects_positive=[\"cleanliness\"]; B gán aspects_positive=[\"photos\"]. Chỉ xét hai lỗi này: schema loại A, B hay cả hai? Trả lời một câu, nêu vì sao.", answer: "Schema chỉ loại B vì photos ngoài enum; A qua schema nhưng bịa cleanliness không có bằng chứng.", explanation: "Danh mục Literal ràng buộc tên nhãn, không tự đối chiếu nội dung review.", skill: "D6, D8, G4, G6", difficulty: "Phân tích" },
+            { id: 30, code: "B11-TL-010", batch: 2, type: "tl", question: "extract ưu tiên cache theo str(review_id), chỉ gọi API khi cache miss. Nhóm sửa prompt để xử lý mixed nhưng chạy lại vẫn nhận nhãn cũ. Có key và có gold đã chốt. Nêu cách làm để đo tác động của prompt mới; trả lời một câu.", answer: "Xóa hoặc vô hiệu hóa cache liên quan để buộc gọi API với prompt mới, sau đó chạy lại và so sánh điểm trên cùng bộ gold.", explanation: "Cache hit bỏ qua lời gọi nên sửa prompt đơn thuần chưa sinh dự đoán mới; không sửa gold theo kết quả mong muốn.", skill: "E10, J7, J9", difficulty: "Phân tích" },
+
+            // Đợt 3
+            { id: 31, code: "B11-TN-021", batch: 3, type: "tn", question: "Đã có nhãn được người gán xác nhận: sentiment=negative, aspects_positive=[location], aspects_negative=[noise, cleanliness]. Cần bảng “khách chê gì”, không đếm lời khen. Dữ liệu nào được đưa vào bộ đếm cho review này?", options: ["location, noise và cleanliness.", "Chỉ negative.", "Chỉ location.", "noise và cleanliness."], answer: 3, explanation: "Cảm xúc tổng thể không thay thế danh sách khía cạnh bị chê; dùng aspects_negative.", skill: "A3, A4, A5, F5", difficulty: "Cơ bản" },
+            { id: 32, code: "B11-TN-022", batch: 3, type: "tn", question: "Bộ từ khóa dưới đây trả về gì? Không suy thêm ngữ nghĩa.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>import re\nK = {\"cleanliness\":r\"clean|dust\", \"noise\":r\"loud|quiet\"}\ntext = \"Not clean, but quiet.\"\nprint([a for a,p in K.items() if re.search(p,text,re.I)])</code></pre>", options: ["['cleanliness', 'noise']", "['noise']", "['cleanliness']", "['negative', 'positive']"], answer: 0, explanation: "clean và quiet cùng khớp; hàm chỉ xác định khía cạnh được nhắc đến.", skill: "B1, B4", difficulty: "Vận dụng" },
+            { id: 33, code: "B11-TN-023", batch: 3, type: "tn", question: "Để minh họa cách lấy review mới nhất, bài này lấy 2 review dài ≥ 30 ký tự. Không có comments thiếu; date tăng theo ngày.<br>ID 1: 2026-01-01, len=70<br>ID 2: 2026-01-02, len=35<br>ID 3: 2026-01-03, len=29<br>ID 4: 2026-01-04, len=50<br>Code lọc độ dài trước, sau đó sort_values(\"date\").tail(2). Hai ID được chọn là gì?", options: ["2 và 4.", "1 và 2.", "1 và 4.", "3 và 4."], answer: 0, explanation: "Tập đủ dài là 1,2,4; hai review mới nhất trong tập đó là 2,4. Đây không phải sample ngẫu nhiên.", skill: "C5, C6", difficulty: "Vận dụng" },
+            { id: 34, code: "B11-TN-024", batch: 3, type: "tn", question: "Phản hồi giả lập output_text là chuỗi: <code>{\"sentiment\":\"mixed\",\"aspects_positive\":[],\"aspects_negative\":[],\"language\":\"en\"}</code>. ReviewInfo đã có schema đúng. Sau info=ReviewInfo.model_validate_json(output_text) và d=info.model_dump(), cặp kiểu nào đúng?", options: ["info là đối tượng ReviewInfo; d là dict.", "info là dict; d là chuỗi JSON.", "info là chuỗi JSON; d là DataFrame.", "info là DataFrame; d là schema."], answer: 0, explanation: "Validation tạo model; model_dump lấy dữ liệu dạng dict, chưa tạo DataFrame.", skill: "D3, D5", difficulty: "Cơ bản" },
+            { id: 35, code: "B11-TN-025", batch: 3, type: "tn", question: "Dùng đúng thân hàm extract trong bài. Có key, cache ban đầu rỗng. API thành công ngay, nhưng JSON trả về thiếu language. Gọi extract hai lần liên tiếp cho cùng ID, không đổi cache. API không tự ném lỗi do schema; chỉ model_validate_json ném lỗi. Kết quả hai lần và tổng số lời gọi API là gì?", options: ["Cả hai lần trả None; tổng 1 lời gọi API.", "Lần đầu None, lần hai hợp lệ; tổng 2 lời gọi API.", "Cả hai lần trả None; tổng 4 lời gọi API.", "Cả hai lần hợp lệ; tổng 1 lời gọi API."], answer: 0, explanation: "JSON được lưu trước validation. Lỗi validation không xóa cache và không vào vòng retry; lần sau đọc lại cùng JSON lỗi.", skill: "E1, E4, E7, E8", difficulty: "Phân tích" },
+            { id: 36, code: "B11-TN-026", batch: 3, type: "tn", question: "Dùng as_set như dưới. Với ID 2, tập khía cạnh dự đoán là gì sau left join?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>df = pd.DataFrame({\"comments\":[\"A\",\"B\",\"C\"]}, index=[1,2,3])\nlabels = pd.DataFrame({\"aspects_positive\":[[\"host\"],[\"location\"]],\n                       \"aspects_negative\":[[],[\"noise\"]]}, index=[1,3])\nfull = df.join(labels, how=\"left\")\ndef as_set(x):\n    return set(x) if isinstance(x,list) else set()\np = as_set(full.loc[2,\"aspects_positive\"]) | as_set(full.loc[2,\"aspects_negative\"])</code></pre>", options: ["Không còn ID 2 trong full.", "Tập rỗng.", "Tập {location, noise}.", "Tập {host}."], answer: 1, explanation: "Left join giữ ID 2, hai ô nhãn là giá trị thiếu; as_set biến mỗi ô không phải list thành tập rỗng.", skill: "F3, F4, H5", difficulty: "Vận dụng" },
+            { id: 37, code: "B11-TN-027", batch: 3, type: "tn", question: "Hai thí nghiệm có dữ liệu riêng: lecture có 24 review, gold cho 23 review; review rỗng thứ 24 dành hậu kiểm. Lab có 10 review mô phỏng đầu ra, 8 hợp schema và 5/8 đúng cảm xúc. Muốn báo cáo lại kết quả cảm xúc của lab trên đầu ra hợp lệ, dòng nào đúng?", options: ["Lab: 8/10 vì schema đã loại hai review lỗi.", "Lab: 5/8 = 62,5%, không dùng mẫu số của lecture.", "Lab: 5/24 vì lecture xử lý 24 review.", "Lab: 5/23 vì gold lecture có 23 review."], answer: 1, explanation: "Các con số 24/23 thuộc lecture, 10/8 thuộc lab; mẫu số phụ thuộc thí nghiệm và tập chấm.", skill: "G8, H2, H3", difficulty: "Vận dụng" },
+            { id: 38, code: "B11-TN-028", batch: 3, type: "tn", question: "Hai review có tập khía cạnh như sau:<br>ID 1: Gold {host}, Pred {host}<br>ID 2: Gold {location, noise, value}, Pred {}<br>Dùng công thức micro-F1=2TP/(2TP+FP+FN). Kết quả nào đúng?", options: ["0,25.", "1,0.", "0,5.", "0,4."], answer: 3, explanation: "Cộng toàn bộ: TP=1, FP=0, FN=3, nên 2/(2+0+3)=0,4.", skill: "H5, H6, H7", difficulty: "Phân tích" },
+            { id: 39, code: "B11-TN-029", batch: 3, type: "tn", question: "Hướng dẫn của một nhóm cho phép sentiment=positive khi lời khen chiếm ưu thế dù còn một ý chê nhỏ. Gold và LLM cùng gán positive, khen=[location, host], chê=[noise]. Quy tắc lab vẫn gắn cờ positive có danh sách chê. Nên xử lý thế nào?", options: ["Đổi gold thành mixed ngay để mọi cờ đều thành lỗi thật.", "Xóa noise khỏi đầu ra vì mọi ý chê đều bị cấm khi positive.", "Đọc lại theo hướng dẫn đã chốt; cờ này chưa chứng minh nhãn sai.", "Bỏ toàn bộ đánh giá nhãn tay vì hậu kiểm đã đủ tin cậy."], answer: 2, explanation: "Cờ phụ thuộc quy ước. Ở tình huống đã cho, đầu ra có thể đúng gold và vẫn bị cảnh báo.", skill: "G1, I4, I5, I7, I9, J9", difficulty: "Phân tích" },
+            { id: 40, code: "B11-TN-030", batch: 3, type: "tn", question: "Giả định đề: hạn mức miễn phí 1.000 lời gọi/ngày, không retry, mọi review cần đúng một lời gọi. Cần xử lý 2.400 review, trong đó 900 review đã có cache hợp lệ. Chỉ xét hạn mức theo ngày. Số ngày tối thiểu phát sinh lời gọi mới là bao nhiêu?", options: ["0 ngày.", "1 ngày.", "2 ngày.", "3 ngày."], answer: 2, explanation: "Còn 1.500 lời gọi, cần 2 ngày theo giả định. Có thể vẫn phải chờ giữa các lời gọi theo hạn mức/phút.", skill: "E4, J6", difficulty: "Vận dụng" },
+            { id: 41, code: "B11-TL-011", batch: 3, type: "tl", question: "Điền một dòng theo đúng phép ước lượng của lab. mau[\"comments\"] không thiếu; không cộng prompt ở câu này.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>tong_token = ...  # cộng len // 4 của từng comment</code></pre>", answer: "tong_token = int((mau[\"comments\"].str.len() // 4).sum())", explanation: "Phép // thực hiện trên từng độ dài trước .sum(); chia tổng sau khi cộng có thể cho số khác.", skill: "J1, J2", difficulty: "Cơ bản" },
+            { id: 42, code: "B11-TL-012", batch: 3, type: "tl", question: "Dùng thân hàm extract với 2 lượt thử, sleep(20) khi lỗi lần đầu và sleep(4) khi thành công. Cache miss, có key; cả hai lần call_llm_raw đều ném lỗi trước khi trả kết quả. Bỏ qua thời gian API và print. Tổng thời gian sleep là bao nhiêu giây? Chỉ ghi một số.", answer: "20", explanation: "Chỉ lượt lỗi đầu sleep(20); lượt lỗi cuối không chờ, for-else trả None; không tới sleep(4).", skill: "E6, E7", difficulty: "Vận dụng" },
+            { id: 43, code: "B11-TL-013", batch: 3, type: "tl", question: "Đếm số lượt chê noise theo đúng code.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>full = pd.DataFrame({\"aspects_negative\":[[\"noise\",\"host\"],[\"amenities\"],\n                                         [\"noise\"],[]]})\nc = full.explode(\"aspects_negative\")[\"aspects_negative\"].value_counts()\nket_qua = c[\"noise\"]</code></pre>", answer: "2", explanation: "Noise xuất hiện trong danh sách chê của hai review; danh sách rỗng không đóng góp nhãn.", skill: "F5, F6", difficulty: "Vận dụng" },
+            { id: 44, code: "B11-TL-014", batch: 3, type: "tl", question: "Nhóm gặp review “.” và review trộn hai ngôn ngữ; hai người gán nhãn không thống nhất. Chưa có quy tắc cho hai trường hợp này. Nêu cách làm trước khi dùng gold để so sánh baseline với LLM; trả lời một câu.", answer: "Thống nhất quy định gán nhãn cho rỗng và đa ngôn ngữ, gán độc lập rồi thảo luận để chốt gold chung trước khi so sánh.", explanation: "Lab dùng mixed/[]/und cho rỗng/vô nghĩa; cách gán đa ngôn ngữ cần được nhóm định nghĩa nhất quán.", skill: "G1, G2, G3, B6", difficulty: "Vận dụng" },
+            { id: 45, code: "B11-TL-015", batch: 3, type: "tl", question: "Văn bản “Khu này thiếu an toàn” chưa được danh mục hiện tại ghi nhận. Có key, nhóm quyết định thêm nhãn safety theo bài tập lecture. Ngoài thêm từ safety vào prompt, nêu các thành phần phải cập nhật để so sánh lại đúng; trả lời một câu.", answer: "Cập nhật Pydantic schema/Literal, bổ sung từ khóa vào baseline, làm sạch hoặc xóa cache cũ, cập nhật gold theo nhãn mới và chạy lại toàn bộ.", explanation: "Đổi tên khía cạnh tác động toàn pipeline; cập nhật gold vì mở rộng mục tiêu gán nhãn.", skill: "J8, J9, E10", difficulty: "Phân tích" },
+
+            // Đợt 4
+            { id: 46, code: "B11-TN-031", batch: 4, type: "tn", question: "Quy ước câu này: có cả lời khen và lời chê thì mixed; không tự thêm khía cạnh. Review “Vị trí tốt, phòng sạch nhưng wifi hỏng” có ba khía cạnh tương ứng location, cleanliness, amenities. Dòng nhãn nào đúng?", options: ["negative; khen=[]; chê=[location, cleanliness, amenities].", "mixed; khen=[location]; chê=[cleanliness, amenities].", "mixed; khen=[location, cleanliness]; chê=[amenities].", "positive; khen=[location, cleanliness, amenities]; chê=[]."], answer: 2, explanation: "Cảm xúc theo quy ước là mixed; hai danh sách giữ riêng chiều của từng ý.", skill: "A3, A4, A5, G2", difficulty: "Vận dụng" },
+            { id: 47, code: "B11-TN-032", batch: 4, type: "tn", question: "Đoạn code in danh sách nào?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>import re\ndef sent(t):\n    p = len(re.findall(r\"great|quiet\", t, re.I))\n    n = len(re.findall(r\"dirty|loud\", t, re.I))\n    return \"positive\" if p > n else \"negative\" if n > p else \"mixed\"\nprint([sent(t) for t in [\"\", \"👍\", \"great loud\", \"excellent\"]])</code></pre>", options: ["['und', 'und', 'mixed', 'und']", "['mixed', 'positive', 'mixed', 'positive']", "['negative', 'negative', 'negative', 'negative']", "['mixed', 'mixed', 'mixed', 'mixed']"], answer: 3, explanation: "Ba chuỗi rỗng/emoji/excellent đều có p=n=0; great loud có p=n=1; tất cả trả mixed.", skill: "B2, B5", difficulty: "Vận dụng" },
+            { id: 48, code: "B11-TN-033", batch: 4, type: "tn", question: "Một bạn điền mau=du_dai.head(100). Cả ba assert sau đều qua; du_dai có hơn 100 dòng:<br>assert len(du_dai) == 535719<br>assert len(mau) == 100<br>assert mau[\"comments\"].str.len().min() >= 50<br>Yêu cầu TODO còn nói phải lấy ngẫu nhiên với random_state=42. Kết luận nào đúng?", options: ["Mọi assert qua nên head(100) tương đương sample với seed 42.", "Mẫu head(100) chắc chắn không có đủ 100 review dài 50 ký tự.", "head(100) chắc chắn đại diện hơn sample vì giữ đúng thứ tự gốc.", "Assert chưa kiểm tra tính ngẫu nhiên; head(100) vẫn chưa đáp ứng TODO."], answer: 3, explanation: "Các assert chỉ ràng buộc số lượng và độ dài; phải đọc TODO để điền sample(n=100, random_state=42).", skill: "C2, C3", difficulty: "Phân tích" },
+            { id: 49, code: "B11-TN-034", batch: 4, type: "tn", question: "Dùng schema không có validator bổ sung với 6 khía cạnh enum. Với JSON sau, phát biểu nào đúng?<br><code>{\"sentiment\":\"mixed\",\"aspects_positive\":[\"noise\",\"noise\"],\"aspects_negative\":[\"noise\"],\"language\":\"xx-custom\"}</code>", options: ["Schema từ chối vì language chỉ nhận mã ISO hợp lệ.", "Schema chấp nhận; nó chưa cấm lặp nhãn, hai chiều cùng khía cạnh hay chuỗi mã tự đặt.", "Schema từ chối vì hai danh sách không được có phần tử chung.", "Schema từ chối vì list[Aspect] tự bảo đảm phần tử là duy nhất."], answer: 1, explanation: "Các phần tử noise thuộc Literal, hai trường là list và language là str. Những ràng buộc còn lại không có trong schema.", skill: "D4, D9", difficulty: "Phân tích" },
+            { id: 50, code: "B11-TN-035", batch: 4, type: "tn", question: "Pipeline ở chế độ --skip-llm, không có API key. Cache file chỉ có \"1\" và \"2\". Cần chạy review 1,2,3; tất cả cache sẵn hợp schema. Theo cơ chế lecture, kết quả nào đúng?", options: ["Cả ba đều có nhãn vì --skip-llm tự tạo JSON cho phần thiếu.", "ID 3 nhận mixed, [], [], und như một dự đoán thật.", "Cả ba đều mất nhãn vì không có API key.", "ID 1,2 đọc được nhãn; ID 3 không có kết quả và cần được ghi nhận."], answer: 3, explanation: "Cache miss không key trả None. Bài mở rộng safety cho phép người học tự viết JSON minh họa.", skill: "E3, E8, E9", difficulty: "Vận dụng" },
+            { id: 51, code: "B11-TN-036", batch: 4, type: "tn", question: "Ô hàng en, cột mixed của bảng chéo có giá trị bao nhiêu?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>full = pd.DataFrame({\"language\":[\"en\",\"es\",\"en\",\"en\",\"es\"],\n                     \"sentiment\":[\"mixed\",\"positive\",\"negative\",\"mixed\",\"mixed\"]})\nt = pd.crosstab(full[\"language\"], full[\"sentiment\"])\nket_qua = t.loc[\"en\",\"mixed\"]</code></pre>", options: ["3", "2", "1", "5"], answer: 1, explanation: "Hai review en+mixed nằm ở hàng vị trí 0 và 3.", skill: "F7", difficulty: "Cơ bản" },
+            { id: 52, code: "B11-TN-037", batch: 4, type: "tn", question: "Chạy đúng code phân tích lỗi sau, không bổ sung kiểm tra trong đầu:<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>gold = {1:{\"aspects\":[\"location\",\"noise\"]}}\npred = {1:{\"location\"}}\nerrors = []\nfor rid,g in gold.items():\n    extra = pred[rid] - set(g[\"aspects\"])\n    if extra:\n        errors.append(rid)\nprint(errors)</code></pre>Nhận xét nào đúng?", options: ["In []; code chỉ tìm nhãn bịa thêm nên bỏ sót lỗi thiếu noise.", "In []; do dự đoán đã khớp toàn bộ gold.", "In [1]; code phát hiện mọi sai khác giữa hai tập.", "Báo lỗi vì tập dự đoán ngắn hơn danh sách gold."], answer: 0, explanation: "P−T rỗng nhưng T−P={noise}; code không kiểm FN nên không ghi lỗi thiếu nhãn.", skill: "G6, H5, I9", difficulty: "Phân tích" },
+            { id: 53, code: "B11-TN-038", batch: 4, type: "tn", question: "Gold khía cạnh nhận diện là {location, noise}. Nội dung đã xác nhận: khen location, chê noise. LLM lại khen noise, chê location. Code lecture chấm P=set(khen)|set(chê), dùng micro-F1. Chỉ có review này. Điểm và cách diễn giải nào đúng?", options: ["F1=0 vì hai khía cạnh đều bị đảo chiều.", "F1=0,5 vì chỉ một danh sách được tính.", "F1=1; nhận diện đủ khía cạnh nhưng chưa chứng minh gán đúng chiều khen/chê.", "F1=1 nên cả cảm xúc và chiều khen/chê chắc chắn đúng."], answer: 2, explanation: "P=T={location,noise}, TP=2, FP=FN=0. Việc đảo chiều không làm đổi hợp tập.", skill: "H5, H6, H8, A4", difficulty: "Phân tích" },
+            { id: 54, code: "B11-TN-039", batch: 4, type: "tn", question: "Điền một điều kiện vào TODO để gắn cờ khi có pattern nhưng review không khớp bằng chứng. re đã import; warnings là list.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>for aspect in set(r.aspects_positive) | set(r.aspects_negative):\n    pat = ASPECT_KEYWORDS.get(aspect, \"\")\n    if ____:\n        warnings.append(aspect)</code></pre>", options: ["aspect not in text", "not pat and re.search(pat, text, flags=re.I) is None", "pat and re.search(pat, text, flags=re.I) is not None", "pat and re.search(pat, text, flags=re.I) is None"], answer: 3, explanation: "Chỉ kiểm khi có pat và không có match; đây là cảnh báo cần đọc lại, không tự xóa nhãn.", skill: "I3, I5, I7", difficulty: "Vận dụng" },
+            { id: 55, code: "B11-TN-040", batch: 4, type: "tn", question: "Giả định đề: 3 review, mỗi review 80 ký tự; quy tắc gần đúng 4 ký tự/token. Mỗi lời gọi thêm 100 input token hướng dẫn; mỗi review gọi riêng đúng một lần. Bỏ output ở câu này. Ước lượng tổng input token là bao nhiêu?", options: ["360", "160", "60", "540"], answer: 0, explanation: "Mỗi review 80/4=20 token dữ liệu, cộng 100 prompt; 3×120=360 input token ước lượng.", skill: "J1, J2", difficulty: "Vận dụng" },
+            { id: 56, code: "B11-TL-016", batch: 4, type: "tl", question: "Quy ước: có cả khen/chê thì mixed. Review: “Chủ nhà tốt nhưng phòng bẩn và rất ồn”. Khía cạnh host, cleanliness, noise tương ứng ba ý đó. Ghi một dòng gồm sentiment; danh sách khen; danh sách chê, không thêm khía cạnh.", answer: "mixed; [host]; [cleanliness, noise]", explanation: "Khen chủ nhà; chê vệ sinh và tiếng ồn; không gộp tất cả thành tiêu cực.", skill: "A3, A4, A5, G2", difficulty: "Vận dụng" },
+            { id: 57, code: "B11-TL-017", batch: 4, type: "tl", question: "Nhóm chỉ lấy 100 review dài ≥ 50 ký tự, đo LLM đạt accuracy 90% trên mẫu đó rồi viết “LLM đúng 90% với mọi review, kể cả review rất ngắn”. Sửa kết luận bằng một câu.", answer: "Độ chính xác 90% chỉ đúng trên tập mẫu review dài ≥ 50 ký tự đã chọn, không được suy rộng cho mọi review hay review rất ngắn.", explanation: "Ngưỡng lọc giới hạn đối tượng được quan sát; câu ngắn chưa được đo ở đây.", skill: "C4, H10", difficulty: "Vận dụng" },
+            { id: 58, code: "B11-TL-018", batch: 4, type: "tl", question: "raw là chuỗi JSON do API trả về; ReviewInfo đã khai báo schema. Dòng dưới chỉ parse JSON, chưa validate. Thay đúng một dòng để info là đối tượng đã qua schema.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>info = json.loads(raw)</code></pre>", answer: "info = ReviewInfo.model_validate_json(raw)", explanation: "json.loads tạo dict theo cú pháp JSON, không kiểm enum hay trường bắt buộc của ReviewInfo.", skill: "D3, D5, D7", difficulty: "Cơ bản" },
+            { id: 59, code: "B11-TL-019", batch: 4, type: "tl", question: "Hàm sau được áp dụng cho 3 review mà cả gold và dự đoán đều là tập rỗng. Giá trị trả về là gì? Chỉ ghi một số.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>def score(pred, gold):\n    tp = fp = fn = 0\n    for rid,t in gold.items():\n        p = pred[rid]\n        tp += len(p & t)\n        fp += len(p - t)\n        fn += len(t - p)\n    return 2*tp/(2*tp+fp+fn) if tp else 0.0</code></pre>", answer: "0.0", explanation: "TP=0 nên nhánh else được chọn, không thực hiện phép chia 0/0; không tự đổi quy ước thành 1.", skill: "H9", difficulty: "Cơ bản" },
+            { id: 60, code: "B11-TL-020", batch: 4, type: "tl", question: "Cache có 3 kết quả hợp lệ với in_tok=[170,180,190], out_tok=[30,40,50]. Mọi review cần chạy đều có trong cache. Chạy lại extract theo cơ chế ưu tiên cache, không xóa gì. Tổng token mới phát sinh do lời gọi API trong lần chạy lại là bao nhiêu? Chỉ ghi một số.", answer: "0", explanation: "540 input và 120 output trong cache là số đã ghi từ trước; không có lời gọi mới nên không phát sinh token mới.", skill: "E4, J5", difficulty: "Vận dụng" },
+
+            // Đợt 5
+            { id: 61, code: "B11-TN-041", batch: 5, type: "tn", question: "Bộ từ khóa chỉ phát hiện sự xuất hiện. Đoạn code trả 2/3. Diễn giải nào đúng với chính phép tính?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>comments = pd.Series([\"quiet room\", \"too loud\", \"good host\"])\nhas_noise = comments.str.contains(r\"quiet|loud\", case=False, regex=True)\nratio = has_noise.mean()</code></pre>", options: ["2/3 review có từ khóa về noise; chưa phải tỷ lệ review phàn nàn về noise.", "2/3 mọi review trong toàn thành phố đều chê noise.", "1/3 review có noise vì quiet là lời khen nên regex bỏ qua.", "2/3 review chê noise vì cả quiet và loud đều là phàn nàn."], answer: 0, explanation: "quiet và loud đều khớp regex, nhưng quiet có thể là lời khen.", skill: "A3, A4, B1, B4, H10", difficulty: "Vận dụng" },
+            { id: 62, code: "B11-TN-042", batch: 5, type: "tn", question: "Đoạn code in gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>import re\nt = \"great great dirty\"\np = len(re.findall(r\"great|quiet\",t,re.I))\nn = len(re.findall(r\"dirty|loud\",t,re.I))\ns = \"positive\" if p>n else \"negative\" if n>p else \"mixed\"\nprint(p,n,s)</code></pre>", options: ["1 2 negative", "2 1 mixed", "2 1 positive", "1 1 mixed"], answer: 2, explanation: "findall đếm cả hai lần great; code so số lượt, không tự áp quy tắc mixed theo ý nghĩa.", skill: "B2, G2", difficulty: "Vận dụng" },
+            { id: 63, code: "B11-TN-043", batch: 5, type: "tn", question: "Nhóm A lọc review ≥ 50 ký tự, nhóm B lọc review ≥ 30 ký tự rồi lấy mới nhất. A và B có accuracy lần lượt 0,90 và 0,85. Hai nhóm dùng prompt khác nhau. Chỉ từ hai con số này, kết luận nào hợp lý?", options: ["Ngưỡng 50 chắc chắn gây giảm chất lượng vì loại nhiều review hơn.", "Prompt A chắc chắn tốt hơn trên mọi review vì 0,90 lớn hơn 0,85.", "Chưa tách được ảnh hưởng của prompt khỏi khác biệt tập chấm; cần đo hai prompt trên cùng gold.", "Prompt B chắc chắn tốt hơn vì có review ngắn nên phép đo luôn khó hơn."], answer: 2, explanation: "Hai thí nghiệm đổi đồng thời prompt và dữ liệu. Cần giữ cùng bộ đánh giá và chính sách xử lý lỗi.", skill: "C4, C5, C6, H4, J7", difficulty: "Phân tích" },
+            { id: 64, code: "B11-TN-044", batch: 5, type: "tn", question: "Một bạn vô tình viết schema khác bản gốc:<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>class R(BaseModel):\n    sentiment: Literal[\"positive\",\"mixed\",\"negative\"]\n    aspects_positive: list[str]\n    aspects_negative: list[str]\n    language: str</code></pre>Giả sử đã import BaseModel, Literal. JSON đủ trường, sentiment=\"mixed\", hai list chứa chuỗi \"photos\". Chỉ theo schema R, điều gì xảy ra?", options: ["Từ chối photos vì Literal của sentiment áp dụng cho mọi trường.", "Chấp nhận photos vì list[str] chưa giới hạn tên khía cạnh.", "Chấp nhận photos nên đã chứng minh review thực sự nhắc ảnh chụp.", "Từ chối photos vì tên trường aspects tự mang enum của bài học."], answer: 1, explanation: "Phải dùng list[Aspect] để ràng buộc nhãn khía cạnh; list[str] chỉ kiểm phần tử là chuỗi.", skill: "D4, D8, D9", difficulty: "Vận dụng" },
+            { id: 65, code: "B11-TN-045", batch: 5, type: "tn", question: "Phiên 1: cache={} rồi gọi thành công 3 review mới, chỉ lưu vào dict RAM. Không lưu file, không nhúng các kết quả mới vào notebook. Phiên 2: khởi động lại tiến trình, tạo cache={} và chạy lại đúng 3 review với key, mọi lời gọi thành công ngay. Tổng lời gọi API của hai phiên là bao nhiêu?", options: ["3", "9", "6", "0"], answer: 2, explanation: "Mỗi phiên bắt đầu cache rỗng nên gọi 3 lần; cần lưu và đọc file để tái dùng giữa các phiên.", skill: "E4, E5", difficulty: "Vận dụng" },
+            { id: 66, code: "B11-TN-046", batch: 5, type: "tn", question: "Schema không cấm nhãn lặp. Đếm đúng kết quả code sau; không tự khử trùng trước explode.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>d = pd.DataFrame({\"aspects_negative\":[[\"noise\",\"noise\"],[\"noise\"],[]]})\nc = d.explode(\"aspects_negative\")[\"aspects_negative\"].value_counts()\nprint(c[\"noise\"])</code></pre>", options: ["4", "3", "1", "2"], answer: 1, explanation: "explode giữ cả hai phần tử noise của review đầu; code đếm lượt nhãn, chưa bảo đảm một lượt/review.", skill: "D9, F5, F6", difficulty: "Vận dụng" },
+            { id: 67, code: "B11-TN-047", batch: 5, type: "tn", question: "Ba đầu ra hợp lệ có dữ kiện cố định:<br>ID 4: mixed / positive / khen=[location] / chê=[]<br>ID 9: mixed / negative / khen=[location] / chê=[noise, cleanliness]<br>ID 10: mixed / negative / khen=[location] / chê=[amenities]<br>Hậu kiểm chỉ gắn cờ positive có chê, hoặc negative có khen. ID sai cảm xúc nào bị bỏ sót?", options: ["ID 10.", "ID 9.", "Không ID nào.", "ID 4."], answer: 3, explanation: "ID 4 không có danh sách chê nên không vi phạm quy tắc, dù đã sai gold. Đây là ca bỏ sót ý chê trong lab.", skill: "G5, I4, I9", difficulty: "Phân tích" },
+            { id: 68, code: "B11-TN-048", batch: 5, type: "tn", question: "Đánh giá cảm xúc trên 4 đầu vào. “Đúng/sai” đều được đối chiếu cùng gold.<br>ID 1: Baseline đúng / LLM đúng, hợp lệ<br>ID 2: Baseline sai / LLM đúng, hợp lệ<br>ID 3: Baseline đúng / LLM sai, hợp lệ<br>ID 4: Baseline đúng / LLM lỗi schema<br>Quy ước lần so sánh này: chấm toàn bộ 4 đầu vào, lỗi schema tính là không đúng. Kết quả nào đúng?", options: ["Baseline 66,7%; LLM 66,7%.", "Baseline 75%; LLM 50%.", "Baseline 75%; LLM 66,7%.", "Baseline 75%; LLM 75%."], answer: 1, explanation: "Baseline đúng 3/4; LLM vừa hợp lệ vừa đúng 2/4. 3/4 = 75%, 2/4 = 50%.", skill: "B6, H2, H3, H4", difficulty: "Phân tích" },
+            { id: 69, code: "B11-TN-049", batch: 5, type: "tn", question: "Review “The host was kind” có gold sentiment=positive, language=en, khía cạnh={host}. Đầu ra hợp schema: positive, khen=[host], chê=[], language=es. Không có cờ rỗng, ngắn-nhiều khía cạnh hay mâu thuẫn khen/chê. Kết luận nào đúng?", options: ["Đầu ra vẫn sai ngôn ngữ; không bị các quy tắc trên gắn cờ không chứng minh đúng.", "Gold phải đổi thành es để thống nhất với model đã qua schema.", "Đầu ra sai schema vì es không phải tiếng Anh.", "Đầu ra đúng hoàn toàn vì mọi hậu kiểm đều qua."], answer: 0, explanation: "Schema không xác nhận ngôn ngữ thật, và các hậu kiểm đã nêu không kiểm language.", skill: "D8, G4, I8, I9", difficulty: "Phân tích" },
+            { id: 70, code: "B11-TN-050", batch: 5, type: "tn", question: "Giả định đề: mẫu đo trung bình 200 input token và 40 output token/review; giá lần lượt 0,25 và 1,50 USD/triệu token. Ước tính cho 10.000 review mới, không cache, không retry, giữ nguyên mức token trung bình. Chi phí và giới hạn diễn giải nào đúng?", options: ["0,60 USD; dùng đơn giá input cho cả hai loại token.", "1,10 USD; đây là giá chắc chắn dù độ dài và prompt thay đổi.", "11,00 USD; mẫu nhỏ nên phải nhân thêm hệ số 10 để bù sai số.", "1,10 USD; chỉ là ước tính dưới giả định mức token trung bình giữ nguyên."], answer: 3, explanation: "10.000×(200×0,25+40×1,50)/1e6=1,10. Dữ liệu/prompt/retry khác có thể làm chi phí đổi.", skill: "J3, J4", difficulty: "Vận dụng" },
+            { id: 71, code: "B11-TL-021", batch: 5, type: "tl", question: "ok chứa các đối tượng ReviewInfo hợp lệ, key là review_id. Code dưới làm ID thành cột. Sửa đúng một dòng để ID thành hàng, tên trường thành cột.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>labels = pd.DataFrame({rid:r.model_dump() for rid,r in ok.items()})</code></pre>", answer: "labels = pd.DataFrame({rid:r.model_dump() for rid,r in ok.items()}).T", explanation: "model_dump cung cấp dict trường; .T đổi hướng bảng theo đúng đoạn lecture.", skill: "F1, F2", difficulty: "Cơ bản" },
+            { id: 72, code: "B11-TL-022", batch: 5, type: "tl", question: "Cache JSON đọc lại có khóa chuỗi \"15\". rid=15 là số nguyên. Dòng key=rid làm kiểm tra cache miss. Thay đúng một dòng để tra cùng khóa theo lecture.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>key = rid</code></pre>", answer: "key = str(rid)", explanation: "Khóa int 15 khác chuỗi \"15\"; cần thống nhất kiểu khóa khi đọc/ghi cache.", skill: "E2", difficulty: "Cơ bản" },
+            { id: 73, code: "B11-TL-023", batch: 5, type: "tl", question: "hop_le là dict không rỗng, chỉ chứa các đối tượng đã validate; GOLD có gold cho từng ID của hop_le. Điền hai biểu thức để chấm cảm xúc chỉ trên hop_le.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>so_dung = sum(r.sentiment == GOLD[rid][\"sentiment\"] for rid,r in hop_le.items())\nacc = ____ / ____</code></pre>", answer: "so_dung / len(hop_le)", explanation: "Cả tử và mẫu cùng thuộc tập hợp lệ; dùng len(GOLD) có thể đổi sang tập đầu vào rộng hơn.", skill: "H1, H2, H3", difficulty: "Vận dụng" },
+            { id: 74, code: "B11-TL-024", batch: 5, type: "tl", question: "Dự đoán thiếu được chuyển thành tập rỗng như as_set trong lecture. Tính tổng FN trên ba review, chỉ ghi một số.<br>ID 1: Gold {host, noise}, Pred {host}<br>ID 2: Gold {cleanliness, location}, Pred {}<br>ID 3: Gold {}, Pred {value}", answer: "3", explanation: "FN lần lượt 1,2,0; value ở ID 3 là FP, không phải FN.", skill: "F4, H5", difficulty: "Vận dụng" },
+            { id: 75, code: "B11-TL-025", batch: 5, type: "tl", question: "Hai prompt v1 và v2 được chấm trên cùng 6 gold, cùng chính sách. Số nhãn cảm xúc đúng lần lượt 4 và 5; mọi đầu ra đều hợp lệ và mới được sinh đúng phiên bản prompt. Một bạn sửa gold của ca v2 sai thành dự đoán v2 để báo 100%. Nêu một câu nhận xét và mức accuracy v2 đúng trước khi sửa gold.", answer: "Không được đổi gold chỉ để tăng điểm; accuracy v2 đúng trước khi sửa gold là 5/6 (khoảng 83.33%).", explanation: "Sửa quy ước/gold chỉ có lý do gán nhãn độc lập và áp dụng nhất quán; không dùng mục tiêu tăng điểm.", skill: "G1, G7, J7, J9", difficulty: "Phân tích" },
+
+            // Đợt 6
+            { id: 76, code: "B11-TN-051", batch: 6, type: "tn", question: "Cần xử lý 2.000 review trong một chương trình có thể chạy lại, lưu JSON theo review_id rồi lập bảng nhãn. Cách dùng mô hình nào trực tiếp phù hợp pipeline của Bài 11?", options: ["Người gõ từng review vào chat rồi chỉ chép lại các câu trả lời có vẻ hay.", "Đổi tên file comments.csv thành labels.csv mà không trích xuất.", "Mã nguồn gửi từng yêu cầu qua API, nhận phản hồi, validate và cache.", "Chỉ lưu ảnh chụp giao diện chat rồi coi đó là DataFrame."], answer: 2, explanation: "Bài này đặt lời gọi mô hình bên trong pipeline; phản hồi được kiểm tra và nối lại theo ID.", skill: "A2, D1", difficulty: "Cơ bản" },
+            { id: 77, code: "B11-TN-052", batch: 6, type: "tn", question: "Bộ từ khóa cleanliness chỉ có r\"clean|dirty\". Ba review được cung cấp nghĩa rõ: spotless = sạch không tì vết; muy limpio = rất sạch; clean room = phòng sạch. Gold cả ba đều nhắc cleanliness. Baseline chỉ phát hiện review thứ ba. Nhận xét nào đúng?", options: ["Gold hai review đầu phải bỏ cleanliness để khớp bộ từ khóa.", "Bộ từ khóa bỏ sót từ đồng nghĩa và ngôn ngữ chưa bao phủ; cần đo cải thiện trên cùng gold.", "Baseline sai vì regex chỉ được dùng cho văn bản tiếng Việt.", "LLM chắc chắn đạt 100% trên cả ba dù chưa có đầu ra đo được."], answer: 1, explanation: "Mở rộng từ khóa có thể giảm thiếu sót, nhưng mức cải thiện của bất kỳ phương pháp nào đều cần đo bằng cùng gold.", skill: "B1, B5, B6, G7", difficulty: "Vận dụng" },
+            { id: 78, code: "B11-TN-053", batch: 6, type: "tn", question: "Ví dụ nhỏ thay cho sample 100: rv đã sạch, có 5 review với độ dài [60,10,70,20,80]. Cần lấy ngẫu nhiên 3 review, tất cả dài ≥50. Một lần sample(n=3, random_state=42) trên rv cho các độ dài [10,80,70] theo thứ tự đó. Sau đó bạn mới lọc ≥50. Kết luận nào đúng?", options: ["Còn 3 review vì random_state buộc mọi mẫu đều qua ngưỡng.", "Còn 2 review nên không thể lấy đủ 3 review dài từ bảng gốc.", "Chỉ còn 2 review; phải lọc đủ dài trước khi sample để đáp ứng yêu cầu 3 review.", "Còn 3 review vì lọc sau sample tự bù thêm dòng từ rv."], answer: 2, explanation: "Lọc chỉ bỏ dòng, không bù; có đúng 3 review đủ dài trong rv nên lọc trước rồi sample 3 sẽ đáp ứng.", skill: "C1, C2, C3", difficulty: "Vận dụng" },
+            { id: 79, code: "B11-TN-054", batch: 6, type: "tn", question: "Dùng schema với 6 khía cạnh enum để yêu cầu structured output. Phản hồi giả lập cố định vẫn là JSON <code>{\"sentiment\":\"happy\",\"aspects_positive\":[],\"aspects_negative\":[],\"language\":\"en\"}</code>. Code mới chỉ gọi json.loads và đưa dict vào bảng. Cách sửa tối thiểu đúng mục tiêu chặn nhãn ngoài enum là gì?", options: ["Giữ json.loads vì schema gửi API đã chứng minh phản hồi thực tế hợp lệ.", "Chạy ReviewInfo.model_validate_json trên chuỗi và ghi nhận lỗi, chỉ đưa model hợp lệ vào bảng.", "Bỏ trường sentiment khỏi bảng để mọi phản hồi đều được tính là đúng.", "Đổi mọi happy thành positive mà không đọc review hay gold."], answer: 1, explanation: "Đã cho phản hồi cụ thể ngoài enum; phải kiểm tra nó cục bộ, không đoán API luôn tuân thủ.", skill: "D5, D6, D7, E8, F1", difficulty: "Phân tích" },
+            { id: 80, code: "B11-TN-055", batch: 6, type: "tn", question: "Trong đoạn code rút gọn này, validate(x) luôn trả đối tượng hợp lệ với x=\"ok\". Không có lời gọi API vì HAS_KEY=False.<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>cache = {\"1\":\"ok\", 2:\"ok\"}\nHAS_KEY = False\ndef extract(rid):\n    k = str(rid)\n    if k not in cache:\n        if not HAS_KEY:\n            return None\n    return validate(cache[k])\nresults = {i:extract(i) for i in [1,2,3]}\nok = {i:r for i,r in results.items() if r is not None}</code></pre>Có bao nhiêu nhãn hợp lệ và bao nhiêu hàng full nếu join vào df 3 ID?", options: ["1 nhãn hợp lệ; 1 hàng full.", "2 nhãn hợp lệ; 3 hàng full.", "1 nhãn hợp lệ; 3 hàng full.", "3 nhãn hợp lệ; 3 hàng full."], answer: 2, explanation: "Chỉ \"1\" khớp khóa str; int 2 không khớp \"2\". Left join vẫn giữ cả ba review.", skill: "E2, E3, F1, F4", difficulty: "Phân tích" },
+            { id: 81, code: "B11-TN-056", batch: 6, type: "tn", question: "Dữ liệu không lặp khía cạnh trong mỗi list. Dòng cuối in gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>full = pd.DataFrame({\"aspects_negative\":[[\"noise\",\"host\",\"value\"],\n                                         [\"noise\",\"amenities\"],\n                                         [\"cleanliness\",\"host\"]]})\nc = full.explode(\"aspects_negative\")[\"aspects_negative\"].value_counts()\nprint(len(full), c.sum())</code></pre>", options: ["3 5", "3 7", "7 7", "3 3"], answer: 1, explanation: "Ba review lần lượt góp 3,2,2 lượt; tổng 7 có thể vượt số review.", skill: "A5, F5, F6", difficulty: "Vận dụng" },
+            { id: 82, code: "B11-TN-057", batch: 6, type: "tn", question: "Ba phản hồi sau được đọc từ cache. Schema cho sentiment trong {positive,mixed,negative}, khía cạnh trong 6 enum, language:str bắt buộc. Đủ trường và đúng kiểu:<br>Ca A: chỉ khen vị trí / thêm cleanliness vào danh sách khen<br>Ca B: bản dịch xác nhận tiếng Tây Ban Nha, gold es / language=\"pt\"<br>Ca C: văn bản nhắc ảnh chụp / aspects_negative=[\"photos\"]<br>Phân loại nào đúng?", options: ["A đúng vì cleanliness thuộc enum; B sai nội dung; C sai schema.", "A sai schema; B đúng vì là str; C sai nội dung nhưng qua schema.", "Cả A, B, C đều bị schema chặn vì không đúng gold.", "A và B là lỗi nội dung qua schema; C bị chặn vì ngoài enum."], answer: 3, explanation: "cleanliness và pt hợp kiểu nhưng có thể sai nội dung; photos không thuộc enum.", skill: "G4, G6, D6, D8, E11", difficulty: "Phân tích" },
+            { id: 83, code: "B11-TN-058", batch: 6, type: "tn", question: "Chạy đúng hàm dưới, không tự bổ sung giá trị mặc định. Điều gì xảy ra?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>GOLD = {1:{\"sentiment\":\"positive\"},\n        2:{\"sentiment\":\"mixed\"},\n        3:{\"sentiment\":\"negative\"}}\npred = {1:\"positive\", 3:\"negative\"}\ndef score_flat(pred):\n    hit = sum(pred[rid] == g[\"sentiment\"] for rid,g in GOLD.items())\n    return hit / len(GOLD)\nprint(score_flat(pred))</code></pre>", options: ["In 0.0 vì chỉ cần thiếu một dự đoán thì điểm tự về 0.", "In 2/3 vì code tự tính nhãn thiếu là sai.", "Phát sinh KeyError khi truy cập pred[2].", "In 1.0 vì chỉ chấm hai ID có trong pred."], answer: 2, explanation: "Hàm dùng pred[rid] trực tiếp. Lecture dựng dict llm_sent từ full cho mọi ID gold; không được bỏ bước đó.", skill: "H2, F4", difficulty: "Phân tích" },
+            { id: 84, code: "B11-TN-059", batch: 6, type: "tn", question: "Giả sử schema đã được mở rộng để chấp nhận safety. Theo đúng code sau, warnings là gì?<br><pre class='bg-slate-100 dark:bg-slate-900 p-3 rounded-lg my-2 text-xs overflow-x-auto'><code>text = \"quiet street\"\nASPECT_KEYWORDS = {\"noise\":r\"quiet|loud\"}\nassigned = {\"noise\", \"safety\"}\nwarnings = []\nfor a in assigned:\n    pat = ASPECT_KEYWORDS.get(a, \"\")\n    if pat and re.search(pat, text, flags=re.I) is None:\n        warnings.append(a)\nprint(warnings)</code></pre>", options: ["[]; không có cờ chưa chứng minh safety có căn cứ.", "[\"safety\"]; thiếu pattern cũng luôn bị gắn cờ.", "[\"noise\"]; quiet là từ khen nên không khớp noise.", "[\"noise\", \"safety\"]; mọi khía cạnh đều cần đúng tên trong câu."], answer: 0, explanation: "Noise có từ quiet; safety có pat=\"\" nên bỏ qua if. Đây là chỗ quy tắc có thể bỏ sót.", skill: "I3, I9, J8", difficulty: "Phân tích" },
+            { id: 85, code: "B11-TN-060", batch: 6, type: "tn", question: "Giả định đề: 4 review cần chạy. Hai review có cache; hai review còn lại gọi API mới thành công, usage mỗi lời gọi là 120 input token, 20 output token. Một phản hồi mới không qua validation nhưng API đã xử lý và trả usage. Giá input/output là 0,25/1,50 USD mỗi triệu token. Chỉ tính chi phí hai lời gọi mới, kết quả nào đúng?", options: ["0,00007 USD; dùng một đơn giá input cho mọi token.", "0,00024 USD; cộng lại token cho cả hai review đã cache.", "0,00006 USD; bỏ token của phản hồi không qua schema.", "0,00012 USD; phản hồi bị schema loại vẫn đã phát sinh token API."], answer: 3, explanation: "(240×0,25+40×1,50)/1e6=0,00012 USD. Cache hit không tạo lời gọi; validation lỗi xảy ra sau khi API trả.", skill: "E1, E7, J3, J5", difficulty: "Phân tích" },
+            { id: 86, code: "B11-TL-026", batch: 6, type: "tl", question: "results={1:đối_tượng_hợp_lệ, 2:None, 3:đối_tượng_hợp_lệ, 4:None}. Viết tối đa hai dòng: tạo dict ok giữ đối tượng hợp lệ và list loi ghi ID bị None; không tự thay None bằng một nhãn cảm xúc.", answer: "ok = {rid:r for rid,r in results.items() if r is not None}\nloi = [rid for rid,r in results.items() if r is None]", explanation: "Cần giữ dấu vết review lỗi để báo cáo tỷ lệ hợp lệ và xử lý sau, không coi lỗi như mixed.", skill: "E8, F1", difficulty: "Vận dụng" },
+            { id: 87, code: "B11-TL-027", batch: 6, type: "tl", question: "Review rỗng có đầu ra đúng kiểu: sentiment=mixed, aspects_positive=[], aspects_negative=[], language=\"en\". Quy ước gold cho văn bản rỗng là mixed/[]/[]/und. Hậu kiểm lecture chỉ xét (1) rỗng và có khía cạnh hoặc sentiment khác mixed; (2) ≤4 từ và ≥2 khía cạnh. Không quy tắc nào xét language. Nêu một câu: có bị gắn cờ không và nhãn có đúng gold hoàn toàn không?", answer: "Không bị gắn cờ theo các quy tắc trên, nhưng nhãn chưa đúng gold hoàn toàn vì sai language là \"en\" thay vì \"und\".", explanation: "Số khía cạnh bằng 0 và sentiment mixed làm cả hai điều kiện sai; lỗi ngôn ngữ không nằm trong phạm vi kiểm tra.", skill: "I1, I2, I9, G2, D8", difficulty: "Phân tích" },
+            { id: 88, code: "B11-TL-028", batch: 6, type: "tl", question: "Ba review có khen/chê sau; gold khía cạnh là tập được nhắc, không xét chiều. Tính micro-F1 theo code lecture, chỉ ghi một số.<br>ID 1: Gold {host} / Pred khen [host], chê [host]<br>ID 2: Gold {noise} / Pred khen [], chê [noise]<br>ID 3: Gold {location} / Pred khen [location], chê []<br>P của mỗi review = set(khen) | set(chê); F1=2TP/(2TP+FP+FN).", answer: "1", explanation: "Hợp tập ở ID 1 chỉ có một host dù xuất hiện trong cả hai list. Tổng TP=3, FP=FN=0.", skill: "H5, H6, H8", difficulty: "Vận dụng" },
+            { id: 89, code: "B11-TL-029", batch: 6, type: "tl", question: "Giả định đề: xử lý 500 review mới, mỗi review gửi riêng 60 token dữ liệu + 140 token prompt và nhận 40 output token; không retry/cache. Giá input=0,25, output=1,50 USD/triệu token. Tính tổng chi phí USD; chỉ ghi một số.", answer: "0.055", explanation: "Input=500×200=100.000; output=500×40=20.000; chi phí=(100.000×0,25+20.000×1,50)/1e6=0,055.", skill: "J2, J3, J4", difficulty: "Vận dụng" },
+            { id: 90, code: "B11-TL-030", batch: 6, type: "tl", question: "Nhóm thực hiện kiểm tra bằng 3 ca đã biết gold: (A) JSON thiếu language bị loại; (B) JSON hợp schema nhưng sentiment sai, không bị hậu kiểm gắn cờ; (C) JSON hợp schema, đúng gold, nhưng regex bằng chứng tiếng Anh gắn cờ do review tiếng Tây Ban Nha. Nêu một câu giải thích vì sao cần cả schema, gold và hậu kiểm.", answer: "Schema chặn lỗi hình thức, gold đo độ đúng nội dung, còn hậu kiểm sàng lọc các đầu ra nghi vấn nhưng có thể có cảnh báo nhầm hoặc bỏ sót.", explanation: "Ba tầng có vai trò khác nhau; hậu kiểm vận hành không đòi gold nhưng cần gold để đo chất lượng.", skill: "D8, E8, G4, I5, I6, I8, I9", difficulty: "Phân tích" }
+        ];
+
+        // Trạng thái ứng dụng
+        let state = {
+            currentBatch: 'all',
+            currentType: 'all',
+            searchQuery: '',
+            userAnswers: {}, // { id: answerIndexOrText }
+            revealed: {}     // { id: boolean }
+        };
+
+        // Khởi tạo localStorage
+        function loadState() {
+            const saved = localStorage.getItem('b11_quiz_state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state.userAnswers = parsed.userAnswers || {};
+                    state.revealed = parsed.revealed || {};
+                } catch (e) {
+                    console.error("Lỗi đọc storage:", e);
+                }
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('b11_quiz_state', JSON.stringify({
+                userAnswers: state.userAnswers,
+                revealed: state.revealed
+            }));
+            updateProgress();
+        }
+
+        // Dark/Light Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('b11_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('b11_theme', 'dark');
+            }
+        }
+
+        // Khởi tạo theme khi load
+        if (localStorage.getItem('b11_theme') === 'dark' || (!localStorage.getItem('b11_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Render câu hỏi
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            const noResults = document.getElementById('noResults');
+            
+            const filtered = rawData.filter(q => {
+                // Lọc theo đợt
+                if (state.currentBatch !== 'all' && q.batch.toString() !== state.currentBatch) return false;
+                // Lọc theo loại
+                if (state.currentType !== 'all' && q.type !== state.currentType) return false;
+                // Lọc theo tìm kiếm
+                if (state.searchQuery) {
+                    const query = state.searchQuery.toLowerCase();
+                    const matchCode = q.code.toLowerCase().includes(query);
+                    const matchQ = q.question.toLowerCase().includes(query);
+                    const matchAns = q.answer.toString().toLowerCase().includes(query);
+                    const matchSkill = q.skill.toLowerCase().includes(query);
+                    if (!matchCode && !matchQ && !matchAns && !matchSkill) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noResults.classList.remove('hidden');
+                document.getElementById('resultsCount').innerText = `Hiển thị 0 / ${rawData.length} câu hỏi`;
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            document.getElementById('resultsCount').innerText = `Hiển thị ${filtered.length} / ${rawData.length} câu hỏi`;
+
+            let html = '';
+            filtered.forEach(q => {
+                const isRevealed = state.revealed[q.id] || false;
+                const userAns = state.userAnswers[q.id];
+                
+                // Badge độ khó & đợt
+                let diffColor = 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300';
+                if (q.difficulty === 'Vận dụng') diffColor = 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
+                if (q.difficulty === 'Phân tích') diffColor = 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800';
+                if (q.difficulty === 'Cơ bản') diffColor = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
+
+                let typeBadge = q.type === 'tn' 
+                    ? '<span class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">Trắc nghiệm</span>'
+                    : '<span class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">Trả lời ngắn</span>';
+
+                html += `
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col gap-4 transition-all hover:shadow-md">
+                        <!-- Header thẻ câu hỏi -->
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">${q.code}</span>
+                                <span class="px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Đợt ${q.batch}</span>
+                                ${typeBadge}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-md text-[11px] font-medium ${diffColor}">${q.difficulty}</span>
+                                <span class="text-[11px] text-slate-400">Kỹ năng: ${q.skill}</span>
+                            </div>
+                        </div>
+
+                        <!-- Nội dung câu hỏi -->
+                        <div class="text-sm sm:text-base text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
+                            ${q.question}
+                        </div>
+                `;
+
+                // Phần tương tác: Trắc nghiệm hoặc Tự luận ngắn
+                if (q.type === 'tn') {
+                    html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-1">`;
+                    q.options.forEach((opt, idx) => {
+                        let btnClass = "border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 bg-white dark:bg-slate-800/60 text-slate-700 dark:text-slate-300";
+                        let iconHtml = `<span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold flex items-center justify-center mr-2.5 shrink-0">${String.fromCharCode(65 + idx)}</span>`;
+                        
+                        if (isRevealed) {
+                            if (idx === q.answer) {
+                                btnClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200 shadow-sm";
+                                iconHtml = `<span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center mr-2.5 shrink-0"><i class="fa-solid fa-check"></i></span>`;
+                            } else if (userAns === idx) {
+                                btnClass = "border-rose-500 bg-rose-50 dark:bg-rose-950/30 text-rose-900 dark:text-rose-200";
+                                iconHtml = `<span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center mr-2.5 shrink-0"><i class="fa-solid fa-xmark"></i></span>`;
+                            } else {
+                                btnClass = "border-slate-200 dark:border-slate-700 opacity-60 bg-slate-50 dark:bg-slate-900/40 text-slate-500";
+                            }
+                        } else if (userAns === idx) {
+                            btnClass = "border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-900 dark:text-blue-200 ring-1 ring-blue-500";
+                            iconHtml = `<span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2.5 shrink-0">${String.fromCharCode(65 + idx)}</span>`;
+                        }
+
+                        html += `
+                            <button onclick="selectOption(${q.id}, ${idx})" class="flex items-start text-left p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all ${btnClass}">
+                                ${iconHtml}
+                                <span class="mt-0.5">${opt}</span>
+                            </button>
+                        `;
+                    });
+                    html += `</div>`;
+                } else {
+                    // Tự luận ngắn
+                    const currentInput = userAns !== undefined ? userAns : '';
+                    html += `
+                        <div class="flex flex-col sm:flex-row gap-3 mt-1">
+                            <input type="text" id="input_${q.id}" value="${currentInput}" oninput="updateTextAnswer(${q.id}, this.value)" placeholder="Nhập câu trả lời ngắn của bạn..." class="flex-grow px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="revealQuestion(${q.id})" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                                Xem đáp án
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Nút xem đáp án cho Trắc nghiệm (nếu chưa bấm hoặc muốn hiện giải thích)
+                if (q.type === 'tn' && !isRevealed) {
+                    html += `
+                        <div class="flex justify-end mt-1">
+                            <button onclick="revealQuestion(${q.id})" class="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5">
+                                <i class="fa-regular fa-eye"></i>
+                                <span>Xem đáp án & giải thích</span>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Hộp giải thích khi đã reveal
+                if (isRevealed) {
+                    let correctText = q.type === 'tn' ? `Đáp án đúng: <strong>${String.fromCharCode(65 + q.answer)}. ${q.options[q.answer]}</strong>` : `Đáp án mẫu: <strong>${q.answer}</strong>`;
+                    html += `
+                        <div class="mt-3 p-4 rounded-2xl bg-blue-50/70 dark:bg-slate-900/60 border border-blue-100 dark:border-slate-700 flex flex-col gap-2 text-xs sm:text-sm animate-fadeIn">
+                            <div class="font-bold text-blue-700 dark:text-blue-400 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>${correctText}</span>
+                            </div>
+                            <div class="text-slate-600 dark:text-slate-300 leading-relaxed pt-1 border-t border-blue-100/60 dark:border-slate-800">
+                                <span class="font-semibold text-slate-700 dark:text-slate-200">Giải thích chi tiết:</span> ${q.explanation}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+            updateProgress();
+
+            // Kích hoạt MathJax render lại công thức
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        // Tương tác chọn đáp án Trắc nghiệm
+        function selectOption(qId, optIdx) {
+            state.userAnswers[qId] = optIdx;
+            state.revealed[qId] = true; // Click chọn là hiển thị kết quả luôn theo yêu cầu
+            saveState();
+            renderQuestions();
+        }
+
+        // Cập nhật câu trả lời dạng text
+        function updateTextAnswer(qId, val) {
+            state.userAnswers[qId] = val;
+            saveState();
+        }
+
+        // Bấm xem đáp án
+        function revealQuestion(qId) {
+            state.revealed[qId] = true;
+            saveState();
+            renderQuestions();
+        }
+
+        // Bộ lọc đợt
+        function setBatch(batch) {
+            state.currentBatch = batch;
+            document.querySelectorAll('.batch-btn').forEach(btn => {
+                if (btn.getAttribute('data-batch') === batch) {
+                    btn.className = "batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-blue-600 text-white shadow-sm";
+                } else {
+                    btn.className = "batch-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600";
+                }
+            });
+            renderQuestions();
+        }
+
+        // Bộ lọc loại câu hỏi
+        function setType(type) {
+            state.currentType = type;
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                if (btn.getAttribute('data-type') === type) {
+                    btn.className = "type-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 shadow-sm";
+                } else {
+                    btn.className = "type-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600";
+                }
+            });
+            renderQuestions();
+        }
+
+        // Tìm kiếm
+        function filterQuestions() {
+            state.searchQuery = document.getElementById('searchInput').value.trim();
+            renderQuestions();
+        }
+
+        // Cập nhật thanh tiến độ
+        function updateProgress() {
+            const total = rawData.length;
+            const revealedKeys = Object.keys(state.revealed).filter(k => state.revealed[k]);
+            const count = revealedKeys.length;
+            
+            const percent = Math.round((count / total) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').innerText = `${count}/${total} đã làm (${percent}%)`;
+        }
+
+        // Làm lại từ đầu
+        function resetProgress() {
+            if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử làm bài và bắt đầu lại từ đầu không?")) {
+                state.userAnswers = {};
+                state.revealed = {};
+                localStorage.removeItem('b11_quiz_state');
+                renderQuestions();
+            }
+        }
+
+        // Modal Thống Kê
+        function openStatsModal() {
+            const modal = document.getElementById('statsModal');
+            modal.classList.remove('hidden');
+
+            const total = rawData.length;
+            const revealedKeys = Object.keys(state.revealed).filter(k => state.revealed[k]);
+            const completedCount = revealedKeys.length;
+
+            document.getElementById('statCompleted').innerText = `${completedCount}/${total}`;
+
+            // Tính độ chính xác trắc nghiệm
+            let tnCorrect = 0;
+            let tnTotalAnswered = 0;
+            revealedKeys.forEach(id => {
+                const q = rawData.find(item => item.id == id);
+                if (q && q.type === 'tn') {
+                    tnTotalAnswered++;
+                    if (state.userAnswers[id] === q.answer) {
+                        tnCorrect++;
+                    }
+                }
+            });
+
+            const accuracy = tnTotalAnswered > 0 ? Math.round((tnCorrect / tnTotalAnswered) * 100) : 0;
+            document.getElementById('statCorrect').innerText = accuracy + '%';
+
+            // Tiến độ theo đợt
+            let batchHtml = '';
+            for (let i = 1; i <= 6; i++) {
+                const batchQs = rawData.filter(q => q.batch === i);
+                const batchDone = batchQs.filter(q => state.revealed[q.id]).length;
+                const batchPct = Math.round((batchDone / batchQs.length) * 100);
+                
+                batchHtml += `
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-medium text-slate-700 dark:text-slate-300">Đợt ${i} (${batchQs.length} câu):</span>
+                        <div class="flex items-center gap-2 w-36">
+                            <div class="flex-grow bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-blue-600 h-full" style="width: ${batchPct}%"></div>
+                            </div>
+                            <span class="w-10 text-right text-slate-500">${batchDone}/${batchQs.length}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('batchStatsList').innerHTML = batchHtml;
+        }
+
+        function closeStatsModal() {
+            document.getElementById('statsModal').classList.add('hidden');
+        }
+
+        // Chạy lần đầu
+        window.onload = function() {
+            loadState();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>

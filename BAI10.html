@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân hàng câu hỏi Bài 10 - Tương tác</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* Bộ lọc */
+        .filters {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn-reset {
+            background-color: #e11d48;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            background-color: #be123c;
+        }
+
+        /* Thẻ câu hỏi */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-tl {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .question-content {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        /* Danh sách đáp án Trắc nghiệm */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            text-align: left;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success-color) !important;
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error-color) !important;
+            color: #991b1b;
+        }
+
+        /* Phần trả lời ngắn */
+        .short-answer-section {
+            margin-bottom: 15px;
+        }
+
+        .btn-toggle-answer {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-toggle-answer:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Khung giải thích */
+        .explanation-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success-color);
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 12px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .explanation-title {
+            font-weight: 600;
+            color: #15803d;
+            margin-bottom: 4px;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Ngân hàng Câu hỏi Bài 10 (90 Câu)</h1>
+        <p>Hệ thống ôn tập trắc nghiệm và trả lời ngắn có tương tác và giải thích chi tiết.</p>
+    </header>
+
+    <!-- Bộ lọc -->
+    <div class="filters">
+        <div class="filter-group">
+            <label for="filter-dot"><strong>Đợt:</strong></label>
+            <select id="filter-dot" onchange="filterQuestions()">
+                <option value="all">Tất cả các đợt</option>
+                <option value="1">Đợt 1</option>
+                <option value="2">Đợt 2</option>
+                <option value="3">Đợt 3</option>
+                <option value="4">Đợt 4</option>
+                <option value="5">Đợt 5</option>
+                <option value="6">Đợt 6</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="filter-type"><strong>Loại câu hỏi:</strong></label>
+            <select id="filter-type" onchange="filterQuestions()">
+                <option value="all">Tất cả</option>
+                <option value="TN">Trắc nghiệm</option>
+                <option value="TL">Trả lời ngắn</option>
+            </select>
+        </div>
+
+        <button class="btn-reset" onclick="resetAnswers()">Làm lại từ đầu</button>
+    </div>
+
+    <!-- Danh sách câu hỏi -->
+    <div id="questions-container">
+        <!-- Các câu hỏi sẽ được render tự động bằng Javascript -->
+    </div>
+</div>
+
+<script>
+    // Dữ liệu 90 câu hỏi tích hợp sẵn từ nguồn B10_CHI_DE.md và B10_DAP_AN.md
+    const questionsData = [
+        // --- ĐỢT 1 ---
+        {
+            id: "B10-TN-001", dot: 1, type: "TN",
+            question: "Cột `price_num` là số, không thiếu. KPI giá chỉ dùng giá dương; phải giữ nguyên dữ liệu gốc.\n\nQuy tắc nào đáp ứng đúng yêu cầu? Mỗi phương án ghi **tên — điều kiện — lý do — hành động**.",
+            options: [
+                "A. `gia_loi` — `price_num <= 0` — KPI cần giá dương — xóa dòng khỏi bảng gốc.",
+                "B. `gia_loi` — `price_num < 0` — KPI cần giá dương — gắn cờ, loại khỏi KPI giá.",
+                "C. `gia_loi` — `price_num <= 0` — KPI cần giá dương — gắn cờ, loại khỏi KPI giá.",
+                "D. `gia_loi` — `price_num >= 0` — KPI cần giá dương — gắn cờ, loại khỏi KPI giá."
+            ],
+            correct: 2, // Đáp án C (index 2)
+            explanation: "Giá âm và giá 0 bị gắn cờ, loại khỏi KPI theo quy ước; bảng gốc vẫn được giữ nguyên."
+        },
+        {
+            id: "B10-TN-002", dot: 1, type: "TN",
+            question: "Giá tính bằng nghìn đồng/đêm:\n\nDòng 0: Private, NaN\nDòng 1: Private, 100\nDòng 2: Private, NaN\nDòng 3: Private, 200\nDòng 4: Entire, 300\nDòng 5: Entire, 400\n\n**Trong nhóm Private**, tỷ lệ dòng thiếu giá là bao nhiêu?",
+            options: [
+                "A. 100%",
+                "B. 50%",
+                "C. Khoảng 33,33%",
+                "D. Khoảng 66,67%"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Có 2 dòng thiếu trên tổng số 4 dòng thuộc nhóm Private: 2/4 × 100 = 50%."
+        },
+        {
+            id: "B10-TN-003", dot: 1, type: "TN",
+            question: "```python\nd = pd.DataFrame({\n    \"accommodates\": [2, 2, 2, 4, 4, 4],\n    \"bedrooms\": [1., np.nan, 3., 2., np.nan, 4.]\n})\nd[\"bedrooms_isna\"] = d[\"bedrooms\"].isna()\nd[\"bedrooms\"] = d[\"bedrooms\"].fillna(\n    d.groupby(\"accommodates\")[\"bedrooms\"].transform(\"median\")\n)\n```\nBộ ba `(d.loc[1,\"bedrooms\"], d.loc[4,\"bedrooms\"], int(d[\"bedrooms_isna\"].sum()))` bằng gì?",
+            options: [
+                "A. `(2.5, 2.5, 2)`",
+                "B. `(2.0, 3.0, 0)`",
+                "C. `(1.0, 1.0, 2)`",
+                "D. `(2.0, 3.0, 2)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Trung vị nhóm sức chứa 2 là 2; nhóm sức chứa 4 là 3. Cờ được tạo trước khi điền nên vẫn ghi nhận 2 giá trị thiếu ban đầu."
+        },
+        {
+            id: "B10-TN-004", dot: 1, type: "TN",
+            question: "Một tập tham chiếu có Q1 = 100, Q3 = 200, đơn vị nghìn đồng/đêm. Dùng ngưỡng trên `Q3 + 1.5 × IQR` của tập này để sàng lọc năm giá mới:\n`100, 200, 350, 351, 500`\nChỉ gắn cờ giá **lớn hơn** ngưỡng. Cặp **(ngưỡng trên, số giá bị cờ)** là gì?",
+            options: [
+                "A. `(350, 2)`",
+                "B. `(200, 3)`",
+                "C. `(350, 3)`",
+                "D. `(500, 0)`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "IQR = 200 - 100 = 100; Ngưỡng trên = 200 + 1.5 * 100 = 350. Chỉ có 2 giá lớn hơn 350 là 351 và 500."
+        },
+        {
+            id: "B10-TN-005", dot: 1, type: "TN",
+            question: "```python\ns = pd.Series([7, 7, 7, 8, 9, 9])\na = int(s.duplicated().sum())\nb = int(s.duplicated(keep=False).sum())\n```\nCặp `(a,b)` là gì?",
+            options: [
+                "A. `(5, 3)`",
+                "B. `(2, 5)`",
+                "C. `(3, 5)`",
+                "D. `(3, 6)`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Nhóm 7 có 2 dòng dư (duplicated() đếm True cho các dòng lặp sau dòng đầu), nhóm 9 có 1 dòng dư -> a = 3. keep=False đánh dấu tất cả các dòng tham gia nhóm lặp (3 dòng số 7 và 2 dòng số 9) -> b = 5."
+        },
+        {
+            id: "B10-TN-006", dot: 1, type: "TN",
+            question: "Mỗi chỗ ở được phép có một quan sát hợp lệ trong mỗi snapshot:\nid=1, snapshot=2026-06\nid=1, snapshot=2026-09\nid=2, snapshot=2026-06\nid=2, snapshot=2026-09\n\nCách xử lý nào phù hợp?",
+            options: [
+                "A. Giữ 4 dòng; kiểm tra khóa `(id, snapshot)`.",
+                "B. Giữ 2 dòng; bỏ dòng lặp theo `id`.",
+                "C. Giữ 2 dòng; bỏ dòng lặp theo `snapshot`.",
+                "D. Giữ 0 dòng; bỏ mọi dòng có `id` tham gia nhóm lặp."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Bốn cặp khóa (id, snapshot) đều khác nhau; cùng id ở hai thời điểm là hai quan sát hợp lệ."
+        },
+        {
+            id: "B10-TN-007", dot: 1, type: "TN",
+            question: "Hai mặt nạ có cùng chỉ mục:\na = pd.Series([True, False, True, False, False, False])\nb = pd.Series([False, True, True, False, True, False])\n\n`(int((a | b).sum()), int((a & b).sum()))` bằng gì?",
+            options: [
+                "A. `(5, 1)`",
+                "B. `(1, 4)`",
+                "C. `(3, 2)`",
+                "D. `(4, 1)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Phép OR (a | b) có 4 giá trị True (dòng 0, 1, 2, 4). Phép AND (a & b) chỉ có dòng 2 là True (1 phần tử)."
+        },
+        {
+            id: "B10-TN-008", dot: 1, type: "TN",
+            question: "```python\nds = pd.DataFrame({\"id\": [10, 20, 30, 40]})\nrv = pd.DataFrame({\"listing_id\": [10, 10, 20, 99]})\n```\nReview mồ côi có listing_id không tồn tại trong ds.id. Biểu thức nào đếm đúng số **dòng review mồ côi**?",
+            options: [
+                "A. `(~ds[\"id\"].isin(rv[\"listing_id\"])).sum()`",
+                "B. `(~rv[\"listing_id\"].isin(ds[\"id\"])).sum()`",
+                "C. `rv[\"listing_id\"].isin(ds[\"id\"]).sum()`",
+                "D. `rv[\"listing_id\"].isna().sum()`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Kiểm tra xem listing_id trong rv có nằm trong ds.id hay không, phủ định lại rồi sum() đếm số dòng mồ côi."
+        },
+        {
+            id: "B10-TN-009", dot: 1, type: "TN",
+            question: "```python\nds = pd.DataFrame({\"id\": [30, 10, 40, 20]})\nrv = pd.DataFrame({\"listing_id\": [10, 10, 20, 30, 30, 30]})\ndem = rv.groupby(\"listing_id\").size()\nds[\"dem_that\"] = ds[\"id\"].map(dem).fillna(0).astype(int)\n```\n`ds[\"dem_that\"].tolist()` trả về gì?",
+            options: [
+                "A. `[3, 2, 0, 1]`",
+                "B. `[2, 1, 3, 0]`",
+                "C. `[3, 2, nan, 1]`",
+                "D. `[1, 1, 0, 1]`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Mã 30 có 3 review, mã 10 có 2, mã 40 không có (fill bằng 0), mã 20 có 1. Map theo thứ tự id của ds [30, 10, 40, 20] cho ra `[3, 2, 0, 1]`."
+        },
+        {
+            id: "B10-TN-010", dot: 1, type: "TN",
+            question: "Listings có `(id, number_of_reviews)` là `(10,2)` và `(20,2)`. Reviews gồm:\nlisting_id | date\n10 | 2026-06-29\n10 | 2026-07-01\n20 | 2026-06-28\n20 | 2026-06-29\n\nChính sách đã chọn: **chỉ dùng review không sau 29/06/2026**. Quy trình nào đáp ứng?",
+            options: [
+                "A. Đổi mốc thành 01/07; giữ reviews và số đếm có sẵn.",
+                "B. Giữ mốc 29/06; cắt reviews và giữ số đếm có sẵn.",
+                "C. Giữ mốc 29/06; cắt reviews và tính lại số đếm.",
+                "D. Giữ mốc 29/06; giữ reviews và trừ 1 ở mọi số đếm."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Phải thực hiện đúng chính sách (giữ mốc 29/06), cắt lọc lại bảng review và tính toán lại số đếm thống kê cho phù hợp."
+        },
+        {
+            id: "B10-TL-001", dot: 1, type: "TL",
+            question: "KPI cần điểm trung bình của các chỗ ở đã có đánh giá, mỗi chỗ ở có trọng số như nhau. Điền 0 rồi tính trung bình cả bốn dòng có phù hợp không? Trả lời một câu, nêu cách tính đúng.",
+            answer: "Không phù hợp; chỉ lấy hai chỗ ở đã có đánh giá (loại các giá trị NaN), nên trung bình là (4.0 + 5.0) / 2 = 4.5.",
+            explanation: "Điểm chưa quan sát khác điểm 0; không được biến dữ liệu thiếu thành điểm 0 để tính toán KPI."
+        },
+        {
+            id: "B10-TL-002", dot: 1, type: "TL",
+            question: "Viết hai dòng tạo `ten_trong` (thiếu, rỗng hoặc toàn khoảng trắng) và `diem_ngoai_thang` (điểm quan sát ngoài [0,5], hai biên hợp lệ). Điểm thiếu kiểm riêng.",
+            answer: "```python\nten_trong = d[\"name\"].isna() | d[\"name\"].str.strip().eq(\"\")\ndiem_ngoai_thang = d[\"review_scores_rating\"].notna() & ~d[\"review_scores_rating\"].between(0, 5)\n```",
+            explanation: "Dùng isna kết hợp với str.strip().eq('') để bắt chuỗi trống/khoảng trắng. Dùng notna kết hợp between để lọc điểm hợp lệ ngoài khoảng [0, 5]."
+        },
+        {
+            id: "B10-TL-003", dot: 1, type: "TL",
+            question: "Reviews rút gọn chỉ có hai cột (listing_id, date). Hai khách khác nhau có thể đánh giá cùng chỗ ở trong cùng ngày. Có nên chạy `drop_duplicates(subset=[\"listing_id\",\"date\"])` để làm sạch không? Trả lời một câu và giải thích.",
+            answer: "Không nên, vì hai khách khác nhau hoàn toàn có thể đánh giá cùng một chỗ ở trong cùng một ngày, nên cặp cột này không định danh duy nhất từng review.",
+            explanation: "Trùng theo tập cột chỉ là căn cứ xóa khi tập cột đó thực sự là khóa định danh phù hợp của bảng."
+        },
+        {
+            id: "B10-TL-004", dot: 1, type: "TL",
+            question: "Cả năm review đều thuộc chỗ ở 10, có ngày `2025-06-29`, `2025-06-30`, `2026-06-29`, `2026-06-30`, `2026-07-01`. Cột có sẵn `number_of_reviews_ltm = 3`. Cửa sổ tự đếm là **30/06/2025 đến 29/06/2026, gồm cả hai đầu**. Tính **cột có sẵn − số tự đếm**. Chỉ trả lời một con số.",
+            answer: "1",
+            explanation: "Số review tự đếm trong cửa sổ [2025-06-30, 2026-06-29] là 2 review (ngày 30/06/2025 và 29/06/2026). Ta có: 3 - 2 = 1."
+        },
+        {
+            id: "B10-TL-005", dot: 1, type: "TL",
+            question: "`report` có ba cột `quy_tac`, `so_dong`, `ghi_chu` và hai dòng. Viết hai dòng ghi toàn bộ bảng vào `qa_report_reviews.csv` không thêm cột index, rồi đọc lại vào `kq` để kiểm tra.",
+            answer: "```python\nreport.to_csv(\"qa_report_reviews.csv\", index=False)\nkq = pd.read_csv(\"qa_report_reviews.csv\")\n```",
+            explanation: "Sử dụng tham số `index=False` để tránh việc ghi thêm cột chỉ mục mặc định của Pandas vào tệp CSV."
+        },
+
+        // --- ĐỢT 2 ---
+        {
+            id: "B10-TN-011", dot: 2, type: "TN",
+            question: "```python\nd = pd.DataFrame({\n    \"price_num\": [100., np.nan, 300., 200.],\n    \"bedrooms\": [np.nan, 1., 2., np.nan]\n})\nkpi = d.dropna(subset=[\"price_num\"])\n```\nGiá tính bằng nghìn đồng/đêm. Cặp `(len(kpi), kpi[\"price_num\"].mean())` bằng gì?",
+            options: [
+                "A. `(1, 300.0)`",
+                "B. `(4, 150.0)`",
+                "C. `(3, 200.0)`",
+                "D. `(3, 600.0)`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Loại dòng thiếu price_num (dòng 1 bị loại), còn 3 dòng [100, 300, 200]. Trung bình là (100+300+200)/3 = 200.0."
+        },
+        {
+            id: "B10-TN-012", dot: 2, type: "TN",
+            question: "```python\np = pd.Series([np.nan, 0., -5., 100.], dtype=\"float64\")\na = p.isna()\nb = p <= 0\n```\nCặp **(số giá thiếu, số giá không dương)** bằng gì?",
+            options: [
+                "A. `(1, 2)`",
+                "B. `(1, 3)`",
+                "C. `(0, 2)`",
+                "D. `(1, 1)`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Số giá thiếu (NaN) là 1. Số giá không dương (<= 0) gồm 0. và -5, tổng cộng là 2 (NaN không thỏa mãn điều kiện so sánh số học)."
+        },
+        {
+            id: "B10-TN-013", dot: 2, type: "TN",
+            question: "Trong bối cảnh này, nhóm đã xác nhận quy tắc `minimum_nights > 365` cần gắn cờ. Bốn giá trị là `1, 365, 366, 999`, đơn vị đêm, không thiếu. Có bao nhiêu dòng bị gắn cờ?",
+            options: [
+                "A. 3",
+                "B. 1",
+                "C. 4",
+                "D. 2"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Chỉ các giá trị lớn hơn 365 mới bị gắn cờ, đó là 366 và 999 (tổng cộng 2 giá trị)."
+        },
+        {
+            id: "B10-TN-014", dot: 2, type: "TN",
+            question: "Biên hợp lệ đã chọn: vĩ độ trong [-34,-33], kinh độ trong [-71,-70], gồm cả hai biên; không có ô thiếu.\n\nChỉ mục | latitude | longitude\n0 | -34.0 | -71.0\n1 | -33.5 | -70.5\n2 | -32.9 | -70.5\n3 | -33.5 | -69.9\n4 | -34.0 | -70.0\n\nMặt nạ `~(d.latitude.between(-34,-33) & d.longitude.between(-71,-70))` gắn cờ những chỉ mục nào?",
+            options: [
+                "A. `[0, 2, 3, 4]`",
+                "B. `[2, 3]`",
+                "C. `[]`",
+                "D. `[0, 1, 4]`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Dòng 2 vi phạm vĩ độ (-32.9 ngoài [-34,-33]), dòng 3 vi phạm kinh độ (-69.9 ngoài [-71,-70]). Các dòng 0, 1, 4 đều nằm trong biên hợp lệ."
+        },
+        {
+            id: "B10-TN-015", dot: 2, type: "TN",
+            question: "Một giá rất lớn làm histogram trên thang giá gốc nén phần lớn quan sát vào vùng hẹp. Nhóm vẽ thêm histogram của `np.log10(gia)` với các giá dương. Diễn giải nào đúng?",
+            options: [
+                "A. Thang log bảo đảm phân bố đối xứng và mọi giá đều hợp lệ.",
+                "B. Thang log loại các giá cao khỏi dữ liệu dùng cho histogram.",
+                "C. Thang log giúp nhìn rõ phân bố; các giá gốc vẫn được giữ nguyên.",
+                "D. Thang log thay toàn bộ giá gốc bằng giá mới trong DataFrame."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Biến đổi log chỉ phục vụ mục đích trực quan hóa phân phối dữ liệu; dữ liệu gốc trong DataFrame không bị thay đổi."
+        },
+        {
+            id: "B10-TN-016", dot: 2, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"id\": [1, 1, 1, 2],\n                  \"price_num\": [100, 100, 120, 200]})\n```\nCặp `(int(d.duplicated().sum()), int(d.duplicated(subset=[\"id\"]).sum()))` bằng gì?",
+            options: [
+                "A. `(1, 2)`",
+                "B. `(2, 3)`",
+                "C. `(0, 2)`",
+                "D. `(1, 1)`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "duplicated() kiểm tra trùng nguyên dòng (chỉ có dòng thứ 2 trùng dòng 0) -> sum = 1. duplicated(subset=['id']) kiểm tra trùng theo id (dòng 1 và dòng 2 trùng id=1 với dòng 0) -> sum = 2."
+        },
+        {
+            id: "B10-TN-017", dot: 2, type: "TN",
+            question: "```python\ndef qa_rules(d):\n    return {\"gia_khong_duong\": d[\"price_num\"] <= 0}\n\nd = pd.DataFrame({\"price_num\": [-1, 2, 3, 4]})\nr = qa_rules(d)\n```\nSau lời gọi, nhận định nào đúng?",
+            options: [
+                "A. `r` chứa bảng đã làm sạch; giá -1 trong `d` đã bị xóa.",
+                "B. `r` chứa mặt nạ vi phạm; giá -1 trong `d` đã thành 0.",
+                "C. `r` chứa số vi phạm; giá -1 trong `d` vẫn còn.",
+                "D. `r` chứa mặt nạ vi phạm; giá -1 trong `d` vẫn còn."
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Hàm QA trả về dict chứa Series bool (mặt nạ vi phạm), bảng d ban đầu hoàn toàn không bị thay đổi hay xóa dữ liệu."
+        },
+        {
+            id: "B10-TN-018", dot: 2, type: "TN",
+            question: "Bảng mới có `id` nhưng không có `latitude` và `longitude`. Bộ kiểm phòng thủ chỉ chạy quy tắc khi đủ cột. `id_trung` đã chạy và có 0 vi phạm; quy tắc tọa độ bị bỏ qua. Diễn giải báo cáo nào đúng?",
+            options: [
+                "A. Ghi cả hai quy tắc bằng 0 vì không phát hiện dòng vi phạm.",
+                "B. Bỏ cả hai quy tắc vì báo cáo chỉ cần dòng có vi phạm.",
+                "C. Ghi `id_trung` chưa kiểm; ghi tọa độ bằng 0 vì cột vắng.",
+                "D. Ghi `id_trung = 0`; ghi tọa độ chưa kiểm do thiếu cột."
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Phép kiểm id đã chạy và ghi nhận kết quả 0 vi phạm; phép kiểm tọa độ bị bỏ qua do thiếu cột nên cần ghi rõ trạng thái chưa kiểm."
+        },
+        {
+            id: "B10-TN-019", dot: 2, type: "TN",
+            question: "Thư mục snapshot ghi 29/06/2026, nhưng `rv[\"date\"].max()` là 01/07/2026. Chính sách phân tích đang dùng mốc công bố để so sánh các kỳ. Kết luận nào phù hợp?",
+            options: [
+                "A. Ngày lớn nhất là mốc đúng; phải tự đổi mọi kỳ sang ngày này.",
+                "B. Ngày lớn nhất phát hiện lệch mốc; muốn đổi chính sách phải có lý do riêng.",
+                "C. Có ngày sau mốc nên chắc chắn toàn bộ tệp reviews bị hỏng.",
+                "D. Tên thư mục đã ghi mốc nên không cần kiểm ngày trong tệp."
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Phát hiện ngày vượt mốc là căn cứ chẩn đoán lệch dữ liệu; không tự động thay đổi chính sách nếu không có lý do xác đáng."
+        },
+        {
+            id: "B10-TN-020", dot: 2, type: "TN",
+            question: "Các mã trong `ds.id` là duy nhất. Số đếm đã đưa đúng về từng mã:\nid=10, number_of_reviews=2, dem_that=2\nid=20, number_of_reviews=0, dem_that=1\nid=30, number_of_reviews=2, dem_that=1\nid=40, number_of_reviews=1, dem_that=2\n\nĐặt `delta = ds[\"number_of_reviews\"] - ds[\"dem_that\"]`. Cặp **(số listing lệch, tổng delta)** là gì?",
+            options: [
+                "A. `(1, -1)`",
+                "B. `(3, -1)`",
+                "C. `(3, 1)`",
+                "D. `(6, -1)`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Delta từng dòng: id 10 (0), id 20 (-1), id 30 (1), id 40 (-1). Có 3 listing lệch (id 20, 30, 40); tổng delta = 0 + (-1) + 1 + (-1) = -1."
+        },
+        {
+            id: "B10-TL-006", dot: 2, type: "TL",
+            question: "Quy tắc đang viết: tên `gia_khong_duong`, điều kiện `price_num <= 0`. Cột giá không thiếu; KPI giá chỉ dùng giá dương và bảng gốc phải được giữ. Viết một câu bổ sung **lý do** và **hành động** để quy tắc đủ bốn phần.",
+            answer: "Lý do là KPI cần giá dương, hành động là gắn cờ các dòng vi phạm và loại chúng khỏi KPI giá, đồng thời giữ nguyên bảng gốc.",
+            explanation: "Một quy tắc QA chuẩn gồm 4 phần: Tên, Điều kiện, Lý do và Hành động xử lý."
+        },
+        {
+            id: "B10-TL-007", dot: 2, type: "TL",
+            question: "Nhóm Private có 4 dòng, trong đó 2 dòng thiếu giá. Nhóm Entire có 2 dòng, trong đó 1 dòng thiếu giá. Không có nhóm khác. Trả lời một câu ghi **tỷ lệ thiếu trong Private** và **tỷ trọng Private trong tập thiếu**; làm tròn đến hai chữ số thập phân nếu cần.",
+            answer: "Tỷ lệ thiếu trong Private là 50.0%; tỷ trọng Private trong tập thiếu là 66.67%.",
+            explanation: "Tỷ lệ thiếu trong Private = 2/4 = 50%. Tổng số dòng thiếu toàn bảng = 2 + 1 = 3; tỷ trọng Private trong tập thiếu = 2/3 ≈ 66.67%."
+        },
+        {
+            id: "B10-TL-008", dot: 2, type: "TL",
+            question: "Năm giá thuê là `100, 100, 200, 200, 2400` nghìn đồng/đêm. Tạm loại giá 2400 để phân tích độ nhạy, không sửa bảng gốc. Trả lời một câu nêu mức giảm của **trung bình** và của **trung vị**, cùng đơn vị trên.",
+            answer: "Trung bình giảm 450 nghìn đồng/đêm và trung vị giảm 50 nghìn đồng/đêm.",
+            explanation: "Ban đầu: Trung bình = (100+100+200+200+2400)/5 = 600, Trung vị = 200. Sau khi loại 2400: Trung bình = (100+100+200+200)/4 = 150, Trung vị = 150. Mức giảm lần lượt là 450 và 50."
+        },
+        {
+            id: "B10-TL-009", dot: 2, type: "TL",
+            question: "Listings có id `10,20,30,40`. Mốc công bố là 29/06/2026, ngày bằng mốc hợp lệ. Có bao nhiêu **dòng review** mồ côi **hoặc** sau mốc? Mỗi dòng chỉ tính một lần. Chỉ trả lời một số.",
+            answer: "2",
+            explanation: "Dòng 1 (listing_id 99) là review mồ côi; dòng 5 (listing_id 10, date 2026-07-01) là review sau mốc. Tổng cộng có 2 dòng thỏa mãn."
+        },
+        {
+            id: "B10-TL-010", dot: 2, type: "TL",
+            question: "`ds.id` duy nhất; mọi `rv.listing_id` đều khớp ds. `rv.date` đã là datetime không thiếu. Chính sách LTM của bài này là [30/06/2025, 29/06/2026], gồm hai đầu. Viết hai dòng: tạo `r` chỉ gồm review trong cửa sổ; cập nhật `ds[\"number_of_reviews_ltm\"]` từ r theo id, điền 0 cho listing không có review trong cửa sổ.",
+            answer: "```python\nr = rv[rv[\"date\"].between(\"2025-06-30\", \"2026-06-29\")]\nds[\"number_of_reviews_ltm\"] = ds[\"id\"].map(r.groupby(\"listing_id\").size()).fillna(0).astype(int)\n```",
+            explanation: "Sử dụng between để lọc khoảng thời gian LTM, sau đó dùng map kết hợp fillna(0) và astype(int) để cập nhật số lượng review LTM cho từng id."
+        },
+
+        // --- ĐỢT 3 ---
+        {
+            id: "B10-TN-021", dot: 3, type: "TN",
+            question: "Bảng chéo đếm số chỗ ở:\nscore.isna() | number_of_reviews != 0 | number_of_reviews == 0\nFalse | 3 | 0\nTrue | 1 | 2\n\nPhát biểu nào mô tả đúng bảng này?",
+            options: [
+                "A. Mọi chỗ chưa có review đều thiếu điểm; có một chỗ có review vẫn thiếu điểm.",
+                "B. Điểm thiếu đúng khi chưa có review; không có trường hợp ngoại lệ nào.",
+                "C. Mọi chỗ thiếu điểm đều đã có review; không có chỗ mới nào thiếu điểm.",
+                "D. Bảng chứng minh lỗi nhập điểm là nguyên nhân của mọi ô điểm thiếu."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Cột số review == 0 có tổng 0 + 2 = 2 chỗ, đều thiếu điểm (True). Cột review != 0 có 1 chỗ thiếu điểm (True) -> phát biểu A mô tả chính xác."
+        },
+        {
+            id: "B10-TN-022", dot: 3, type: "TN",
+            question: "```python\nb = pd.Series([1., 1., 3., np.nan, np.nan])\n```\nLàm tròn hai chữ số thập phân, cặp `(b.mean(), b.fillna(1).mean())` bằng gì?",
+            options: [
+                "A. `(1.67, 1.67)`",
+                "B. `(1.00, 1.40)`",
+                "C. `(1.67, 1.40)`",
+                "D. `(1.00, 1.00)`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "b.mean() = (1+1+3)/3 = 1.666... làm tròn thành 1.67. b.fillna(1).mean() = (1+1+3+1+1)/5 = 7/5 = 1.40."
+        },
+        {
+            id: "B10-TN-023", dot: 3, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"accommodates\": [2, 4, 2, 4],\n                  \"bedrooms\": [1., np.nan, np.nan, 3.]})\nr = d.groupby(\"accommodates\")[\"bedrooms\"].median()\n```\nVì sao `r` chưa phù hợp để điền trực tiếp bằng `d[\"bedrooms\"].fillna(r)` cho từng dòng?",
+            options: [
+                "A. `r` đã có bốn dòng như d; chỉ cần đổi tên r là điền đúng theo nhóm.",
+                "B. `fillna(r)` tự đọc cột accommodates để tìm nhóm tương ứng của mỗi dòng.",
+                "C. `r` có chỉ mục là nhóm sức chứa; cần mức điền theo từng dòng, chẳng hạn dùng `transform`.",
+                "D. `fillna(r)` luôn bỏ nhãn và điền lần lượt hai trung vị theo vị trí."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "r có index là accommodates [2, 4], trong khi d có 4 dòng. fillna căn theo index nên sẽ không khớp trực tiếp; cần dùng transform để sinh giá trị tương ứng theo từng dòng của d."
+        },
+        {
+            id: "B10-TN-024", dot: 3, type: "TN",
+            question: "Một tập giá dương lệch phải có 100 chỗ ở. Quy tắc 1,5 × IQR gắn cờ 8 chỗ; kiểm tra miền chưa phát hiện vi phạm ở 8 chỗ này. Phát biểu nào đúng cả về ý nghĩa IQR và cách diễn giải cờ?",
+            options: [
+                "A. IQR là độ rộng 50% dữ liệu ở giữa; các giá bị cờ vẫn có thể hợp lệ.",
+                "B. IQR là độ rộng 25% dữ liệu thấp nhất; các giá bị cờ cần điều tra thêm.",
+                "C. IQR là độ rộng 50% dữ liệu ở giữa; tám giá bị cờ chắc chắn nhập sai.",
+                "D. IQR là độ rộng 50% dữ liệu ở giữa; giá dương nên không cờ nào cần kiểm."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "IQR đo khoảng giữa (50% dữ liệu). Ngoại lai thống kê (bị cờ) chỉ là điểm cần điều tra, bản thân chúng vẫn có thể là giá trị hợp lệ ở đuôi phải phân phối."
+        },
+        {
+            id: "B10-TN-025", dot: 3, type: "TN",
+            question: "Giá dương, đơn vị nghìn đồng/đêm. P99 tham chiếu toàn thành phố là 4000.\nChỉ mục | Quận | Giá\n0 | A | 100\n1 | A | 100\n2 | A | 2500\n3 | B | 1000\n4 | B | 1000\n5 | B | 5000\n\nHai quy tắc dùng dấu `>`: giá trên 20 lần trung vị quận và giá trên P99 tham chiếu. Cặp **(chỉ mục bị cờ theo quận, chỉ mục bị cờ P99)** là gì?",
+            options: [
+                "A. `([5], [2])`",
+                "B. `([2, 5], [5])`",
+                "C. `([], [5])`",
+                "D. `([2], [5])`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Trung vị quận A = 100 (ngưỡng 20x = 2000), dòng 2 giá 2500 > 2000 nên bị cờ theo quận ([2]). Trung vị quận B = 1000 (ngưỡng 20x = 20000), không dòng nào vượt. Quy tắc P99 tham chiếu (4000) bắt dòng 5 (giá 5000)."
+        },
+        {
+            id: "B10-TN-026", dot: 3, type: "TN",
+            question: "Sau concat hai snapshot, `d` có các cặp `(id,snapshot)` là `(1,\"06\")`, `(1,\"09\")`, `(2,\"06\")`, `(2,\"09\")`. Chỉ được coi là trùng khi cùng chỗ ở trong cùng snapshot. Biểu thức nào thay cho `d[\"id\"].duplicated(keep=False)` để gắn cờ đúng, vẫn giữ mọi dòng?",
+            options: [
+                "A. `d[\"id\"].duplicated(keep=False)`",
+                "B. `d[\"snapshot\"].duplicated(keep=False)`",
+                "C. `d.duplicated(subset=[\"id\", \"snapshot\"], keep=False)`",
+                "D. `d[\"id\"].duplicated(keep=\"last\")`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Phải dùng subset gồm cả `id` và `snapshot` để xác định chính xác tính duy nhất của quan sát theo đúng đơn vị thời gian."
+        },
+        {
+            id: "B10-TN-027", dot: 3, type: "TN",
+            question: "Một mặt nạ vi phạm đã chạy trên toàn bộ 5 dòng, không thiếu:\nm = pd.Series([True, False, False, False, False])\nty_le = m.mean() * 100\n`ty_le` bằng bao nhiêu?",
+            options: [
+                "A. 20.0",
+                "B. 1.0",
+                "C. 0.2",
+                "D. 25.0"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "m.mean() tính trung bình giá trị bool (1 True / 5 phần tử = 0.2). Nhân 100 cho ra 20.0%."
+        },
+        {
+            id: "B10-TN-028", dot: 3, type: "TN",
+            question: "P99 đã hiệu chỉnh từ snapshot tham chiếu là 1000. Bảng cần kiểm có giá `1000,2000,3000,4000` cùng đơn vị. Nếu tính P99 trên chính bảng mới thì nhận 3970 (đã cho). Với dấu `>`, cặp **(số cờ dùng ngưỡng tham chiếu, số cờ dùng P99 tính lại)** là gì?",
+            options: [
+                "A. `(1, 1)`",
+                "B. `(4, 1)`",
+                "C. `(3, 0)`",
+                "D. `(3, 1)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Dùng ngưỡng tham chiếu cố định (1000): các giá 2000, 3000, 4000 đều lớn hơn -> 3 cờ. Dùng P99 tính lại trên bảng mới (3970): chỉ có giá 4000 lớn hơn -> 1 cờ. Cặp kết quả là (3, 1)."
+        },
+        {
+            id: "B10-TN-029", dot: 3, type: "TN",
+            question: "Listings có bốn mã `10,20,30,40`. Reviews có cột listing_id là `10,10,20,20,20,30`; mỗi dòng là một review hợp lệ. Cặp **(tổng số review, số listing có ít nhất một review)** là gì?",
+            options: [
+                "A. `(3, 6)`",
+                "B. `(6, 3)`",
+                "C. `(3, 3)`",
+                "D. `(6, 4)`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Tổng số review là số dòng của rv = 6. Số listing có ít nhất một review gồm 3 mã [10, 20, 30] -> 3 listing."
+        },
+        {
+            id: "B10-TN-030", dot: 3, type: "TN",
+            question: "Trong bốn listing lệch LTM, `cột có sẵn − tự đếm` lần lượt là `-1,-1,-1,2`. Tất cả được đối chiếu sau khi map đúng id. Nhận định nào có căn cứ nhất?",
+            options: [
+                "A. Nguồn chắc chắn dùng cửa sổ ngắn hơn đúng một ngày cho mọi listing.",
+                "B. Có mẫu hình lệch cần kiểm định nghĩa cửa sổ; các số này chưa xác định được nguyên nhân.",
+                "C. Chỉ cần cộng 1 vào mọi giá trị có sẵn là toàn bộ listing sẽ khớp.",
+                "D. Chênh lệch chỉ do gán sai vị trí, dù đã xác nhận map đúng id."
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Sự xuất hiện độ lệch âm và dương gợi ý có sự khác biệt về định nghĩa cửa sổ hoặc lọc dữ liệu, nhưng chưa đủ kết luận nguyên nhân duy nhất."
+        },
+        {
+            id: "B10-TL-011", dot: 3, type: "TL",
+            question: "Trong tập dữ liệu này, giá 0 là khuyến mãi miễn phí hợp lệ đã được xác nhận. KPI cần bao gồm cả các đêm miễn phí. AI đề xuất: “Gắn cờ mọi `price_num <= 0` rồi loại khỏi KPI vì giá không dương vô nghĩa”. Viết một câu nêu điểm không phù hợp và cách điều chỉnh tối thiểu đối với giá 0.",
+            answer: "Điểm không phù hợp là quy tắc loại nhầm các đêm miễn phí giá 0 hợp lệ; cần điều chỉnh điều kiện thành `price_num < 0` để chỉ bắt giá âm.",
+            explanation: "Không được áp dụng máy móc quy tắc từ bối cảnh khác khi nghiệp vụ thực tế cho phép giá 0."
+        },
+        {
+            id: "B10-TL-012", dot: 3, type: "TL",
+            question: "Cột bedrooms hiện là `[1.,1.,1.,2.]`. Một số ô thiếu trước đây đã được điền bằng 1, nhưng nhóm không giữ cờ thiếu và không còn bản gốc. Có thể dùng `bedrooms == 1` để khôi phục chính xác cờ thiếu ban đầu không? Trả lời một câu, nêu dữ liệu cần giữ để tránh vấn đề này.",
+            answer: "Không thể, vì giá trị 1 có thể là dữ liệu quan sát gốc hoặc giá trị do điền; cần giữ cờ thiếu ban đầu trước khi điền.",
+            explanation: "Mất dấu vết sau khi fillna nếu không tạo và lưu trữ cột cờ `_isna` từ trước."
+        },
+        {
+            id: "B10-TL-013", dot: 3, type: "TL",
+            question: "Một tập giá lệch phải có Q1=40 và Q3=100, đơn vị nghìn đồng/đêm. Dùng hai ngưỡng 1,5 × IQR. Trả lời một câu ghi **ngưỡng dưới, ngưỡng trên**, và cho biết có nên tự động xóa mọi giá trên ngưỡng trên chỉ vì vượt IQR không.",
+            answer: "Ngưỡng dưới là -50, ngưỡng trên là 190; không nên tự động xóa vì các giá cao ở đuôi phải phân phối vẫn có thể hợp lệ.",
+            explanation: "IQR = 60; Ngưỡng dưới = 40 - 90 = -50; Ngưỡng trên = 100 + 90 = 190. Ngoại lai thống kê cần kiểm tra, không xóa tự động."
+        },
+        {
+            id: "B10-TL-014", dot: 3, type: "TL",
+            question: "Trên cùng một Series khóa không thiếu, đã chạy:\nduplicated().sum() = 4\nduplicated(keep=False).sum() = 6\n\nCó bao nhiêu **nhóm giá trị xuất hiện từ hai lần trở lên**? Chỉ trả lời một số.",
+            answer: "2",
+            explanation: "Mỗi nhóm trùng có k phần tử sẽ đóng góp k−1 dòng dư (đếm bởi duplicated()) và k dòng đánh dấu (đếm bởi keep=False). Hiệu số này đúng bằng số nhóm trùng: 6 - 4 = 2 nhóm."
+        },
+        {
+            id: "B10-TL-015", dot: 3, type: "TL",
+            question: "```python\nds = pd.DataFrame({\"id\": [70, 90, 50]})\ndem = pd.Series([1, 2], index=[50, 70]) # chỉ mục là listing_id\nds[\"dem_that\"] = dem # dòng cần sửa\n```\nViết một dòng thay dòng cuối để đưa đúng số review theo id và điền 0 cho listing không có review; giải thích lỗi cũ bằng một câu ngắn.",
+            answer: "```python\nds[\"dem_that\"] = ds[\"id\"].map(dem).fillna(0).astype(int)\n```\nLỗi cũ gán trực tiếp Series theo vị trí index thay vì tra cứu theo giá trị cột id.",
+            explanation: "Phải dùng phương thức `.map()` hoặc `.set_index().loc` để căn chỉnh đúng giá trị id thay vì gán trực tiếp."
+        },
+
+        // --- ĐỢT 4 ---
+        {
+            id: "B10-TN-031", dot: 4, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"price_num\": [np.nan, 100., np.nan, 200.],\n                  \"bedrooms\": [1., np.nan, 2., 3.]})\nkq = (d.isna().mean() * 100).to_dict()\n```\n`kq` có hai giá trị phần trăm nào, theo thứ tự price_num rồi bedrooms?",
+            options: [
+                "A. `(2.0, 1.0)`",
+                "B. `(25.0, 12.5)`",
+                "C. `(66.67, 33.33)`",
+                "D. `(50.0, 25.0)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "price_num có 2/4 ô thiếu = 50.0%. bedrooms có 1/4 ô thiếu = 25.0%."
+        },
+        {
+            id: "B10-TN-032", dot: 4, type: "TN",
+            question: "Trong dữ liệu được kiểm, Private có 50% dòng thiếu giá, Entire có 0%. Chưa có thông tin về quá trình thu thập hay hành vi chủ nhà. Kết luận nào được dữ kiện hỗ trợ?",
+            options: [
+                "A. Chủ phòng Private chắc chắn cố tình giấu giá; có thể kết luận mà không cần nguồn khác.",
+                "B. Mọi loại phòng trong các thành phố khác cũng có cùng hai tỷ lệ thiếu như trên.",
+                "C. Do tỷ lệ khác nhau nên mọi giá đã quan sát trong Private đều không đáng tin.",
+                "D. Tỷ lệ thiếu khác theo loại phòng; cần điều tra thêm trước khi xác định nguyên nhân."
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Số liệu phản ánh tỷ lệ thiếu khác nhau theo nhóm phòng trong tập dữ liệu; không được suy diễn nguyên nhân chủ quan hay khái quát hóa khi chưa đủ bằng chứng."
+        },
+        {
+            id: "B10-TN-033", dot: 4, type: "TN",
+            question: "```python\ns = pd.Series([np.nan, -0.1, 0., 5., 5.1], dtype=\"float64\")\n```\nChỉ gắn cờ **điểm đã quan sát ngoài [0,5]**; điểm thiếu kiểm riêng. Biểu thức nào đúng?",
+            options: [
+                "A. `~s.between(0, 5)`",
+                "B. `s.notna() & ~s.between(0, 5)`",
+                "C. `s.notna() | ~s.between(0, 5)`",
+                "D. `s.notna() & s.between(0, 5)`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Cần kết hợp điều kiện không thiếu (`s.notna()`) với phủ định khoảng hợp lệ (`~s.between(0, 5)`) để tránh gắn cờ nhầm giá trị NaN."
+        },
+        {
+            id: "B10-TN-034", dot: 4, type: "TN",
+            question: "```python\ns = pd.Series([\"   \", \"\", None, \" An \"], dtype=object)\nm = s.isna() | s.str.strip().eq(\"\")\n```\nNhững chỉ mục nào có `m=True`?",
+            options: [
+                "A. `[2]`",
+                "B. `[0, 1]`",
+                "C. `[0, 1, 2, 3]`",
+                "D. `[0, 1, 2]`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Chỉ mục 0 ('   ') và 1 ('') sau khi strip() đều thành chuỗi rỗng; chỉ mục 2 là None (isna). Cả 3 chỉ mục này đều cho m=True."
+        },
+        {
+            id: "B10-TN-035", dot: 4, type: "TN",
+            question: "Một listing có giá trên P99 tham chiếu, điểm 4,9/5, số đêm tối thiểu 1; chưa kiểm giá tại nguồn. Chưa có quy tắc miền đã xác nhận nào bị vi phạm. Hành động nào phù hợp nhất với thông tin hiện có?",
+            options: [
+                "A. Gắn cờ giá cao, kiểm nguồn và đo độ nhạy trước khi chọn xử lý.",
+                "B. Xóa listing vì trên P99 là bằng chứng giá chắc chắn nhập sai.",
+                "C. Giữ mà không cần cờ vì điểm 4,9 chứng minh giá thuê chính xác.",
+                "D. Thay giá bằng P99 vì mọi giá cao hơn ngưỡng đều phải bằng nhau."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Vượt phân vị là tín hiệu nghi vấn cần gắn cờ để điều tra, kiểm tra nguồn và phân tích độ nhạy KPI trước khi quyết định xử lý."
+        },
+        {
+            id: "B10-TN-036", dot: 4, type: "TN",
+            question: "Bảng một snapshot quy định mỗi id chỉ có một dòng:\nid=11, price_num=100\nid=11, price_num=120\nid=22, price_num=200\nid=33, price_num=300\n\n`d.duplicated().sum()` bằng 0. Nhận định nào đúng?",
+            options: [
+                "A. Không trùng nguyên dòng nên id đã được chứng minh là khóa duy nhất.",
+                "B. Giá khác nhau chứng minh hai dòng id=11 là hai chỗ ở khác nhau.",
+                "C. Không trùng nguyên dòng, nhưng id=11 lặp nên khóa id bị vi phạm.",
+                "D. Có id lặp nên cả bốn dòng đều phải là bản sao nguyên vẹn."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "duplicated() kiểm tra toàn dòng bằng 0 vì giá khác nhau (100 và 120), nhưng id=11 bị lặp -> vi phạm tính duy nhất của khóa id."
+        },
+        {
+            id: "B10-TN-037", dot: 4, type: "TN",
+            question: "`a` và `b` là mặt nạ bool, cùng index, không thiếu. Muốn giữ dòng **không vi phạm quy tắc nào**. Biểu thức nào tương đương `~(a | b)` với mọi tổ hợp True/False?",
+            options: [
+                "A. `(~a) | (~b)`",
+                "B. `a & b`",
+                "C. `(~a) & (~b)`",
+                "D. `a | b`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Theo định luật De Morgan, phủ định của phép OR là phép AND của hai phủ định: `~(a | b) == (~a) & (~b)`."
+        },
+        {
+            id: "B10-TN-038", dot: 4, type: "TN",
+            question: "Ở snapshot cũ, giá là chuỗi có dấu `$`. Snapshot mới đã được kiểm và có `price` kiểu float64, cùng đơn vị tiền tệ, có NaN. Cách chuẩn bị `price_num` nào phù hợp?",
+            options: [
+                "A. Luôn gọi trực tiếp `.str.replace` trên price vì mọi giá từ CSV đều là chuỗi.",
+                "B. Dùng cột giá số sẵn có cho price_num và giữ nguyên NaN để kiểm thiếu.",
+                "C. Điền NaN bằng 0 trước mọi phép kiểm để kiểu số không còn lỗi thiếu.",
+                "D. Ép price thành int vì NaN sẽ tự trở thành giá 0 hợp lệ."
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Dữ liệu mới đã ở dạng số float64, ta trực tiếp sử dụng mà không cần các thao tác xử lý chuỗi cũ, đồng thời giữ nguyên NaN phục vụ kiểm tra thiếu."
+        },
+        {
+            id: "B10-TN-039", dot: 4, type: "TN",
+            question: "Mốc snapshot là 29/06/2026. Quy tắc gắn cờ ngày **sau** mốc. Bốn ngày là `2026-06-28`, `2026-06-29`, `2026-06-30`, `2026-07-01`. Có bao nhiêu review bị cờ?",
+            options: [
+                "A. 3",
+                "B. 2",
+                "C. 1",
+                "D. 0"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Các ngày sau mốc 29/06/2026 gồm 30/06/2026 và 01/07/2026 (tổng cộng 2 ngày bị cờ)."
+        },
+        {
+            id: "B10-TN-040", dot: 4, type: "TN",
+            question: "Bốn review có ngày `2025-06-29`, `2025-06-30`, `2026-06-29`, `2026-06-30`. Chính sách LTM là [30/06/2025,29/06/2026], gồm hai đầu.\n`r = rv[rv[\"date\"] >= \"2025-06-30\"]`\nNhận định nào đúng về r và chính sách?",
+            options: [
+                "A. r có 3 dòng, gồm 1 dòng sau mốc; cần thêm điều kiện cận trên.",
+                "B. r có 2 dòng và không có dòng sau mốc; đã đúng cả hai cận.",
+                "C. r có 3 dòng nhưng không có dòng sau mốc vì tất cả đều sau cận dưới.",
+                "D. r có 4 dòng, gồm 1 dòng sau mốc; cần đổi >= thành >."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Lọc `>= 2025-06-30` giữ lại 3 dòng (2025-06-30, 2026-06-29, 2026-06-30), trong đó có 1 dòng vượt quá mốc kết thúc 2026-06-29 -> cần bổ sung điều kiện cận trên."
+        },
+        {
+            id: "B10-TL-016", dot: 4, type: "TL",
+            question: "Một nhóm đã gắn cờ các giá trên P99 nhưng chưa kiểm nguồn hay đánh giá ảnh hưởng tới KPI. Một thành viên muốn xóa vĩnh viễn các dòng này khỏi bảng gốc để mọi phân tích sau đều dùng bảng đã xóa. Viết một câu nêu quyết định phù hợp và lý do.",
+            answer: "Giữ dữ liệu gốc và cờ, không xóa vĩnh viễn vì giá trị vượt P99 chỉ là nghi vấn thống kê và cần điều tra trước khi quyết định loại bỏ.",
+            explanation: "Không được hủy hoại dữ liệu gốc chỉ dựa trên một ngưỡng sàng lọc thống kê ban đầu."
+        },
+        {
+            id: "B10-TL-017", dot: 4, type: "TL",
+            question: "Có 4 dòng bedrooms, trong đó 3 giá trị quan sát có trung bình đúng bằng 2 phòng ngủ; dòng còn lại thiếu. Điền hằng số 1 cho đúng dòng thiếu đó, giữ nguyên ba giá trị quan sát. Trung bình mới trên cả 4 dòng là bao nhiêu? Chỉ trả lời một con số.",
+            answer: "1.75",
+            explanation: "Tổng 3 giá trị ban đầu là 3 * 2 = 6. Thêm giá trị 1 cho dòng thiếu, tổng mới là 6 + 1 = 7. Trung bình mới trên 4 dòng = 7 / 4 = 1.75."
+        },
+        {
+            id: "B10-TL-018", dot: 4, type: "TL",
+            question: "Giá theo thứ tự dưới đây, đơn vị nghìn đồng/đêm:\nQuận: A, A, A, A, B, B, B, B\nGiá: 100, 100, 100, 2100, 1000, 1000, 1000, 21000\nQuy tắc a: giá **> 20 × trung vị quận** tính trên bảng này. Quy tắc b: giá **> P99 tham chiếu = 10000**. Có bao nhiêu dòng bị cả a và b gắn cờ? Chỉ trả lời một số.",
+            answer: "1",
+            explanation: "Trung vị quận A = 100 (ngưỡng 20x = 2000), giá 2100 bị cờ a. Trung vị quận B = 1000 (ngưỡng 20x = 20000), giá 21000 bị cờ a. Cả hai giá này đều so với P99 (10000): chỉ có giá 21000 lớn hơn 10000 (thỏa mãn cờ b). Vậy chỉ có 1 dòng (giá 21000 của quận B) bị cả hai quy tắc gắn cờ."
+        },
+        {
+            id: "B10-TL-019", dot: 4, type: "TL",
+            question: "Số đếm đã căn chỉnh đúng id:\nid=1, number_of_reviews=5, dem_that=4\nid=2, number_of_reviews=2, dem_that=3\nid=3, number_of_reviews=1, dem_that=1\nid=4, number_of_reviews=0, dem_that=0\n\nMột bạn nói tổng `(number_of_reviews - dem_that)` bằng 0 nên mọi listing đều khớp. Trả lời một câu nêu sai ở đâu và có bao nhiêu listing lệch.",
+            answer: "Sai ở chỗ lấy tổng độ lệch bị triệt tiêu âm dương; thực tế có 2 listing bị lệch (id 1 và id 2).",
+            explanation: "Delta từng dòng: id 1 (+1), id 2 (-1), id 3 (0), id 4 (0). Tổng delta = 0 nhưng có 2 listing không khớp."
+        },
+        {
+            id: "B10-TL-020", dot: 4, type: "TL",
+            question: "Snapshot mới không có cột bedrooms. Hàm phòng thủ bỏ qua quy tắc `bedrooms_dien`. Người lập báo cáo dự định ghi `so_dong = 0` cho quy tắc đó. Trả lời một câu nêu trạng thái cần ghi và việc cần kiểm tra tiếp theo.",
+            answer: "Cần ghi trạng thái 'chưa kiểm do thiếu cột' thay vì 0, đồng thời kiểm tra schema và cấu hình dữ liệu mới.",
+            explanation: "Phép kiểm không thực thi do thiếu cột khác hoàn toàn với kết quả 0 vi phạm trên dữ liệu đã kiểm."
+        },
+
+        // --- ĐỢT 5 ---
+        {
+            id: "B10-TN-041", dot: 5, type: "TN",
+            question: "Chuyển bộ QA từ Santiago sang thành phố B. Dữ liệu B có tọa độ hợp lệ quanh (10,106), nhưng bộ QA vẫn dùng hộp vĩ độ [-34,-33], kinh độ [-71,-70]. Các cột và kiểu dữ liệu đều đủ. Việc cần làm trước khi diễn giải số cờ là gì?",
+            options: [
+                "A. Kết luận dữ liệu B sai toàn bộ vì không nằm trong hộp của Santiago.",
+                "B. Hiệu chỉnh biên theo thành phố B và ghi cấu hình, lý do áp dụng.",
+                "C. Sửa tọa độ B về hộp Santiago để làm tỷ lệ vi phạm bằng 0.",
+                "D. Bỏ mọi phép QA vì quy tắc tọa độ cũ không dùng được cho thành phố B."
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Khi thay đổi địa bàn nghiên cứu, cần hiệu chỉnh lại tham số biên giới địa lý cho phù hợp với thành phố mới và ghi chép cấu hình minh bạch."
+        },
+        {
+            id: "B10-TN-042", dot: 5, type: "TN",
+            question: "Bảng gốc có 4 Private và 4 Entire. Trong Private có 2 dòng thiếu giá; Entire không thiếu giá. Nhóm dùng `dropna(subset=[\"price_num-\"])` để lập KPI giá, không có điều kiện lọc khác. Nhận xét nào đúng về cơ cấu bảng dùng cho KPI?",
+            options: [
+                "A. Private giảm từ 50% xuống khoảng 33,33%; cần báo hạn chế đại diện.",
+                "B. Private tăng từ 50% lên khoảng 66,67%; cần báo nhóm này chiếm nhiều hơn.",
+                "C. Private vẫn chiếm đúng 50%; dropna không thay đổi cơ cấu loại phòng.",
+                "D. Private giảm từ 50% xuống 0%; mọi dòng của nhóm đều bị loại."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Ban đầu Private chiếm 4/8 = 50%. Sau khi loại 2 dòng thiếu giá của Private, số dòng Private còn 2, Entire còn 4 (tổng 6 dòng). Tỷ lệ Private trong bảng KPI = 2/6 ≈ 33.33% -> cơ cấu thay đổi và cần báo cáo hạn chế đại diện."
+        },
+        {
+            id: "B10-TN-043", dot: 5, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"accommodates\": [2, 2, 4, 4],\n                  \"bedrooms\": [1., np.nan, np.nan, np.nan]})\nd[\"was_missing\"] = d[\"bedrooms\"].isna()\nd[\"bedrooms\"] = d[\"bedrooms\"].fillna(\n    d.groupby(\"accommodates\")[\"bedrooms\"].transform(\"median\")\n)\n```\nKhông có chính sách điền dự phòng. Cặp **(số ô còn thiếu, tổng was_missing)** bằng gì?",
+            options: [
+                "A. `(0, 3)`",
+                "B. `(2, 3)`",
+                "C. `(2, 2)`",
+                "D. `(3, 3)`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Nhóm accommodates=2 có dữ liệu quan sát (1.); nhóm accommodates=4 hoàn toàn bằng NaN nên trung vị nhóm 4 là NaN (không điền được). Vậy sau fillna vẫn còn 2 ô thiếu. Số ô was_missing ban đầu là 3 ô."
+        },
+        {
+            id: "B10-TN-044", dot: 5, type: "TN",
+            question: "Quy tắc đã xác nhận: 365 đêm hợp lệ, từ 366 đêm cần gắn cờ. Cột `minimum_nights` là số nguyên không thiếu. Code hiện dùng `d[\"minimum_nights\"] >= 365` nên gắn cờ nhầm biên. Biểu thức thay thế nào đúng?",
+            options: [
+                "A. `d[\"minimum_nights\"] >= 365`",
+                "B. `d[\"minimum_nights\"] < 365`",
+                "C. `d[\"minimum_nights\"] > 365`",
+                "D. `d[\"minimum_nights\"] <= 365`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Chỉ từ 366 đêm trở lên mới vi phạm, do đó điều kiện đúng phải là số đêm lớn hơn 365 (`> 365`)."
+        },
+        {
+            id: "B10-TN-045", dot: 5, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"name\": [\"A\", \"B\", \"C\", \"D\"],\n                  \"price_num\": [100, 300, 200, 9000],\n                  \"review_scores_rating\": [4., 4.1, 4.8, 4.9]})\nx = d.nlargest(1, \"price_num\").iloc[0]\n```\nGiá tính bằng nghìn đồng/đêm, chưa kiểm nguồn. Cách đọc `(x[\"name\"], x[\"price_num\"])` và kết luận nào phù hợp?",
+            options: [
+                "A. `(\"D\", 9000)`; đây chắc chắn là giá nhập sai vì cao nhất bảng.",
+                "B. `(\"D\", 9000)`; đây chắc chắn là giá đúng vì điểm đánh giá cao.",
+                "C. `(\"D\", 9000)`; cần thay ngay bằng trung bình của ba dòng còn lại.",
+                "D. `(\"D\", 9000)`; đây là dòng cần kiểm nguồn trước khi kết luận về giá."
+            ],
+            correct: 3, // Đáp án D
+            explanation: "nlargest chọn ra giá trị lớn nhất (D, 9000); giá trị này là tín hiệu ngoại lai cần kiểm tra nguồn gốc trước khi đưa ra kết luận nghiệp vụ."
+        },
+        {
+            id: "B10-TN-046", dot: 5, type: "TN",
+            question: "Mỗi `(id,snapshot)` được phép có một dòng:\nChỉ mục | id | snapshot | price_num\n0 | 1 | 06 | 100\n1 | 1 | 06 | 120\n2 | 1 | 09 | 130\n3 | 2 | 09 | 200\n\nPhát hiện nào đúng?",
+            options: [
+                "A. Dòng 0 và 1 xung đột khóa ghép; dòng 2 là quan sát khác snapshot.",
+                "B. Dòng 0,1,2 đều xung đột khóa ghép vì cùng có id bằng 1.",
+                "C. Không dòng nào xung đột vì cả bốn giá thuê đều khác nhau.",
+                "D. Chỉ dòng 1 và 2 xung đột vì đều xuất hiện sau dòng 0."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Cặp khóa ghép (id=1, snapshot=06) xuất hiện ở dòng 0 và dòng 1 -> xung đột khóa ghép. Dòng 2 có snapshot '09' nên là quan sát kỳ khác hợp lệ."
+        },
+        {
+            id: "B10-TN-047", dot: 5, type: "TN",
+            question: "Hai phép kiểm đã chạy trên cùng 6 dòng: a có 3 dòng vi phạm, b có 3 dòng vi phạm, giao a và b có 2 dòng. Báo cáo cho quy tắc tổng hợp “vi phạm a hoặc b”, làm tròn phần trăm đến hai chữ số, phải ghi **(so_dong, tỷ lệ %)** nào?",
+            options: [
+                "A. `(6, 100.00)`",
+                "B. `(2, 33.33)`",
+                "C. `(4, 66.67)`",
+                "D. `(4, 133.33)`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Số dòng vi phạm A hoặc B (phép Hợp) = Số A + Số B - Số Giao = 3 + 3 - 2 = 4 dòng. Tỷ lệ phần trăm = 4 / 6 * 100% ≈ 66.67%."
+        },
+        {
+            id: "B10-TN-048", dot: 5, type: "TN",
+            question: "P99 tham chiếu là 2.000.000 **đồng/đêm**. Bảng mới đổi giá sang **nghìn đồng/đêm**, một giá bằng 2500. Ngưỡng cần cùng đơn vị với cột; dùng dấu >. Cặp **(ngưỡng theo đơn vị mới, giá 2500 có bị cờ không)** là gì?",
+            options: [
+                "A. `(2000000, không)`",
+                "B. `(2, có)`",
+                "C. `(2000, không)`",
+                "D. `(2000, có)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Quy đổi ngưỡng sang nghìn đồng: 2.000.000 đồng = 2000 nghìn đồng. Giá 2500 > 2000 nên bị cờ."
+        },
+        {
+            id: "B10-TN-049", dot: 5, type: "TN",
+            question: "Listings có id `10,20,30,40`. Reviews có listing_id `10,99,99,88,20,99`; không có giá trị thiếu. Cặp **(số dòng review mồ côi, số mã listing_id mồ côi khác nhau)** là gì?",
+            options: [
+                "A. `(2, 4)`",
+                "B. `(4, 2)`",
+                "C. `(2, 2)`",
+                "D. `(6, 4)`"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Các review mồ côi (listing_id không nằm trong [10,20,30,40]) gồm: 99, 99, 88, 99 -> tổng cộng 4 dòng review mồ côi, ứng với 2 mã khác nhau là 99 và 88."
+        },
+        {
+            id: "B10-TN-050", dot: 5, type: "TN",
+            question: "Theo chính sách chỉ dùng ngày <=29/06/2026, reviews đã được cắt từ bảng sau:\nlisting_id | date\n10 | 2026-06-28\n10 | 2026-07-01\n20 | 2026-06-29\n20 | 2026-06-30\nTrước cắt, listings có `number_of_reviews` và `last_review` tính từ toàn bộ bảng. Cách cập nhật nào nhất quán?",
+            options: [
+                "A. Tính lại cả số review và ngày review cuối từ bảng đã cắt cho từng id.",
+                "B. Chỉ tính lại số review; ngày cuối giữ nguyên để không mất thông tin nguồn.",
+                "C. Chỉ tính lại ngày cuối; số review giữ nguyên vì trước cắt đã khớp.",
+                "D. Giữ cả hai cột; việc reviews đã cắt bảo đảm listings tự cập nhật theo."
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Khi bảng review nguồn đã bị cắt lọc theo chính sách thời gian, mọi cột dẫn xuất thống kê liên quan (số lượng review và mốc thời gian cuối) đều phải được tính toán lại từ bảng đã cắt."
+        },
+        {
+            id: "B10-TL-021", dot: 5, type: "TL",
+            question: "Ở lecture, snapshot được mô tả có điểm thiếu đúng khi chưa có review. Trong snapshot mới, có bản ghi A: `number_of_reviews=2`, `review_scores_rating=NaN`. Có được tiếp tục khẳng định “mọi chỗ thiếu điểm đều chưa có review” trên snapshot mới không? Trả lời một câu dựa vào dữ kiện.",
+            answer: "Không, vì bản ghi A có 2 review nhưng vẫn thiếu điểm, đóng vai trò là phản ví dụ bác bỏ khẳng định trên.",
+            explanation: "Quy luật ở tập dữ liệu cũ không được suy diễn tuyệt đối sang tập dữ liệu mới khi xuất hiện phản ví dụ thực tế."
+        },
+        {
+            id: "B10-TL-022", dot: 5, type: "TL",
+            question: "Các cột số là float64; NaN nghĩa là thiếu. Hộp tọa độ hợp lệ [-34,-33] × [-71,-70], gồm biên. Trong bài này, một dòng cần điều tra nếu giá thiếu/không dương **hoặc** tọa độ thiếu/ngoài hộp.\n\nDòng | price_num | latitude | longitude\n0 | 100 | -34.0 | -71.0\n1 | NaN | -33.5 | -70.5\n2 | 200 | NaN | -70.5\n3 | -1 | -32.9 | -70.5\n\nCó bao nhiêu dòng cần điều tra, không đếm trùng? Chỉ trả lời một số.",
+            answer: "3",
+            explanation: "Dòng 0 hợp lệ hoàn toàn. Dòng 1 thiếu giá (NaN). Dòng 2 thiếu vĩ độ (NaN). Dòng 3 có giá âm (-1) và vĩ độ ngoài biên (-32.9). Tổng cộng có 3 dòng (1, 2, 3) cần điều tra."
+        },
+        {
+            id: "B10-TL-023", dot: 5, type: "TL",
+            question: "Bảng reviews rút gọn chỉ giữ listing_id và date; hai review khác nhau có thể cùng cặp này. Cần định danh từng review để kiểm trùng theo khóa thực sự. Trả lời một câu nêu loại cột cần lấy thêm từ bảng đầy đủ và điều cần kiểm trước khi dùng làm khóa.",
+            answer: "Cần lấy thêm cột định danh duy nhất của từng review (id review) từ bảng đầy đủ, và kiểm tra cột này không thiếu và không lặp trước khi dùng làm khóa.",
+            explanation: "Cặp listing_id và date không đủ độ chi tiết để phân biệt nhiều review diễn ra trong cùng một ngày."
+        },
+        {
+            id: "B10-TL-024", dot: 5, type: "TL",
+            question: "Đặt delta = `number_of_reviews_ltm` có sẵn trừ số LTM tự đếm theo cửa sổ đã ghi rõ. Một listing có delta = -1; chưa có thêm thông tin về định nghĩa nguồn. Trả lời một câu nêu ý nghĩa số học và có thể khẳng định nguồn bỏ sót đúng một review hay chưa.",
+            answer: "Ý nghĩa số học là cột có sẵn nhỏ hơn số tự đếm 1 đơn vị; chưa thể khẳng định nguồn bỏ sót vì có thể do khác biệt về định nghĩa mốc cửa sổ thời gian.",
+            explanation: "Chênh lệch số học phản ánh kết quả so sánh, không tự động xác định nguyên nhân gốc rễ của dữ liệu nguồn."
+        },
+        {
+            id: "B10-TL-025", dot: 5, type: "TL",
+            question: "Hai quy tắc a và b đã chạy trên cùng 4 dòng. a có 0 vi phạm; b có 2 vi phạm. Báo cáo cần ghi tỷ lệ phần trăm trên số dòng đã kiểm. Trả lời một câu ghi tỷ lệ của a, b và có giữ a trong báo cáo không.",
+            answer: "Tỷ lệ của a là 0.0%, của b là 50.0%; vẫn giữ quy tắc a trong báo cáo vì kết quả 0 vi phạm chứng tỏ phép kiểm đã được thực thi.",
+            explanation: "Báo cáo QA cần minh bạch toàn bộ các phép kiểm đã chạy, ngay cả khi không phát hiện lỗi."
+        },
+
+        // --- ĐỢT 6 ---
+        {
+            id: "B10-TN-051", dot: 6, type: "TN",
+            question: "Loại phòng | Tổng số dòng | Số dòng thiếu giá\nPrivate | 2 | 1\nEntire | 6 | 2\n\nCặp **(nhóm có tỷ lệ thiếu cao hơn, nhóm đóng góp nhiều dòng thiếu hơn)** là gì?",
+            options: [
+                "A. `(Private, Private)`",
+                "B. `(Entire, Entire)`",
+                "C. `(Private, Entire)`",
+                "D. `(Entire, Private)`"
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Tỷ lệ thiếu Private = 1/2 = 50%; Entire = 2/6 = 33.33% -> Private cao hơn. Số dòng thiếu Private = 1; Entire = 2 -> Entire đóng góp nhiều hơn. Cặp kết quả: (Private, Entire)."
+        },
+        {
+            id: "B10-TN-052", dot: 6, type: "TN",
+            question: "```python\nd = pd.DataFrame({\"bedrooms\": [1., np.nan, 2., np.nan]})\nd[\"bedrooms\"] = d[\"bedrooms\"].fillna(1)\nd[\"bedrooms_isna\"] = d[\"bedrooms\"].isna()\n```\nNhận định nào đúng về cờ được tạo?",
+            options: [
+                "A. Cờ có hai True vì pandas tự lưu tình trạng thiếu trước khi fillna.",
+                "B. Mọi giá trị bằng 1 đều có cờ True vì đó là mức đã dùng để điền.",
+                "C. Cờ đều False; cột này không còn ghi lại hai ô thiếu trước khi điền.",
+                "D. Hai NaN vẫn còn nên cờ mới hoàn toàn giống cờ trước điền."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Lệnh tạo cờ isna() được thực hiện *sau* khi đã fillna() toàn bộ cột, lúc này không còn giá trị NaN nào nên toàn bộ cờ đều là False."
+        },
+        {
+            id: "B10-TN-053", dot: 6, type: "TN",
+            question: "Trên thang log10 của giá dương, hai chỗ ở có tọa độ lần lượt là 2 và 4. Giá của chỗ thứ hai gấp giá chỗ thứ nhất bao nhiêu lần?",
+            options: [
+                "A. 2 lần",
+                "B. 100 lần",
+                "C. 10 lần",
+                "D. 10000 lần"
+            ],
+            correct: 1, // Đáp án B
+            explanation: "Trên thang log10, hiệu số 4 - 2 = 2 biểu thị tỷ số giá gốc là 10^(4-2) = 10² = 100 lần."
+        },
+        {
+            id: "B10-TN-054", dot: 6, type: "TN",
+            question: "Bảng phân tích độ nhạy, đơn vị nghìn đồng/đêm:\nChỉ số | Mọi dòng có giá | Tạm loại các dòng bị cờ giá cao\nTrung bình | 1000 | 500\nTrung vị | 450 | 445\n\nDữ liệu gốc vẫn giữ nguyên. Kết luận nào được bảng hỗ trợ?",
+            options: [
+                "A. Trung vị không đổi nên bảng chứng minh mọi giá bị cờ là lỗi nhập.",
+                "B. Trung bình nhạy hơn trong phép so này; chưa chứng minh các giá bị cờ là sai.",
+                "C. Trung bình giảm một nửa nên mọi dòng bị cờ phải bị xóa vĩnh viễn.",
+                "D. Bảng cho thấy dữ liệu gốc đã bị sửa thành tập không có giá cao."
+            ],
+            correct: 1, // Đáp án Б
+            explanation: "Sự sụt giảm mạnh của trung bình (từ 1000 xuống 500) so với sự thay đổi nhỏ của trung vị (450 xuống 445) cho thấy trung bình nhạy cảm hơn với giá trị cao; điều này phản ánh độ nhạy của chỉ số chứ không xác nhận dữ liệu bị cờ là sai."
+        },
+        {
+            id: "B10-TN-055", dot: 6, type: "TN",
+            question: "Trung vị quận đã cho từ bảng dùng làm căn cứ: A=100, B=200, cùng đơn vị với giá. Không tính lại trung vị trên bốn dòng dưới đây. Quy tắc là giá **gấp hơn 20 lần** trung vị quận.\nChỉ mục | Quận | Giá\n0 | A | 2000\n1 | A | 2001\n2 | B | 4000\n3 | B | 3999\n\nNhững chỉ mục nào bị cờ?",
+            options: [
+                "A. `[0, 1, 2]`",
+                "B. `[0, 1, 2, 3]`",
+                "C. `[]`",
+                "D. `[1]`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Ngưỡng quận A = 20 * 100 = 2000. Dòng 0 (giá 2000 không lớn hơn, vì là gấp *hơn*). Dòng 1 (giá 2001 > 2000) bị cờ. Ngưỡng quận B = 20 * 200 = 4000. Dòng 2 (giá 4000 không lớn hơn). Dòng 3 (giá 3999 không lớn hơn). Chỉ duy nhất chỉ mục [1] bị cờ."
+        },
+        {
+            id: "B10-TN-056", dot: 6, type: "TN",
+            question: "Bảng có các cặp `(id,snapshot)`: `(1,06), (1,06), (1,09), (2,06), (2,06), (3,09)`.\nChỉ xét tác động trên hai bảng tạm: X bỏ **mọi dòng tham gia nhóm trùng khóa ghép**; Y chỉ bỏ **dòng dư theo khóa ghép**, giữ lần đầu. Cặp **(số dòng X còn, số dòng Y còn)** là gì?",
+            options: [
+                "A. `(4, 2)`",
+                "B. `(1, 3)`",
+                "C. `(4, 4)`",
+                "D. `(2, 4)`"
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Tổng số dòng ban đầu = 6. Các nhóm trùng khóa ghép gồm: (1,06) xuất hiện 2 lần, (2,06) xuất hiện 2 lần. Nhóm X bỏ mọi dòng tham gia (2 dòng của (1,06) và 2 dòng của (2,06)), còn lại 6 - 4 = 2 dòng. Nhóm Y loại bỏ các dòng dư (mỗi nhóm bỏ 1 dòng dư), còn lại 6 - 2 = 4 dòng."
+        },
+        {
+            id: "B10-TN-057", dot: 6, type: "TN",
+            question: "Ngưỡng P99 tham chiếu đã truyền vào hàm là 500, cùng đơn vị với cột giá. Hàm hiện viết:\n```python\ndef high_price(d, p99_ref):\n    return d[\"price_num\"] > d[\"price_num\"].quantile(0.99)\n```\nGiá cần kiểm là `200,500,600,900`. Chỉ cờ giá lớn hơn ngưỡng tham chiếu. Thay dòng return bằng gì?",
+            options: [
+                "A. `return d[\"price_num\"] > p99_ref`",
+                "B. `return d[\"price_num\"] >= p99_ref`",
+                "C. `return p99_ref > d[\"price_num\"]`",
+                "D. `return d[\"price_num\"] > d[\"price_num\"].quantile(0.99)`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Phải so sánh cột giá với tham số truyền vào `p99_ref` sử dụng toán tử lớn hơn (`>`), thay vì tự tính lại phân vị trên tập dữ liệu đang kiểm."
+        },
+        {
+            id: "B10-TN-058", dot: 6, type: "TN",
+            question: "Hai snapshot có cùng số dòng, báo cáo ghi:\n Quy tắc | Snapshot A | Snapshot B\n id_trung | đã kiểm: 0 | đã kiểm: 0\n toa_do_ngoai_bien | đã kiểm: 2 | chưa kiểm: thiếu longitude\n\nNhận định nào đúng?",
+            options: [
+                "A. Tọa độ B tốt hơn A vì quy tắc không báo dòng nào ở snapshot B.",
+                "B. Id ở B chưa được kiểm vì một quy tắc khác của B thiếu đầu vào.",
+                "C. Cả hai đã kiểm id không lặp; chưa so được chất lượng tọa độ B với A.",
+                "D. Cần bỏ hàng id_trung vì số 0 không cung cấp bằng chứng đã kiểm."
+            ],
+            correct: 2, // Đáp án C
+            explanation: "Phép kiểm id của cả hai snapshot đều đã chạy và ghi nhận 0 vi phạm. Tuy nhiên, do tọa độ của snapshot B bị thiếu cột nên chưa thể kiểm tra, do đó không đủ căn cứ để so sánh chất lượng tọa độ giữa hai snapshot."
+        },
+        {
+            id: "B10-TN-059", dot: 6, type: "TN",
+            question: "Báo cáo trên toàn bộ hai tệp có: `lech_tong_review=0`, `review_mo_coi=0`, `review_sau_moc=2`. Chính sách chọn mốc công bố làm ngày kết thúc phân tích. Nhận định nào đúng?",
+            options: [
+                "A. Hai phép kiểm đầu bằng 0 chứng minh hai dòng sau mốc cũng hợp lệ theo chính sách.",
+                "B. Có hai dòng sau mốc nên phải đổi ngày công bố, không cần điều tra thêm.",
+                "C. Không có review mồ côi nghĩa là mọi listing phải có ít nhất một review.",
+                "D. Số đếm khớp nội bộ nhưng reviews còn ngoài mốc; cần cắt và tính lại cột liên quan."
+            ],
+            correct: 3, // Đáp án D
+            explanation: "Sự tồn tại của các review vượt mốc công bố yêu cầu phải tiến hành cắt lọc tệp review và tính toán lại các chỉ số thống kê phụ thuộc, dù các kiểm tra khớp tổng và mồ côi đạt kết quả tốt."
+        },
+        {
+            id: "B10-TN-060", dot: 6, type: "TN",
+            question: "Độ lệch `cột có sẵn − tự đếm` của 7 listing là: `0, 0, 0, 0, -1, -1, -1`. Cặp **(trung vị toàn bộ 7 listing, trung vị chỉ các listing lệch)** bằng gì?",
+            options: [
+                "A. `(0, -1)`",
+                "B. `(-1, -1)`",
+                "C. `(0, 0)`",
+                "D. `(-1, 0)`"
+            ],
+            correct: 0, // Đáp án A
+            explanation: "Sắp xếp 7 giá trị độ lệch tăng dần: [-1, -1, -1, 0, 0, 0, 0]. Giá trị ở chính giữa (vị trí thứ 4) là 0 -> trung vị toàn bộ bằng 0. Tập chỉ gồm các listing lệch: [-1, -1, -1], giá trị ở giữa là -1 -> trung vị nhóm lệch bằng -1. Cặp kết quả: (0, -1)."
+        },
+        {
+            id: "B10-TL-026", dot: 6, type: "TL",
+            question: "`raw` có cột giá số price_num, có NaN. Phải giữ nguyên raw. Viết hai dòng tạo bảng `d` có thêm cờ `price_missing` từ dữ liệu ban đầu, rồi tạo `kpi` chỉ bỏ dòng thiếu price_num. Không loại vì cột khác thiếu.",
+            answer: "```python\nd = raw.assign(price_missing=raw[\"price_num\"].isna())\nkpi = d.dropna(subset=[\"price_num\"])\n```",
+            explanation: "Sử dụng `.assign()` để tạo cột cờ trên bản sao mà không làm thay đổi bảng raw gốc, tiếp theo dùng `dropna(subset=[...])` để lọc KPI."
+        },
+        {
+            id: "B10-TL-027", dot: 6, type: "TL",
+            question: "```python\np = pd.Series([np.nan, 0., -2., 10.], dtype=\"float64\")\nbad = p <= 0\n```\nTheo quy tắc bài này, giá thiếu **hoặc** không dương đều cần cờ. Viết một dòng thay dòng bad để bắt đủ cả hai nhóm.",
+            answer: "```python\nbad = p.isna() | (p <= 0)\n```",
+            explanation: "Kết hợp điều kiện thiếu bằng `p.isna()` với điều kiện không dương `(p <= 0)` bằng toán tử logic bitwise OR (`|`)."
+        },
+        {
+            id: "B10-TL-028", dot: 6, type: "TL",
+            question: "Các dòng sau được ghép từ nhiều snapshot:\nid=1, snapshot=06\nid=1, snapshot=06\nid=1, snapshot=09\nid=2, snapshot=06\nid=2, snapshot=09\n\nMỗi `(id,snapshot)` được phép có một dòng. `d.duplicated(subset=[\"id\",\"snapshot\"]).sum()` bằng bao nhiêu? Chỉ trả lời một số.",
+            answer: "1",
+            explanation: "Cặp khóa ghép `(1, 06)` xuất hiện tổng cộng 2 lần. Dòng đầu tiên được giữ là False, dòng trùng lặp thứ hai trả về True. Tổng số dòng dư được đánh dấu là 1."
+        },
+        {
+            id: "B10-TL-029", dot: 6, type: "TL",
+            question: "Một listing có review ngày `2025-06-30`, `2026-01-01`, `2026-06-29`, `2026-06-30`; cột LTM có sẵn bằng 3. Ban đầu tự đếm theo [30/06/2025,29/06/2026]. Sau đó chỉ đổi biên đầu thành mở: (30/06/2025,29/06/2026]. Trả lời một câu nêu **cột có sẵn − tự đếm** trước và sau đổi biên, và việc khớp ở một cửa sổ có đủ chứng minh nguồn dùng cửa sổ đó không.",
+            answer: "Trước đổi biên độ lệch là 3 - 3 = 0; sau đổi biên độ lệch là 3 - 2 = 1; việc khớp ở một cửa sổ chưa đủ chứng minh nguồn dùng chính xác cửa sổ đó vì có thể trùng ngẫu nhiên.",
+            explanation: "Cửa sổ đóng có 3 review trong khoảng; khi đổi sang mở, review ngày 2025-06-30 bị loại bỏ khiến số tự đếm giảm xuống còn 2. Sự trùng khớp kết quả không khẳng định tuyệt đối định nghĩa ngầm của nguồn."
+        },
+        {
+            id: "B10-TL-030", dot: 6, type: "TL",
+            question: "`report` hiện có index **được đặt tên quy_tac**, gồm `review_mo_coi`, `review_sau_moc`; hai cột là `so_dong`, `ghi_chu`. Số đếm lần lượt 0,1. Viết hai dòng để ghi CSV có đủ ba cột `quy_tac,so_dong,ghi_chu`, không thêm index thừa, rồi đọc vào kq. Tên tệp `qa_report_reviews.csv`.",
+            answer: "```python\nreport.reset_index().to_csv(\"qa_report_reviews.csv\", index=False)\nkq = pd.read_csv(\"qa_report_reviews.csv\")\n```",
+            explanation: "Vì tên quy_tac đang nằm ở index của DataFrame, ta cần dùng `.reset_index()` để chuyển nó thành cột dữ liệu trước khi xuất CSV với `index=False`."
+        }
+    ];
+
+    // Hàm render danh sách câu hỏi
+    function renderQuestions(filterDot = "all", filterType = "all") {
+        const container = document.getElementById("questions-container");
+        container.innerHTML = "";
+
+        const filtered = questionsData.filter(q => {
+            const matchDot = (filterDot === "all" || q.dot.toString() === filterDot);
+            const matchType = (filterType === "all" || q.type === filterType);
+            return matchDot && matchType;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<p style="text-align: center; color: #64748b; padding: 40px;">Không tìm thấy câu hỏi phù hợp.</p>`;
+            return;
+        }
+
+        filtered.forEach((q, index) => {
+            const card = document.createElement("div");
+            card.className = "question-card";
+            card.id = `card-${q.id}`;
+
+            let headerHTML = `
+                <div class="question-header">
+                    <span>${q.id} (Đợt ${q.dot})</span>
+                    <span class="badge ${q.type === 'TL' ? 'badge-tl' : ''}">${q.type === 'TN' ? 'Trắc nghiệm' : 'Trả lời ngắn'}</span>
+                </div>
+            `;
+
+            let bodyHTML = `<div class="question-content">${escapeHTML(q.question)}</div>`;
+
+            if (q.type === 'TN') {
+                bodyHTML += `<div class="options-list">`;
+                q.options.forEach((opt, optIndex) => {
+                    bodyHTML += `<button class="option-btn" onclick="checkAnswer('${q.id}', ${optIndex})">${escapeHTML(opt)}</button>`;
+                });
+                bodyHTML += `</div>`;
+            } else {
+                bodyHTML += `
+                    <div class="short-answer-section">
+                        <button class="btn-toggle-answer" onclick="toggleShortAnswer('${q.id}')">Xem đáp án & giải thích</button>
+                    </div>
+                `;
+            }
+
+            // Hộp giải thích chung
+            bodyHTML += `
+                <div class="explanation-box" id="exp-${q.id}">
+                    <div class="explanation-title">Đáp án & Giải thích:</div>
+                    <div>${formatAnswerText(q.answer || q.options[q.correct])}</div>
+                    <div style="margin-top: 8px;"><em>${escapeHTML(q.explanation)}</em></div>
+                </div>
+            `;
+
+            card.innerHTML = headerHTML + bodyHTML;
+            container.appendChild(card);
+        });
+    }
+
+    // Xử lý chọn đáp án trắc nghiệm
+    function checkAnswer(questionId, selectedIndex) {
+        const q = questionsData.find(item => item.id === questionId);
+        const card = document.getElementById(`card-${questionId}`);
+        const buttons = card.querySelectorAll(".option-btn");
+
+        buttons.forEach((btn, idx) => {
+            btn.disabled = true;
+            if (idx === q.correct) {
+                btn.classList.add("correct");
+            } else if (idx === selectedIndex) {
+                btn.classList.add("incorrect");
+            }
+        });
+
+        // Hiển thị khung giải thích
+        const expBox = document.getElementById(`exp-${questionId}`);
+        expBox.classList.add("show");
+    }
+
+    // Xử lý hiển thị đáp án câu trả lời ngắn
+    function toggleShortAnswer(questionId) {
+        const expBox = document.getElementById(`exp-${questionId}`);
+        expBox.classList.toggle("show");
+    }
+
+    // Lọc câu hỏi
+    function filterQuestions() {
+        const dot = document.getElementById("filter-dot").value;
+        const type = document.getElementById("filter-type").value;
+        renderQuestions(dot, type);
+    }
+
+    // Làm lại từ đầu
+    function resetAnswers() {
+        document.getElementById("filter-dot").value = "all";
+        document.getElementById("filter-type").value = "all";
+        renderQuestions("all", "all");
+    }
+
+    // Tiện ích thoát ký tự HTML cơ bản để tránh lỗi hiển thị
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
+    // Định dạng đoạn mã code bên trong đáp án (nếu có dấu ```python ... ```)
+    function formatAnswerText(text) {
+        if (!text) return "";
+        // Chuyển đổi block code markdown đơn giản thành thẻ <pre>
+        let formatted = escapeHTML(text);
+        formatted = formatted.replace(/```python([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        return formatted.replace(/\n/g, '<br>');
+    }
+
+    // Khởi chạy khi tải trang
+    window.onload = function() {
+        renderQuestions();
+    };
+</script>
+
+</body>
+</html>
